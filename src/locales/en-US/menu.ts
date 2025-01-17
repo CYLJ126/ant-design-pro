@@ -49,4 +49,6 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.tools': 'Tool',
+  'menu.tool.Text Formatter': 'Text Formatter',
 };

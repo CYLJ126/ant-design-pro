@@ -46,6 +46,19 @@ export default [
     ],
   },
   {
+    path: '/tools',
+    name: 'tools',
+    icon: 'tool',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/tools/text-formatter',
+        name: 'Text Formatter',
+        component: './Tools/TextFormatter',
+      },
+    ],
+  },
+  {
     name: 'list.table-list',
     icon: 'table',
     path: '/list',
