@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Checkbox, Input} from 'antd';
+import React, { useState } from 'react';
+import { Checkbox, Input } from 'antd';
 import styles from './index.less';
 
 interface CustomProperty {
@@ -17,6 +17,62 @@ interface TextPair {
   formatted: string; // 格式化后的内容
 }
 
+function handleBreakLine(text: string) {
+  // 消除换行
+  return text.replace(/\n/g, '');
+}
+
+/**
+ * 示例1：
+ * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工。
+ * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工。
+ * @param customProp
+ * @param text
+ */
+function handleChinese(customProp: CustomProperty, text: string) {
+  let tempStr = text;
+  if (customProp.clearBreakLine) {
+    tempStr = handleBreakLine(tempStr);
+  }
+  if (customProp.punctuationMark) {
+    // 转换标点符号
+    tempStr = tempStr
+      .replace(/\?/g, '？')
+      .replace(/:/g, '：')
+      .replace(/\./g, '。')
+      .replace(/,/g, '，')
+      .replace(/\(/g, '（')
+      .replace(/\)/g, '）')
+      .replace(/!/g, '！')
+      .replace(/;/g, '；');
+  }
+  if (customProp.withSpace) {
+    // 添加空格
+    tempStr = tempStr
+      .replace(/(?<backQuota>([a-zA-Z0-9]+)|([+\-/*￥$]))/g, ' $<backQuota> ')
+      .replace(/ +/g, ' ')
+      .trim();
+  }
+  if (customProp.compressSpace) {
+    // 压缩空格
+    //压缩空格
+    tempStr = tempStr.replace(/\s+/g, ' ');
+    //去除中文之间的空格，由于存在“中 中 中 中”这样交叉空格情况，所以要调用两次才能清完
+    tempStr = tempStr.replace(/([\u4e00-\u9fa5])\s([\u4e00-\u9fa5])/g, '$1$2');
+    tempStr = tempStr.replace(/([\u4e00-\u9fa5])\s([\u4e00-\u9fa5])/g, '$1$2');
+  }
+  //去除标点符号和前后的空格
+  tempStr = tempStr.replace(/(\w)\s+([！，。？；（）‘’“”…【】])/g, '$1$2');
+  tempStr = tempStr.replace(/([！，。？；（）‘’“”…【】])\s+/g, '$1');
+  // 格式化数字
+  tempStr = tempStr.replace(/(\d)\s?[.。]\s?(\d)/g, '$1.$2');
+  tempStr = tempStr.replace(/(\d)\s?[,，]\s?(\d)/g, '$1, $2');
+  tempStr = tempStr.replace(/([$￥])\s?(\d)/g, '$1$2');
+  // 格式化代码
+  tempStr = tempStr.replace(/\s?`\s?(.*?)\s?`\s?/g, ' `$1` ');
+  return tempStr.trim();
+}
+
 /**
  * 根据用户勾选的配置格式化文本
  * @param customProp 用户勾选的配置
@@ -24,7 +80,7 @@ interface TextPair {
  * @return string 格式化后文本
  */
 function handleText(customProp: CustomProperty, text: string) {
-  return {raw: text, formatted: '格式：' + text};
+  return { raw: text, formatted: handleChinese(customProp, text) };
 }
 
 function changeText(text: string, customProp: CustomProperty, set: (textPair: TextPair) => void) {
@@ -52,7 +108,7 @@ async function handleClipboard(customProp: CustomProperty, set: (textPair: TextP
 }
 
 // 初始化内容
-const initialText: TextPair = {raw: '', formatted: ''};
+const initialText: TextPair = { raw: '', formatted: '' };
 const initialProp: CustomProperty = {
   zhOrEn: true,
   punctuationMark: true,
@@ -69,7 +125,7 @@ export default function TextFormatter() {
   const [initialFlag, setInitialFlag] = useState(true);
 
   function change(tempSingle: object) {
-    setCustomProperty({...customProperty, ...tempSingle});
+    setCustomProperty({ ...customProperty, ...tempSingle });
   }
 
   // 激活窗口
@@ -77,7 +133,7 @@ export default function TextFormatter() {
     console.log('注册窗口激活事件---监听剪贴板');
     window.addEventListener('focus', () => {
       handleClipboard(customProperty, setTextObj).then();
-      setCustomProperty({...customProperty, isHandleClipboard: false});
+      setCustomProperty({ ...customProperty, isHandleClipboard: false });
     });
     setInitialFlag(false);
   }
@@ -89,7 +145,7 @@ export default function TextFormatter() {
           defaultChecked
           checked={customProperty.zhOrEn}
           onChange={(e) => {
-            change({zhOrEn: e.target.checked});
+            change({ zhOrEn: e.target.checked });
           }}
         >
           中文
@@ -97,7 +153,7 @@ export default function TextFormatter() {
         <Checkbox
           checked={!customProperty.zhOrEn}
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({zhOrEn: !e.target.checked});
+            change({ zhOrEn: !e.target.checked });
           }}
         >
           英文
@@ -105,7 +161,7 @@ export default function TextFormatter() {
         <Checkbox
           defaultChecked
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({punctuationMark: e.target.checked});
+            change({ punctuationMark: e.target.checked });
           }}
         >
           替换标点符号
@@ -113,7 +169,7 @@ export default function TextFormatter() {
         <Checkbox
           defaultChecked
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({clearBreakLine: e.target.checked});
+            change({ clearBreakLine: e.target.checked });
           }}
         >
           消除换行
@@ -121,7 +177,7 @@ export default function TextFormatter() {
         <Checkbox
           defaultChecked
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({compressSpace: e.target.checked});
+            change({ compressSpace: e.target.checked });
           }}
         >
           压缩空格
@@ -129,7 +185,7 @@ export default function TextFormatter() {
         <Checkbox
           defaultChecked
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({withSpace: e.target.checked});
+            change({ withSpace: e.target.checked });
           }}
         >
           英文数字前后空格
@@ -137,7 +193,7 @@ export default function TextFormatter() {
         <Checkbox
           defaultChecked
           onChange={(e: React.CheckboxChangeEvent): void => {
-            change({rewriteClipboard: e.target.checked});
+            change({ rewriteClipboard: e.target.checked });
           }}
         >
           复制到粘贴板
@@ -151,7 +207,7 @@ export default function TextFormatter() {
           changeText(e.target.value, customProperty, setTextObj);
         }}
       />
-      <Input.TextArea showCount className={styles.textArea} value={textObj.formatted}/>
+      <Input.TextArea showCount className={styles.textArea} value={textObj.formatted} />
     </div>
   );
 }
