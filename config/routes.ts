@@ -46,6 +46,59 @@ export default [
     ],
   },
   {
+    path: '/personal',
+    name: 'personal',
+    icon: 'userOutlined',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/personal/traces',
+        name: 'Traces',
+        component: './Personal/Traces',
+      },
+      {
+        path: '/personal/daily-work',
+        name: 'Daily Work',
+        component: './Personal/DailyWork',
+      },
+      {
+        path: '/personal/weekly-work',
+        name: 'Weekly Work',
+        component: './Personal/WeeklyWork',
+      },
+      {
+        path: '/personal/monthly-work',
+        name: 'Monthly Work',
+        component: './Personal/MonthlyWork',
+      },
+      {
+        path: '/personal/quarterly-work',
+        name: 'Quarterly Work',
+        component: './Personal/QuarterlyWork',
+      },
+      {
+        path: '/personal/semiannual-work',
+        name: 'Semiannual Work',
+        component: './Personal/SemiannualWork',
+      },
+      {
+        path: '/personal/annual-work',
+        name: 'Annual Work',
+        component: './Personal/AnnualWork',
+      },
+      {
+        path: '/personal/summary',
+        name: 'Summary',
+        component: './Personal/Summary',
+      },
+      {
+        path: '/personal/bad-habit',
+        name: 'Bad Habit',
+        component: './Personal/BadHabit',
+      },
+    ],
+  },
+  {
     path: '/tools',
     name: 'tools',
     icon: 'tool',

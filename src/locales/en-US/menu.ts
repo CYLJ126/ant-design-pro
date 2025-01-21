@@ -51,4 +51,13 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   'menu.tools': 'Tool',
   'menu.tool.Text Formatter': 'Text Formatter',
+  'menu.personal.Traces': 'Traces',
+  'menu.personal.Daily Work': 'Daily Work',
+  'menu.personal.Weekly Work': 'Weekly Work',
+  'menu.personal.Monthly Work': 'Monthly Work',
+  'menu.personal.Quarterly Work': 'Quarterly Work',
+  'menu.personal.Semiannual Work': 'Semiannual Work',
+  'menu.personal.Annual Work': 'Annual Work',
+  'menu.personal.Summary': 'Summary',
+  'menu.personal.Bad Habit': 'Bad Habit',
 };
