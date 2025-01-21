@@ -134,3 +134,51 @@ Any type of contribution is welcome, here are some examples of how you may contr
 - Use Ant Design Pro in your daily work.
 - Submit [issues](http://github.com/ant-design/ant-design-pro/issues) to report bugs or ask questions.
 - Propose [pull requests](http://github.com/ant-design/ant-design-pro/pulls) to improve our code.
+
+## 添加页面
+
+- `\src\pages` ：创建文件夹，以大写开头，并实现页面内容；
+- `\config\routes.ts` ：添加路由；
+- `\src\locales\en-US\menu.ts` ：添加英文本地化内容；
+- `\src\locales\zh-CN\menu.ts` ：添加中文本地化内容；
+
+## Git 提交规范
+
+**前缀**
+
+- feat：新增功能或页面；
+- delete：删除功能或文件；
+- fix：修复 bug、解决冲突（尽量避免）；
+- modify：修改功能；
+- docs：修改文档；
+- refactor：代码重构，未新增任何功能和修复任何 bug；
+- build：改变构建流程，新增依赖库、工具等（例如 webpack 修改）；
+- style：仅仅修改了空格、缩进、注释等，不改变代码逻辑的变动；
+- perf：改善性能和体现的修改；
+- chore：非 src 和 test 的修改；
+- test：测试用例的新增、修改；
+- ci：自动化流程（持续集成，Continuous Integration）相关修改；
+- revert：回滚到上一个版本；
+- scope：【可选】用于说明 commit 的影响范围；
+- subject：commit 的简要说明，尽量简短；
+- revert：撤销之前的提交；
+- merge：合并分支或解决冲突；
+- release：发布一个版本；
+- hotfix：发布紧急修补补丁；
+- config：配置文件的更改；
+- data：与数据相关的更改，如数据库操作、数据结构等；
+- init：初始化或创建项目；
+- migration：数据库迁移或数据迁移相关的更改；
+- perf 或 performance：性能优化相关的更改；
+- security：与安全性相关的更改；
+- i18n：国际化（Internationalization）相关的更改；
+- log：日志相关的更改；
+- restyle：调整样式或外观相关的更改；
+- vendor：更新或修改依赖的第三方库或模块；
+
+**说明**
+
+- 格式：前缀+英文冒号+空格+描述，其中“描述”的第一个字符不得为大写字母（不能为句子）；
+- 提交文字规范：提交前缀：动作行为 + 问题内容；
+- 提交的 commit 发现不符合规范，`git commit --amend -m "新的提交信息"` 或 `git reset --hard HEAD^` 重新提交一次；
+-
