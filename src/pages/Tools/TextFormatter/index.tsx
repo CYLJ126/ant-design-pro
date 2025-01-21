@@ -25,7 +25,7 @@ function handleBreakLine(text: string) {
 /**
  * 示例1：
  * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三Node.js国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工。
- * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末.sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工。
+ * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工。
  * @param customProp
  * @param text
  */
@@ -71,7 +71,7 @@ function handleChinese(customProp: CustomProperty, text: string) {
   // 格式化代码
   tempStr = tempStr.replace(/\s?`\s?(.*?)\s?`\s?/g, ' `$1` ');
   // 英文之间的句点，形如 Node.js 还原
-  tempStr = tempStr.replace(/(\w?)\s?[.。]\s?(\w)/g, '$1.$2');
+  tempStr = tempStr.replace(/(\w)\s?[.。]\s?(\w)/g, '$1.$2');
   return tempStr.trim();
 }
 
@@ -128,6 +128,7 @@ export default function TextFormatter() {
 
   function change(tempSingle: object) {
     setCustomProperty({ ...customProperty, ...tempSingle });
+    changeText(textObj.raw, { ...customProperty, ...tempSingle }, setTextObj);
   }
 
   // 激活窗口
