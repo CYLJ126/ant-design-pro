@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Input } from 'antd';
+import { Checkbox, Input, InputNumber, Select } from 'antd';
 import styles from './index.less';
 
 /**
@@ -13,6 +13,7 @@ interface CustomProperty {
   withSpace: boolean; // true-英文、数字前后带空格；false-英文、数字前后不带空格；
   rewriteClipboard: boolean; // true-处理后复制到粘贴板；false-处理后不复制到粘贴板；
   isHandleClipboard: boolean; // true-从粘贴板复制内容到文本框中；false-不从粘贴板复制内容到文本框中；
+  handleList: boolean; // true-处理成列表内容；false-默认，正常文本处理；
 }
 
 /**
@@ -33,7 +34,7 @@ interface TextPair {
 
 function handleBreakLine(text: string) {
   // 消除换行
-  return text.replace(/\n/g, '');
+  return text.replace(/[\r\n]/g, '');
 }
 
 /**
@@ -90,26 +91,26 @@ function handleChinese(customProp: CustomProperty, text: string) {
 }
 
 const serialMark = [
-  { '0': '', '1': '1. ', '2': '（1）', '3': '一、', '4': 'a. ', '5': '（a）' },
-  { '0': '', '1': '2. ', '2': '（2）', '3': '二、', '4': 'b. ', '5': '（b）' },
-  { '0': '', '1': '3. ', '2': '（3）', '3': '三、', '4': 'c. ', '5': '（c）' },
-  { '0': '', '1': '4. ', '2': '（4）', '3': '四、', '4': 'd. ', '5': '（d）' },
-  { '0': '', '1': '5. ', '2': '（5）', '3': '五、', '4': 'e. ', '5': '（e）' },
-  { '0': '', '1': '6. ', '2': '（6）', '3': '六、', '4': 'f. ', '5': '（f）' },
-  { '0': '', '1': '7. ', '2': '（7）', '3': '七、', '4': 'g. ', '5': '（g）' },
-  { '0': '', '1': '8. ', '2': '（8）', '3': '八、', '4': 'h. ', '5': '（h）' },
-  { '0': '', '1': '9. ', '2': '（9）', '3': '九、', '4': 'i. ', '5': '（i）' },
-  { '0': '', '1': '10. ', '2': '（10）', '3': '十、', '4': 'j. ', '5': '（j）' },
-  { '0': '', '1': '11. ', '2': '（11）', '3': '十一、', '4': 'k. ', '5': '（k）' },
-  { '0': '', '1': '12. ', '2': '（12）', '3': '十二、', '4': 'l. ', '5': '（l）' },
-  { '0': '', '1': '13. ', '2': '（13）', '3': '十三、', '4': 'm. ', '5': '（m）' },
-  { '0': '', '1': '14. ', '2': '（14）', '3': '十四、', '4': 'n. ', '5': '（n）' },
-  { '0': '', '1': '15. ', '2': '（15）', '3': '十五、', '4': 'o. ', '5': '（o）' },
-  { '0': '', '1': '16. ', '2': '（16）', '3': '十六、', '4': 'p. ', '5': '（p）' },
-  { '0': '', '1': '17. ', '2': '（17）', '3': '十七、', '4': 'q. ', '5': '（q）' },
-  { '0': '', '1': '18. ', '2': '（18）', '3': '十八、', '4': 'r. ', '5': '（r）' },
-  { '0': '', '1': '19. ', '2': '（19）', '3': '十九、', '4': 's. ', '5': '（s）' },
-  { '0': '', '1': '20. ', '2': '（20）', '3': '二十、', '4': 't. ', '5': '（t）' },
+  { '0': '', '1': '1. ', '2': '（1）', '3': '一、', '4': 'a. ', '5': '（a）', '6': '* ' },
+  { '0': '', '1': '2. ', '2': '（2）', '3': '二、', '4': 'b. ', '5': '（b）', '6': '* ' },
+  { '0': '', '1': '3. ', '2': '（3）', '3': '三、', '4': 'c. ', '5': '（c）', '6': '* ' },
+  { '0': '', '1': '4. ', '2': '（4）', '3': '四、', '4': 'd. ', '5': '（d）', '6': '* ' },
+  { '0': '', '1': '5. ', '2': '（5）', '3': '五、', '4': 'e. ', '5': '（e）', '6': '* ' },
+  { '0': '', '1': '6. ', '2': '（6）', '3': '六、', '4': 'f. ', '5': '（f）', '6': '* ' },
+  { '0': '', '1': '7. ', '2': '（7）', '3': '七、', '4': 'g. ', '5': '（g）', '6': '* ' },
+  { '0': '', '1': '8. ', '2': '（8）', '3': '八、', '4': 'h. ', '5': '（h）', '6': '* ' },
+  { '0': '', '1': '9. ', '2': '（9）', '3': '九、', '4': 'i. ', '5': '（i）', '6': '* ' },
+  { '0': '', '1': '10. ', '2': '（10）', '3': '十、', '4': 'j. ', '5': '（j）', '6': '* ' },
+  { '0': '', '1': '11. ', '2': '（11）', '3': '十一、', '4': 'k. ', '5': '（k）', '6': '* ' },
+  { '0': '', '1': '12. ', '2': '（12）', '3': '十二、', '4': 'l. ', '5': '（l）', '6': '* ' },
+  { '0': '', '1': '13. ', '2': '（13）', '3': '十三、', '4': 'm. ', '5': '（m）', '6': '* ' },
+  { '0': '', '1': '14. ', '2': '（14）', '3': '十四、', '4': 'n. ', '5': '（n）', '6': '* ' },
+  { '0': '', '1': '15. ', '2': '（15）', '3': '十五、', '4': 'o. ', '5': '（o）', '6': '* ' },
+  { '0': '', '1': '16. ', '2': '（16）', '3': '十六、', '4': 'p. ', '5': '（p）', '6': '* ' },
+  { '0': '', '1': '17. ', '2': '（17）', '3': '十七、', '4': 'q. ', '5': '（q）', '6': '* ' },
+  { '0': '', '1': '18. ', '2': '（18）', '3': '十八、', '4': 'r. ', '5': '（r）', '6': '* ' },
+  { '0': '', '1': '19. ', '2': '（19）', '3': '十九、', '4': 's. ', '5': '（s）', '6': '* ' },
+  { '0': '', '1': '20. ', '2': '（20）', '3': '二十、', '4': 't. ', '5': '（t）', '6': '* ' },
 ];
 
 function handleListChinese(listProp: ListProperty, text: string) {
@@ -121,7 +122,7 @@ function handleListChinese(listProp: ListProperty, text: string) {
   // 最长只支持 20
   const loopCount = Math.min(list.length, 20);
   for (let i = 0; i < loopCount; i++) {
-    let str = list[i];
+    let str = list[i].trim();
     const length = str.length;
     if (listProp.removePrefixLength > 0) {
       // 删除前缀
@@ -133,10 +134,8 @@ function handleListChinese(listProp: ListProperty, text: string) {
     str = str.replace(/[,.，。；、]\w?$/, '');
     str = str.trim();
     if (i === list.length - 1) {
-      if (listProp.lastWithPeriod) {
-        // 最后一条换成句号结尾
-        str += '。';
-      }
+      // 最后一条换成句号结尾
+      str += listProp.lastWithPeriod ? '。' : listProp.endWith;
     } else {
       // 添加指定末尾标点
       str = str + listProp.endWith;
@@ -187,6 +186,10 @@ function handleListText(
   let tempPair: TextPair = handleText(text, customProp, set);
   tempPair.formatted = handleListChinese(listProp, tempPair.formatted);
   set(tempPair);
+  if (customProp.rewriteClipboard) {
+    // 写入粘贴板
+    navigator.clipboard.writeText(tempPair.formatted).then();
+  }
 }
 
 /**
@@ -194,14 +197,22 @@ function handleListText(
  * @param customProp 用户勾选的配置
  * @param set 设置文本内容函数
  */
-async function handleClipboard(customProp: CustomProperty, set: (textPair: TextPair) => void) {
+async function handleClipboard(
+  customProp: CustomProperty,
+  listProp: ListProperty,
+  set: (textPair: TextPair) => void,
+) {
   if (!window.isSecureContext) {
     // clipboard 的访问需要在安全上下文中访问，否则无此属性
     console.log('当前访问不满足“安全上下文”要求，请手动粘贴内容...');
     return;
   }
   const clipboardText = await navigator.clipboard.readText();
-  handleText(clipboardText, customProp, set);
+  if (customProp.handleList) {
+    handleListText(clipboardText, customProp, listProp, set);
+  } else {
+    handleText(clipboardText, customProp, set);
+  }
 }
 
 // 初始化内容
@@ -214,6 +225,7 @@ const initialProp: CustomProperty = {
   withSpace: true,
   rewriteClipboard: true,
   isHandleClipboard: true,
+  handleList: false,
 };
 const initialListProp: ListProperty = {
   removePrefixLength: 0,
@@ -231,22 +243,27 @@ export default function TextFormatter() {
   // 列表内容处理
   const [listProperty, setListProperty] = useState(initialListProp);
 
-  function change(tempSingle: object) {
-    setCustomProperty({ ...customProperty, ...tempSingle });
-    handleText(textObj.raw, { ...customProperty, ...tempSingle }, setTextObj);
-  }
-
   function listChange(tempSingle: object) {
     let newProp = { ...listProperty, ...tempSingle };
     setListProperty(newProp);
     handleListText(textObj.raw, customProperty, newProp, setTextObj);
   }
 
+  function change(tempSingle: object) {
+    setCustomProperty({ ...customProperty, ...tempSingle });
+    if (tempSingle.handleList) {
+      listChange({});
+    } else {
+      handleText(textObj.raw, { ...customProperty, ...tempSingle }, setTextObj);
+    }
+  }
+
   // 激活窗口
   if (initialFlag) {
     console.log('注册窗口激活事件---监听剪贴板');
     window.addEventListener('focus', () => {
-      handleClipboard(customProperty, setTextObj).then();
+      // TODO 监听不到handleList属性的变化
+      handleClipboard(customProperty, listProperty, setTextObj).then();
       setCustomProperty({ ...customProperty, isHandleClipboard: false });
     });
     setInitialFlag(false);
@@ -266,81 +283,86 @@ export default function TextFormatter() {
         </Checkbox>
         <Checkbox
           checked={!customProperty.zhOrEn}
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            change({ zhOrEn: !e.target.checked });
-          }}
+          onChange={(e) => change({ zhOrEn: !e.target.checked })}
         >
           英文
         </Checkbox>
         <Checkbox
           defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
+          onChange={(e) => {
             change({ punctuationMark: e.target.checked });
           }}
         >
           替换标点符号
         </Checkbox>
-        <Checkbox
-          defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            change({ clearBreakLine: e.target.checked });
-          }}
-        >
+        <Checkbox defaultChecked onChange={(e) => change({ clearBreakLine: e.target.checked })}>
           消除换行
         </Checkbox>
-        <Checkbox
-          defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            change({ compressSpace: e.target.checked });
-          }}
-        >
+        <Checkbox defaultChecked onChange={(e) => change({ compressSpace: e.target.checked })}>
           压缩空格
         </Checkbox>
-        <Checkbox
-          defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            change({ withSpace: e.target.checked });
-          }}
-        >
+        <Checkbox defaultChecked onChange={(e) => change({ withSpace: e.target.checked })}>
           英文数字前后空格
         </Checkbox>
-        <Checkbox
-          defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            change({ rewriteClipboard: e.target.checked });
-          }}
-        >
+        <Checkbox defaultChecked onChange={(e) => change({ rewriteClipboard: e.target.checked })}>
           复制到粘贴板
         </Checkbox>
       </div>
-      <div>
-        <Input
+      <div style={{ marginTop: '10px' }}>
+        <Checkbox
+          value={customProperty.handleList}
+          onChange={(e) => change({ handleList: e.target.checked })}
+        >
+          列表处理
+        </Checkbox>
+        <InputNumber
+          className={styles.prefixRemove}
           value={listProperty.removePrefixLength}
-          placeholder="前缀删除长度"
-          onChange={(e: React.SyntheticEvent): void => {
-            let content = e.target.value;
-            if (/^\d*$/.test(content)) {
-              // 只在输入为整数的情况下才进行处理
-              listChange({ removePrefixLength: content });
-            }
+          min={0}
+          addonBefore={'删除前缀'}
+          addonAfter={'个字符'}
+          onChange={(num): void => {
+            listChange({ removePrefixLength: num });
           }}
+        />
+        <span style={{ marginLeft: '10px' }}>项目编号：</span>
+        <Select
+          className={styles.serialMark}
+          onChange={(value) => listChange({ serialMark: value })}
+          options={[
+            { value: '1', label: '1. 2. 3.' },
+            { value: '6', label: '* * * ' },
+            { value: '0', label: '无' },
+            { value: '2', label: '（1）（2）（3）' },
+            { value: '3', label: '一、二、三、' },
+            { value: '4', label: 'a. b. c.' },
+            { value: '5', label: '（a）（b）（c）' },
+          ]}
+        />
+        <span style={{ marginLeft: '10px' }}>结束符：</span>
+        <Input
+          value={listProperty.endWith}
+          style={{ width: 40, marginRight: '10px' }}
+          onChange={(e) => listChange({ endWith: e.target.value })}
         />
         <Checkbox
           defaultChecked
-          onChange={(e: React.CheckboxChangeEvent): void => {
-            listChange({ rewriteClipboard: e.target.checked });
-          }}
+          onChange={(e) => listChange({ rewriteClipboard: e.target.checked })}
         >
           添加空行
+        </Checkbox>
+        <Checkbox
+          defaultChecked
+          onChange={(e): void => listChange({ lastWithPeriod: e.target.checked })}
+        >
+          句点结尾
         </Checkbox>
       </div>
       <Input.TextArea
         showCount
         className={styles.textArea}
         value={textObj.raw}
-        onChange={(e: React.SyntheticEvent): void => {
-          handleText(e.target.value, customProperty, setTextObj);
-        }}
+        onChange={(e) => handleText(e.target.value, customProperty, setTextObj)}
       />
       <Input.TextArea showCount className={styles.textArea} value={textObj.formatted} />
     </div>
