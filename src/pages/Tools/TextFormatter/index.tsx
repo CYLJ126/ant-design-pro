@@ -83,6 +83,7 @@ function handleChinese(customProp: CustomProperty, text: string) {
   tempStr = tempStr.replace(/(\d) ?[.。] ?(\d)/g, '$1.$2');
   tempStr = tempStr.replace(/(\d) ?[,，] ?(\d)/g, '$1, $2');
   tempStr = tempStr.replace(/([$￥]) ?(\d)/g, '$1$2');
+  tempStr = tempStr.replace(/(\d) +%/g, '$1% ');
   // 格式化代码
   tempStr = tempStr.replace(/ ?` ?(.*?) ?` ?/g, ' `$1` ');
   // 英文之间的句点，形如 Node.js 还原
