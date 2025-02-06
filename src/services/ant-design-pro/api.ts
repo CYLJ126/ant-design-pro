@@ -2,6 +2,14 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey.pub */
+export async function getPubKey(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/login/outLogin', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
@@ -20,9 +28,16 @@ export async function outLogin(options?: { [key: string]: any }) {
   });
 }
 
-/** 登录接口 POST /api/login/account */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/login/account', {
+/** 登录接口 POST /nip/auth/login.pub */
+export async function login(
+  body: {
+    password: string;
+    name: string | undefined;
+    autoLogin: boolean | undefined;
+  },
+  options?: { [p: string]: any },
+) {
+  return request<API.LoginResult>('/nip/auth/login.pub', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

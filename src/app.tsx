@@ -4,10 +4,11 @@ import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import { history, Link, useModel } from '@umijs/max';
 import React from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
+import type { RequestConfig } from '@@/plugin-request/request';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -128,10 +129,27 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 };
 
 /**
+ * axios 请求拦截器，向后端请求前添加 Token
+ * @param url 请求路径
+ * @param options 参数内容
+ */
+const useAuthHeaderInterceptor = (url: string, options: RequestConfig) => {
+  const { initialState } = useModel('@@initialState');
+  const authHeader = { Authorization: 'Bearer ' + initialState?.token };
+  console.log('token为：' + authHeader.Authorization);
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
+/**
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
+  // 新增自动添加 Token 的请求前拦截器
+  requestInterceptors: [useAuthHeaderInterceptor],
   ...errorConfig,
 };
