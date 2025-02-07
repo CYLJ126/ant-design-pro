@@ -32,7 +32,7 @@ export default [
     path: '/admin',
     name: 'admin',
     icon: 'crown',
-    access: 'canAdmin',
+    access: 'Admin',
     routes: [
       {
         path: '/admin',
@@ -49,7 +49,7 @@ export default [
     path: '/personal',
     name: 'personal',
     icon: 'userOutlined',
-    access: 'canAdmin',
+    access: 'Personal',
     routes: [
       {
         path: '/personal/traces',
@@ -102,12 +102,13 @@ export default [
     path: '/tools',
     name: 'tools',
     icon: 'tool',
-    access: 'canAdmin',
+    access: 'Tools',
     routes: [
       {
         path: '/tools/text-formatter',
         name: 'Text Formatter',
         component: './Tools/TextFormatter',
+        access: 'TextFormatter',
       },
     ],
   },

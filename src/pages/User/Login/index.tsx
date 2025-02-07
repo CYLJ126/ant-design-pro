@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import { encrypt } from '@/common/crypto';
+// import { encrypt } from '@/common/crypto';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -103,14 +103,13 @@ const Login: React.FC = () => {
   const { styles } = useStyles();
   const intl = useIntl();
 
-  const fetchUserInfo = async (token: string) => {
+  const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
           ...s,
           currentUser: userInfo,
-          token: token,
         }));
       });
     }
@@ -118,7 +117,9 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      const encryptPassword = encrypt(values.password);
+      // TODO 密码加密
+      // const encryptPassword = encrypt(values.password);
+      const encryptPassword = values.password;
       // 登录
       const msg = await login({
         name: values.username,
@@ -130,11 +131,12 @@ const Login: React.FC = () => {
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+        localStorage.setItem('user_token', msg.data);
         message.success(defaultLoginSuccessMessage);
-        // 设置 Token
-        await fetchUserInfo(msg.data);
+        // 设置用户信息
+        await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        history.push(urlParams.get('redirect') ?? '/');
         return;
       }
       console.log(msg);

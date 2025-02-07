@@ -4,7 +4,10 @@ import { getPubKey } from '@/services/ant-design-pro/api';
 async function initial() {
   const result = await getPubKey();
   if (result?.data) {
-    return new NodeRSA(result?.data);
+    console.log('RSA Key：', result.data);
+    const rsa = new NodeRSA({ key: result.data });
+    rsa.setOptions({ encryptionScheme: 'pkcs1' });
+    return rsa;
   } else {
     console.log('RSA Key 加载失败……');
   }

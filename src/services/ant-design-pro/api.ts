@@ -4,19 +4,17 @@ import { request } from '@umijs/max';
 
 /** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey.pub */
 export async function getPubKey(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/login/outLogin', {
+  return request<Record<string, any>>('/nip/auth/getPubKey.pub', {
     method: 'POST',
-    ...(options || {}),
+    ...(options ?? {}),
   });
 }
 
-/** 获取当前的用户 GET /api/currentUser */
+/** 获取当前用户信息 POST /nip/auth/onlineInfo.pub */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request<{
-    data: API.CurrentUser;
-  }>('/api/currentUser', {
-    method: 'GET',
-    ...(options || {}),
+  return request<API.CurrentUser>('/nip/auth/onlineInfo.do', {
+    method: 'POST',
+    ...(options ?? {}),
   });
 }
 
@@ -24,14 +22,14 @@ export async function currentUser(options?: { [key: string]: any }) {
 export async function outLogin(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/login/outLogin', {
     method: 'POST',
-    ...(options || {}),
+    ...(options ?? {}),
   });
 }
 
 /** 登录接口 POST /nip/auth/login.pub */
 export async function login(
   body: {
-    password: string;
+    password: string | undefined;
     name: string | undefined;
     autoLogin: boolean | undefined;
   },
@@ -43,7 +41,7 @@ export async function login(
       'Content-Type': 'application/json',
     },
     data: body,
-    ...(options || {}),
+    ...(options ?? {}),
   });
 }
 
@@ -51,7 +49,7 @@ export async function login(
 export async function getNotices(options?: { [key: string]: any }) {
   return request<API.NoticeIconList>('/api/notices', {
     method: 'GET',
-    ...(options || {}),
+    ...(options ?? {}),
   });
 }
 
@@ -71,7 +69,7 @@ export async function rule(
     params: {
       ...params,
     },
-    ...(options || {}),
+    ...(options ?? {}),
   });
 }
 
@@ -81,7 +79,7 @@ export async function updateRule(options?: { [key: string]: any }) {
     method: 'POST',
     data: {
       method: 'update',
-      ...(options || {}),
+      ...(options ?? {}),
     },
   });
 }
@@ -92,7 +90,7 @@ export async function addRule(options?: { [key: string]: any }) {
     method: 'POST',
     data: {
       method: 'post',
-      ...(options || {}),
+      ...(options ?? {}),
     },
   });
 }
@@ -103,7 +101,7 @@ export async function removeRule(options?: { [key: string]: any }) {
     method: 'POST',
     data: {
       method: 'delete',
-      ...(options || {}),
+      ...(options ?? {}),
     },
   });
 }

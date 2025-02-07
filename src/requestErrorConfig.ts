@@ -10,6 +10,7 @@ enum ErrorShowType {
   NOTIFICATION = 3,
   REDIRECT = 9,
 }
+
 // 与后端约定的响应数据格式
 interface ResponseStructure {
   success: boolean;
@@ -88,9 +89,14 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      // 拦截请求配置，头部增加 Token 值
+      const token = localStorage.getItem('user_token');
+      if (token) {
+        const authHeader = { Authorization: 'Bearer ' + token };
+        return { ...config, headers: authHeader };
+      } else {
+        return config;
+      }
     },
   ],
 
