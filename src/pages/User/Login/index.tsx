@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-// import { encrypt } from '@/common/crypto';
+import { encrypt } from '@/common/crypto';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -117,9 +117,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // TODO 密码加密
-      // const encryptPassword = encrypt(values.password);
-      const encryptPassword = values.password;
+      // 密码加密
+      const encryptPassword = encrypt(values.password);
       // 登录
       const msg = await login({
         name: values.username,
