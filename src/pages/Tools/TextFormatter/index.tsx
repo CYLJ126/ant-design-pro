@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Checkbox, Input, InputNumber, Select } from 'antd';
 import styles from './index.less';
 
@@ -153,14 +153,14 @@ function handleListChinese(listProp: ListProperty, text: string) {
 /**
  * 根据用户勾选的配置格式化文本
  * @param text 原文本
- * @param customProp 用户勾选的配置
+ * @param prop 用户勾选的配置
  * @param set 文本内容设置函数（useState属性）
  * @return TextPair 格式化后的文本对象
  */
-function handleText(text: string, customProp: CustomProperty, set: (textPair: TextPair) => void) {
-  let handledTextObj = { raw: text, formatted: handleChinese(customProp, text) };
+function handleText(text: string, prop: CustomProperty, set: (textPair: TextPair) => void) {
+  let handledTextObj = { raw: text, formatted: handleChinese(prop, text) };
   set(handledTextObj);
-  if (customProp.rewriteClipboard) {
+  if (prop.rewriteClipboard) {
     // 写入粘贴板
     navigator.clipboard.writeText(handledTextObj.formatted).then();
   }
@@ -170,24 +170,25 @@ function handleText(text: string, customProp: CustomProperty, set: (textPair: Te
 /**
  * 处理成列表型内容
  * @param text 原文本
- * @param customProp 用户勾选的配置
+ * @param prop 用户勾选的配置
  * @param listProp 用户勾选的列表配置
  * @param set 文本内容设置函数（useState 属性）
  */
 function handleListText(
   text: string,
-  customProp: CustomProperty,
+  prop: CustomProperty,
   listProp: ListProperty,
   set: (textPair: TextPair) => void,
 ) {
-  // 修改非列表下的参数
-  customProp.rewriteClipboard = false;
-  customProp.clearBreakLine = false;
-  // 先处理文本中的其他内容
-  let tempPair: TextPair = handleText(text, customProp, set);
+  // 先处理文本中的其他内容，因为在处理文本后，还要转化为列表，所以不能直接复制到粘贴板，也不能把换行去掉
+  let tempPair: TextPair = handleText(
+    text,
+    { ...prop, rewriteClipboard: false, clearBreakLine: false },
+    set,
+  );
   tempPair.formatted = handleListChinese(listProp, tempPair.formatted);
   set(tempPair);
-  if (customProp.rewriteClipboard) {
+  if (prop.rewriteClipboard) {
     // 写入粘贴板
     navigator.clipboard.writeText(tempPair.formatted).then();
   }
@@ -195,11 +196,12 @@ function handleListText(
 
 /**
  * 处理剪切板内容：拷贝剪贴板内容到文本框，处理后，再通过 {@link handleText} 填充到粘贴板
- * @param customProp 用户勾选的配置
+ * @param prop 用户勾选的配置
+ * @param listProp 用户勾选的列表配置
  * @param set 设置文本内容函数
  */
 async function handleClipboard(
-  customProp: CustomProperty,
+  prop: CustomProperty,
   listProp: ListProperty,
   set: (textPair: TextPair) => void,
 ) {
@@ -209,10 +211,10 @@ async function handleClipboard(
     return;
   }
   const clipboardText = await navigator.clipboard.readText();
-  if (customProp.handleList) {
-    handleListText(clipboardText, customProp, listProp, set);
+  if (prop.handleList) {
+    handleListText(clipboardText, prop, listProp, set);
   } else {
-    handleText(clipboardText, customProp, set);
+    handleText(clipboardText, prop, set);
   }
 }
 
@@ -231,7 +233,7 @@ const initialProp: CustomProperty = {
 const initialListProp: ListProperty = {
   removePrefixLength: 0,
   endWith: '；',
-  lastWithPeriod: true,
+  lastWithPeriod: false,
   serialMark: '1',
   withBlankLine: true,
 };
@@ -239,53 +241,56 @@ const initialListProp: ListProperty = {
 export default function TextFormatter() {
   // 文本处理
   const [textObj, setTextObj] = useState(initialText);
-  const [customProperty, setCustomProperty] = useState(initialProp);
-  const [initialFlag, setInitialFlag] = useState(true);
+  const [prop, setProp] = useState(initialProp);
   // 列表内容处理
   const [listProperty, setListProperty] = useState(initialListProp);
+  // 用 useRef 包裹一层，否则在监听事件中拿不到最新的值
+  const config = useRef({ prop: prop, listProp: listProperty });
+
+  useEffect(() => {
+    config.current = { prop: prop, listProp: listProperty };
+  }, [prop, listProperty]);
 
   function listChange(tempSingle: object) {
     let newProp = { ...listProperty, ...tempSingle };
     setListProperty(newProp);
-    handleListText(textObj.raw, customProperty, newProp, setTextObj);
+    setProp({ ...prop, handleList: true });
+    handleListText(textObj.raw, prop, newProp, setTextObj);
   }
 
   function change(tempSingle: object) {
-    setCustomProperty({ ...customProperty, ...tempSingle });
+    setProp({ ...prop, ...tempSingle });
     if (tempSingle.handleList) {
       listChange({});
     } else {
-      handleText(textObj.raw, { ...customProperty, ...tempSingle }, setTextObj);
+      handleText(textObj.raw, { ...prop, ...tempSingle }, setTextObj);
     }
   }
 
-  // 激活窗口
-  if (initialFlag) {
-    console.log('注册窗口激活事件---监听剪贴板');
-    window.addEventListener('focus', () => {
-      // TODO 监听不到handleList属性的变化
-      handleClipboard(customProperty, listProperty, setTextObj).then();
-      setCustomProperty({ ...customProperty, isHandleClipboard: false });
-    });
-    setInitialFlag(false);
+  function handleWindowFocus() {
+    const { prop, listProp } = { ...config.current };
+    handleClipboard(prop, listProp, setTextObj).then();
   }
+
+  // 设置窗口激活时的监听事件，从粘贴板复制内容到文本框中
+  useEffect(() => {
+    // 激活窗口
+    window.addEventListener('focus', handleWindowFocus);
+  }, []); // 空依赖数组，确保只在组件挂载和卸载时执行一次
 
   return (
     <div>
       <div>
         <Checkbox
           defaultChecked
-          checked={customProperty.zhOrEn}
+          checked={prop.zhOrEn}
           onChange={(e) => {
             change({ zhOrEn: e.target.checked });
           }}
         >
           中文
         </Checkbox>
-        <Checkbox
-          checked={!customProperty.zhOrEn}
-          onChange={(e) => change({ zhOrEn: !e.target.checked })}
-        >
+        <Checkbox checked={!prop.zhOrEn} onChange={(e) => change({ zhOrEn: !e.target.checked })}>
           英文
         </Checkbox>
         <Checkbox
@@ -311,7 +316,7 @@ export default function TextFormatter() {
       </div>
       <div style={{ marginTop: '10px' }}>
         <Checkbox
-          value={customProperty.handleList}
+          checked={prop.handleList}
           onChange={(e) => change({ handleList: e.target.checked })}
         >
           列表处理
@@ -346,16 +351,10 @@ export default function TextFormatter() {
           style={{ width: 40, marginRight: '10px' }}
           onChange={(e) => listChange({ endWith: e.target.value })}
         />
-        <Checkbox
-          defaultChecked
-          onChange={(e) => listChange({ rewriteClipboard: e.target.checked })}
-        >
+        <Checkbox defaultChecked onChange={(e) => listChange({ withBlankLine: e.target.checked })}>
           添加空行
         </Checkbox>
-        <Checkbox
-          defaultChecked
-          onChange={(e): void => listChange({ lastWithPeriod: e.target.checked })}
-        >
+        <Checkbox onChange={(e): void => listChange({ lastWithPeriod: e.target.checked })}>
           句点结尾
         </Checkbox>
       </div>
@@ -363,7 +362,14 @@ export default function TextFormatter() {
         showCount
         className={styles.textArea}
         value={textObj.raw}
-        onChange={(e) => handleText(e.target.value, customProperty, setTextObj)}
+        onChange={(e) => {
+          const { prop, listProp } = { ...config.current };
+          if (prop.handleList) {
+            handleListText(e.target.value, prop, listProp, setTextObj);
+          } else {
+            handleText(e.target.value, prop, setTextObj);
+          }
+        }}
       />
       <Input.TextArea showCount className={styles.textArea} value={textObj.formatted} />
     </div>
