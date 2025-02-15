@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from 'antd';
 import { PlusSquareOutlined, SolutionOutlined } from '@ant-design/icons';
-import styles from './index.less';
+import styles from './steps.less';
 
 function save(index: number, content: string) {
   console.log('下标：' + index + '，内容：' + content);
@@ -12,11 +12,10 @@ function Step({ index, initialContent, addStep }) {
   return (
     <Input
       size="small"
-      className={styles.itemStep}
       addonBefore={'Step' + (index + 1)}
       addonAfter={
         <div>
-          <PlusSquareOutlined onClick={() => addStep(index)} />
+          <PlusSquareOutlined onClick={() => addStep(index)} style={{ marginRight: '3px' }} />
           <SolutionOutlined />
         </div>
       }
@@ -54,11 +53,11 @@ export default function Steps({ stepContents }) {
   }
 
   return (
-    <ul>
+    <ul className={styles.wrapper}>
       {steps
         .sort((a, b) => a.key < b.key)
         .map((item) => (
-          <li key={item.uuid}>
+          <li key={item.uuid} className={styles.itemStep}>
             <Step index={item.key} initialContent={item.content} addStep={addStep} />
           </li>
         ))}

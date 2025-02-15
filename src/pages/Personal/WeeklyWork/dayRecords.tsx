@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Col, Row, InputNumber } from 'antd';
+import { Col, InputNumber, Row } from 'antd';
 import styles from './index.less';
 
-// interface DayRecord {
-//   fatherId: number,
-//   dayOfTarget: number,
-//   dayOfMonth: number,
-//   plannedProgress: number,
-//   actualProgress: number,
-//   score: number,
-// }
+export interface DayContent {
+  fatherId: number;
+  dayOfTarget: number;
+  dayOfMonth: number;
+  plannedProgress: number;
+  actualProgress: number;
+  score: number;
+}
 
 function save(record) {
   console.log('数据：' + JSON.stringify(record));
@@ -22,6 +22,8 @@ function Day({ recordParam }) {
     <>
       <InputNumber
         className={styles.dayProgress}
+        min={0}
+        max={100}
         value={record.plannedProgress}
         onChange={(value) => setRecord({ ...record, plannedProgress: value })}
         onBlur={() => save(record)}
@@ -37,6 +39,7 @@ function Day({ recordParam }) {
       />
       <br />
       <InputNumber
+        className={styles.dayProgress}
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}
@@ -53,8 +56,8 @@ export default function DayRecords({ dayRecords }) {
       {dayRecords
         .sort((a, b) => a.dayOfTarget < b.dayOfTarget)
         .map((day) => (
-          <Col span={1} key={day.uuid}>
-            <Day recordParam={day} />
+          <Col span={3} key={day.uuid}>
+            <Day recordParam={day} className={styles.dayProgress} />
           </Col>
         ))}
     </Row>

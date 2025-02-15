@@ -1,5 +1,43 @@
 import Steps from './steps';
-import DayRecords from './dayRecords';
+import DayRecords, { DayContent } from './dayRecords';
+import Head, { HeadContent } from './head';
+import { Col, Row } from 'antd';
+import styles from './index.less';
+
+function getWorks(): HeadContent[] {
+  return [
+    {
+      id: 1,
+      themeShow: '工作',
+      itemShow: '技术产品负责人',
+      target: '完成产品场景整理',
+      scoreShow: '8.5分',
+      proportion: 65,
+      startTime: '01/24',
+      endTime: '02/24',
+    },
+    {
+      id: 2,
+      themeShow: '工作',
+      itemShow: '技术产品负责人',
+      target: '完成产品场景整理',
+      scoreShow: '8.0分',
+      proportion: 65,
+      startTime: '02/25',
+      endTime: '04/24',
+    },
+    {
+      id: 3,
+      themeShow: '工作',
+      itemShow: '技术产品负责人',
+      target: '完成产品场景整理',
+      scoreShow: '9.0分',
+      proportion: 65,
+      startTime: '01/24',
+      endTime: '02/24',
+    },
+  ];
+}
 
 function getSteps() {
   return [
@@ -12,7 +50,7 @@ function getSteps() {
   ];
 }
 
-function getData() {
+function getDaysData(): DayContent[] {
   return [
     {
       fatherId: 1,
@@ -68,7 +106,7 @@ function getData() {
       dayOfMonth: 15,
       plannedProgress: 100,
       actualProgress: 100,
-      score: null,
+      score: 0,
     },
   ];
 }
@@ -76,9 +114,21 @@ function getData() {
 export default function WeeklyWork() {
   return (
     <div>
-      <h1>WeeklyWork</h1>
-      <Steps stepContents={getSteps()} />
-      <DayRecords dayRecords={getData()} />
+      {getWorks().map((work) => {
+        return (
+          <Row key={work.id}>
+            <Col span={5}>
+              <Head headParam={work} />
+            </Col>
+            <Col span={10} className={styles.stepCol}>
+              <Steps stepContents={getSteps()} />
+            </Col>
+            <Col span={8}>
+              <DayRecords dayRecords={getDaysData()} />
+            </Col>
+          </Row>
+        );
+      })}
     </div>
   );
 }
