@@ -1,4 +1,5 @@
 import NodeRSA from 'node-rsa';
+import * as crypto from 'crypto';
 import { getPubKey } from '@/services/ant-design-pro/api';
 
 async function initial() {
@@ -20,4 +21,8 @@ const key: NodeRSA = await initial();
  */
 export function encrypt(text) {
   return key.encrypt(text, 'base64');
+}
+
+export function uuid(size: number) {
+  return crypto.randomFillSync(Buffer.alloc(size)).toString('hex');
 }
