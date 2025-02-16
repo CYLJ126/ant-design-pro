@@ -17,8 +17,8 @@ function getWorks(): HeadContent[] {
   return [
     {
       id: 1,
-      themeShow: '工作',
-      itemShow: '技术产品负责人',
+      themeId: 1,
+      itemId: 8,
       target: '完成产品场景整理',
       scoreShow: '8.5分',
       proportion: 65,
@@ -27,8 +27,8 @@ function getWorks(): HeadContent[] {
     },
     {
       id: 2,
-      themeShow: '工作',
-      itemShow: '技术产品负责人',
+      themeId: 1,
+      itemId: 8,
       target: '完成产品场景整理',
       scoreShow: '8.0分',
       proportion: 65,
@@ -37,8 +37,8 @@ function getWorks(): HeadContent[] {
     },
     {
       id: 3,
-      themeShow: '工作',
-      itemShow: '技术产品负责人',
+      themeId: 1,
+      itemId: 8,
       target: '完成产品场景整理',
       scoreShow: '9.0分',
       proportion: 65,
@@ -47,8 +47,8 @@ function getWorks(): HeadContent[] {
     },
     {
       id: 4,
-      themeShow: '工作',
-      itemShow: '技术产品负责人',
+      themeId: 1,
+      itemId: 8,
       target: '完成产品场景整理',
       scoreShow: '9.0分',
       proportion: 65,
@@ -57,8 +57,8 @@ function getWorks(): HeadContent[] {
     },
     {
       id: 5,
-      themeShow: '工作',
-      itemShow: '技术产品负责人',
+      themeId: 1,
+      itemId: 8,
       target: '完成产品场景整理',
       scoreShow: '9.0分',
       proportion: 65,
