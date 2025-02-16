@@ -154,7 +154,7 @@ export default function WeeklyWork() {
             <Col span={5}>
               <Head headParam={work} />
             </Col>
-            <Col span={11} className={styles.stepCol}>
+            <Col span={12} className={styles.stepCol}>
               <Row>
                 <Col span={23}>
                   <Steps stepContents={getSteps()} />

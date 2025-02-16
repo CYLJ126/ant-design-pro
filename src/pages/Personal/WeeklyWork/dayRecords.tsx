@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Col, InputNumber, Row } from 'antd';
-import styles from './index.less';
+import { InputNumber, Row } from 'antd';
+import styles from './dayRecords.less';
 
 export interface DayContent {
   fatherId: number;
@@ -19,11 +19,12 @@ function Day({ recordParam }) {
   const [record, setRecord] = useState(recordParam);
 
   return (
-    <>
+    <div>
       <InputNumber
-        className={styles.dayProgress}
+        step={5}
         min={0}
         max={100}
+        addonAfter="%"
         value={record.plannedProgress}
         onChange={(value) => setRecord({ ...record, plannedProgress: value })}
         onBlur={() => save(record)}
@@ -31,7 +32,10 @@ function Day({ recordParam }) {
       />
       <br />
       <InputNumber
-        className={styles.dayProgress}
+        step={5}
+        min={0}
+        max={100}
+        addonAfter="%"
         value={record.actualProgress}
         onChange={(value) => setRecord({ ...record, actualProgress: value })}
         onBlur={() => save(record)}
@@ -39,26 +43,27 @@ function Day({ recordParam }) {
       />
       <br />
       <InputNumber
-        className={styles.dayProgress}
+        step={1}
+        min={0}
+        max={10}
+        addonAfter="分"
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}
         onPressEnter={() => save(record)}
       />
       <br />
-    </>
+    </div>
   );
 }
 
 export default function DayRecords({ dayRecords }) {
   return (
-    <Row>
+    <Row className={styles.dayProgress}>
       {dayRecords
         .sort((a, b) => a.dayOfTarget < b.dayOfTarget)
         .map((day) => (
-          <Col span={3} key={day.uuid}>
-            <Day recordParam={day} className={styles.dayProgress} />
-          </Col>
+          <Day key={day.uuid} recordParam={day} />
         ))}
     </Row>
   );
