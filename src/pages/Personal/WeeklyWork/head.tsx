@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, InputNumber, Row, Select } from 'antd';
+import { Col, DatePicker, Input, Progress, Row, Select } from 'antd';
 import styles from './head.less';
 import { getTags } from '@/services/ant-design-pro/base';
+import locale from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
+// 格式化时间为本地时间
+import utc from 'dayjs-plugin-utc';
+import 'dayjs/locale/zh-cn';
 
 export interface HeadContent {
   id: number;
   themeId: number;
   itemId: number;
   target: string;
-  scoreShow: string;
+  score: number;
   proportion: number;
   startTime: string;
   endTime: string;
@@ -21,6 +26,10 @@ async function getSubTags(param) {
       return { value: item.id, label: item.name };
     }) || []
   );
+}
+
+function saveHead(param) {
+  console.log('保存内容：' + JSON.stringify(param));
 }
 
 export default function Head({ headParam }) {
@@ -59,19 +68,11 @@ export default function Head({ headParam }) {
             />
           </Col>
           <Col span={12}>
-            <Row>
-              <Input value={head.scoreShow} className={styles.score} />
+            <Row style={{ marginBottom: '5px' }}>
+              <Input value={'' + head.score + '分'} className={styles.score} />
             </Row>
             <Row>
-              <InputNumber
-                value={head.proportion}
-                step={5}
-                min={0}
-                max={100}
-                addonAfter="%"
-                className={styles.proportion}
-                onChange={(value) => setHead({ ...head, proportion: value })}
-              />
+              <Input value={head.proportion + '%'} className={styles.score} />
             </Row>
           </Col>
         </Row>
@@ -88,10 +89,36 @@ export default function Head({ headParam }) {
       </Col>
       <Col span={13}>
         <Row>
-          <span className={styles.progress}>01/24 - 02/23</span>
+          <div className={styles.dateAndProgress}>
+            <Progress
+              percent={30}
+              showInfo={false}
+              strokeColor="#81d3f8"
+              trailColor="#c6c6c6"
+              className={styles.progress}
+            />
+            <DatePicker.RangePicker
+              className={styles.date}
+              placeholder={['开始', '结束']}
+              format="MM/DD"
+              locale={locale}
+              defaultValue={[
+                dayjs(head.startTime, 'YYYY/MM/DD'),
+                dayjs(head.endTime, 'YYYY/MM/DD'),
+              ]}
+              onChange={(date) => {
+                dayjs.extend(utc);
+                saveHead({
+                  ...head,
+                  startTime: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
+                  endTime: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
+                });
+              }}
+            />
+          </div>
         </Row>
         <Row>
-          <Input value={head.target} className={styles.target} />
+          <Input.TextArea value={head.target} className={styles.target} />
         </Row>
       </Col>
     </Row>
