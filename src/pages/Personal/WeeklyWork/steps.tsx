@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Input } from 'antd';
-import { PlusSquareOutlined, SolutionOutlined } from '@ant-design/icons';
+import { Col, Input, Row } from 'antd';
+import {
+  ExportOutlined,
+  FastBackwardOutlined,
+  FastForwardOutlined,
+  FullscreenExitOutlined,
+  FullscreenOutlined,
+  PlusSquareOutlined,
+  SolutionOutlined,
+} from '@ant-design/icons';
 import styles from './steps.less';
 
 function save(index: number, content: string) {
@@ -29,6 +37,18 @@ function Step({ index, initialContent, addStep }) {
 
 export default function Steps({ stepContents }) {
   const [steps, setSteps] = useState(stepContents);
+  // true-收起；false-展开
+  const [fold, setFold] = useState(true);
+  // steps 高度，收起时为 115px，展开时为 步骤数 * 30
+  const [height, setHeight] = useState(fold ? 115 : stepContents.length * 30);
+  const toggleFold = () => {
+    setFold(!fold);
+    if (steps.length < 5 || !fold) {
+      setHeight(115);
+    } else {
+      setHeight(steps.length * 30);
+    }
+  };
 
   /**
    * 在指定步骤后面添加一行新步骤
@@ -50,17 +70,37 @@ export default function Steps({ stepContents }) {
       }
     }
     setSteps(tempSteps);
+    if (!fold) {
+      setHeight(tempSteps.length * 30);
+    }
   }
 
   return (
-    <ul className={styles.wrapper}>
-      {steps
-        .sort((a, b) => a.key < b.key)
-        .map((item) => (
-          <li key={item.uuid} className={styles.itemStep}>
-            <Step index={item.key} initialContent={item.content} addStep={addStep} />
-          </li>
-        ))}
-    </ul>
+    <Row>
+      <Col span={23}>
+        <ul className={styles.wrapper} style={{ height: height + 'px' }}>
+          {steps
+            .sort((a, b) => a.key < b.key)
+            .map((item) => (
+              <li key={item.uuid} className={styles.itemStep}>
+                <Step index={item.key} initialContent={item.content} addStep={addStep} />
+              </li>
+            ))}
+        </ul>
+      </Col>
+      <Col span={1} className={styles.myIconCol}>
+        <FastBackwardOutlined className={styles.myIconJump} />
+        <br />
+        <FastForwardOutlined className={styles.myIconJump} />
+        <br />
+        <ExportOutlined className={styles.myIconContinue} />
+        <br />
+        {fold ? (
+          <FullscreenOutlined onClick={toggleFold} className={styles.myIconFold} />
+        ) : (
+          <FullscreenExitOutlined onClick={toggleFold} className={styles.myIconFold} />
+        )}
+      </Col>
+    </Row>
   );
 }

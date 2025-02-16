@@ -1,16 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Steps from './steps';
 import DayRecords, { DayContent } from './dayRecords';
 import Head, { HeadContent } from './head';
 import { Col, Row } from 'antd';
 // 图标依次为：跳转到每日计划，跳转到每月计划，展开，收起，事项推迟到下周
-import {
-  ExportOutlined,
-  FastBackwardOutlined,
-  FastForwardOutlined,
-  FullscreenExitOutlined,
-  FullscreenOutlined,
-} from '@ant-design/icons';
 import styles from './index.less';
 
 function getWorks(): HeadContent[] {
@@ -141,11 +134,6 @@ function getDaysData(): DayContent[] {
 }
 
 export default function WeeklyWork() {
-  // true-收起；false-展开
-  const [fold, setFold] = useState(true);
-  const toggleFold = () => {
-    setFold(!fold);
-  };
   return (
     <div>
       {getWorks().map((work) => {
@@ -155,24 +143,7 @@ export default function WeeklyWork() {
               <Head headParam={work} />
             </Col>
             <Col span={12} className={styles.stepCol}>
-              <Row>
-                <Col span={23}>
-                  <Steps stepContents={getSteps()} />
-                </Col>
-                <Col span={1} className={styles.myIconCol}>
-                  <FastBackwardOutlined className={styles.myIconJump} />
-                  <br />
-                  <FastForwardOutlined className={styles.myIconJump} />
-                  <br />
-                  <ExportOutlined className={styles.myIconContinue} />
-                  <br />
-                  {fold ? (
-                    <FullscreenOutlined onClick={toggleFold} className={styles.myIconFold} />
-                  ) : (
-                    <FullscreenExitOutlined onClick={toggleFold} className={styles.myIconFold} />
-                  )}
-                </Col>
-              </Row>
+              <Steps stepContents={getSteps()} />
             </Col>
             <Col span={7}>
               <DayRecords dayRecords={getDaysData()} />
