@@ -1,10 +1,34 @@
 import React from 'react';
 import Steps from './steps';
 import DayRecords, { DayContent } from './dayRecords';
-import Head, { HeadContent } from './head';
+import HeadInfo, { HeadContent } from './headInfo';
+import HeaderButtons from './headerButtons';
+import HeaderDate from './HeaderDate';
 import { Col, Row } from 'antd';
 // 图标依次为：跳转到每日计划，跳转到每月计划，展开，收起，事项推迟到下周
 import styles from './index.less';
+
+function getWeekInfo() {
+  return [
+    { dayOfWeek: 1, dayOfDate: '02/17' },
+    { dayOfWeek: 2, dayOfDate: '02/18' },
+    { dayOfWeek: 3, dayOfDate: '02/19' },
+    { dayOfWeek: 4, dayOfDate: '02/20' },
+    { dayOfWeek: 5, dayOfDate: '02/21' },
+    { dayOfWeek: 6, dayOfDate: '02/22' },
+    { dayOfWeek: 7, dayOfDate: '02/23' },
+  ];
+}
+
+function getWeekStatistics() {
+  return {
+    weekId: 9,
+    score: 8.5,
+    completed: 3,
+    overdue: 1,
+    todo: 5,
+  };
+}
 
 function getWorks(): HeadContent[] {
   return [
@@ -133,14 +157,27 @@ function getDaysData(): DayContent[] {
   ];
 }
 
+function addItem() {
+  console.log('添加新项');
+}
+
 export default function WeeklyWork() {
   return (
     <div>
+      <Row>
+        <Col span={17}>
+          <HeaderButtons weekInfo={getWeekStatistics()} addItem={addItem} />
+        </Col>
+        <Col span={7}>
+          <HeaderDate week={getWeekInfo()} />
+        </Col>
+      </Row>
+      <hr className={styles.headerLine} />
       {getWorks().map((work) => {
         return (
           <Row key={work.id}>
             <Col span={5}>
-              <Head headParam={work} />
+              <HeadInfo headParam={work} />
             </Col>
             <Col span={12} className={styles.stepCol}>
               <Steps stepContents={getSteps()} />

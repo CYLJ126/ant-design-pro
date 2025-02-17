@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, DatePicker, Input, Progress, Row, Select } from 'antd';
-import styles from './head.less';
+import styles from './headInfo.less';
 import { getTags } from '@/services/ant-design-pro/base';
 import locale from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
@@ -32,7 +32,7 @@ function saveHead(param) {
   console.log('保存内容：' + JSON.stringify(param));
 }
 
-export default function Head({ headParam }) {
+export default function HeadInfo({ headParam }) {
   const [head, setHead] = useState(headParam);
   const [themeOptions, setThemeOptions] = useState([]);
   const [itemOptions, setItemOptions] = useState([]);
