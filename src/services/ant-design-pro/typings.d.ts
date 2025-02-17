@@ -98,4 +98,13 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
+
+  type ResultContext = {
+    data?: any;
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+    desc?: string;
+    code?: string;
+  };
 }

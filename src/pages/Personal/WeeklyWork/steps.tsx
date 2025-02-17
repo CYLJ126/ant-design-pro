@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Input, Row } from 'antd';
 import {
   ExportOutlined,
@@ -10,6 +10,7 @@ import {
   SolutionOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
+import { getSteps } from '@/services/ant-design-pro/dailyWork';
 
 function save(index: number, content: string) {
   console.log('下标：' + index + '，内容：' + content);
@@ -35,12 +36,19 @@ function Step({ index, initialContent, addStep }) {
   );
 }
 
-export default function Steps({ stepContents }) {
-  const [steps, setSteps] = useState(stepContents);
+export default function Steps({ itemId }) {
+  const [steps, setSteps] = useState();
+
+  useEffect(() => {
+    getSteps(itemId).then((result) => {
+      setSteps(result);
+    });
+  }, [itemId]);
+
   // true-收起；false-展开
   const [fold, setFold] = useState(true);
   // steps 高度，收起时为 115px，展开时为 步骤数 * 30
-  const [height, setHeight] = useState(fold ? 115 : stepContents.length * 30);
+  const [height, setHeight] = useState(fold ? 115 : steps.length * 30);
   const toggleFold = () => {
     setFold(!fold);
     if (steps.length < 5 || !fold) {

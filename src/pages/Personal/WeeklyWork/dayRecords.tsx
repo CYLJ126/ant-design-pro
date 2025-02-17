@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
+import { getDaysData } from '@/services/ant-design-pro/dailyWork';
 
 export interface DayContent {
   fatherId: number;
@@ -57,7 +58,15 @@ function Day({ recordParam }) {
   );
 }
 
-export default function DayRecords({ dayRecords }) {
+export default function DayRecords({ itemId }) {
+  const [dayRecords, setDayRecords] = useState();
+
+  useEffect(() => {
+    getDaysData(itemId).then((result) => {
+      setDayRecords(result);
+    });
+  }, [itemId]);
+
   return (
     <Row className={styles.dayProgress}>
       {dayRecords

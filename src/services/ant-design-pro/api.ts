@@ -1,6 +1,34 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { message } from 'antd';
+
+/**
+ * jsonPost 请求后端
+ * 如果是列表请求，则需要新加一个方法，以处理列表统计数据，如总数等
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function jsonPost(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>(path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((resultContext) => {
+    if (resultContext.success) {
+      return resultContext.data;
+    } else {
+      const errMsg = resultContext.desc?.subString(0, 40);
+      message.error('错误码【`${resultContext.code}`】错误信息【`${errMsg}`】').then((r) => {});
+    }
+  });
+}
 
 /** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey.pub */
 export async function getPubKey(options?: { [key: string]: any }) {
