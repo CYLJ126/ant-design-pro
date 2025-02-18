@@ -59,7 +59,7 @@ function Day({ recordParam }) {
 }
 
 export default function DayRecords({ itemId }) {
-  const [dayRecords, setDayRecords] = useState();
+  const [dayRecords, setDayRecords] = useState([]);
 
   useEffect(() => {
     getDaysData(itemId).then((result) => {

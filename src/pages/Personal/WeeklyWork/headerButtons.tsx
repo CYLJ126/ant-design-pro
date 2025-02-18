@@ -1,6 +1,6 @@
 import React from 'react';
-import { Input } from 'antd';
-import { PlusSquareOutlined, BarChartOutlined } from '@ant-design/icons';
+import { Row } from 'antd';
+import { BarChartOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import styles from './headerButtons.less';
 
 /**
@@ -10,14 +10,20 @@ function showWeeklyStatistics() {}
 
 export default function HeaderButtons({ weekInfo, addItem }) {
   return (
-    <div>
-      <Input value={'第' + weekInfo.weekId + '周'} className={styles.whichWeek} />
-      <Input value={'' + weekInfo.score + '分'} className={styles.weeklyScore} />
-      <Input addonBefore="完成项" value={weekInfo.completed} className={styles.completedItems} />
-      <Input addonBefore="待办项" value={weekInfo.todo} className={styles.todoItems} />
-      <Input addonBefore="逾期项" value={weekInfo.overdue} className={styles.overdueItems} />
-      <PlusSquareOutlined onClick={addItem} />
-      <BarChartOutlined onClick={showWeeklyStatistics} />
-    </div>
+    <Row>
+      <span className={styles.whichWeek}>{'第' + weekInfo.weekId + '周'}</span>
+      <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
+      <span className={`${styles.itemCount} ${styles.completedItems}`}>
+        {'完成项 - ' + weekInfo.completed}
+      </span>
+      <span className={`${styles.itemCount} ${styles.todoItems}`}>
+        {'待办项 - ' + weekInfo.todo}
+      </span>
+      <span className={`${styles.itemCount} ${styles.overdueItems}`}>
+        {'逾期项 - ' + weekInfo.overdue}
+      </span>
+      <PlusSquareOutlined onClick={addItem} className={styles.plusItem} />
+      <BarChartOutlined onClick={showWeeklyStatistics} className={styles.statistics} />
+    </Row>
   );
 }

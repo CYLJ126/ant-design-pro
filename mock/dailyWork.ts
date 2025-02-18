@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
 
 export default {
-  'POST /dw/weeklyDays/weekDateHeader': (req: Request, res: Response) => {
+  'POST /dw/weeklyDays/weekDays': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
       data: [
-        { dayOfWeek: 1, dayOfDate: '02/17' },
-        { dayOfWeek: 2, dayOfDate: '02/18' },
-        { dayOfWeek: 3, dayOfDate: '02/19' },
-        { dayOfWeek: 4, dayOfDate: '02/20' },
-        { dayOfWeek: 5, dayOfDate: '02/21' },
-        { dayOfWeek: 6, dayOfDate: '02/22' },
-        { dayOfWeek: 7, dayOfDate: '02/23' },
+        { dayOfWeek: '周一', dayOfDate: '02/17' },
+        { dayOfWeek: '周二', dayOfDate: '02/18' },
+        { dayOfWeek: '周三', dayOfDate: '02/19' },
+        { dayOfWeek: '周四', dayOfDate: '02/20' },
+        { dayOfWeek: '周五', dayOfDate: '02/21' },
+        { dayOfWeek: '周六', dayOfDate: '02/22' },
+        { dayOfWeek: '周日', dayOfDate: '02/23' },
       ],
     });
   },
@@ -23,13 +23,13 @@ export default {
       data: {
         weekId: 49,
         score: 8.5,
-        completed: 3,
-        overdue: 1,
-        todo: 5,
+        completed: 35,
+        overdue: 87,
+        todo: 98,
       },
     });
   },
-  'POST /dw/weeklyWork/list': (req: Request, res: Response) => {
+  'POST /dw/weeklyWork/listWorks': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -145,7 +145,7 @@ export default {
       ],
     });
   },
-  'POST /dw/weeklyDays/list': (req: Request, res: Response) => {
+  'POST /dw/weeklyDays/listWeeklyDays': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -209,7 +209,7 @@ export default {
       ],
     });
   },
-  'POST /dw/steps/list': (req: Request, res: Response) => {
+  'POST /dw/steps/listSteps': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,

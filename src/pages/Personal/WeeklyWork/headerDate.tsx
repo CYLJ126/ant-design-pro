@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Input } from 'antd';
 import styles from './headerDate.less';
-import { getDaysData } from '@/services/ant-design-pro/dailyWork';
 
-function Day(day) {
+function Day({ day }) {
   return (
-    <div>
+    <div style={{ marginRight: '5px' }}>
       <Input value={day.dayOfWeek} className={styles.dayOfWeek} />
       <br />
       <Input value={day.dayOfDate} className={styles.dayOfDate} />
@@ -13,18 +12,11 @@ function Day(day) {
   );
 }
 
-export default function HeaderDate({ weekId }) {
-  const [days, setDays] = useState([]);
-
-  useEffect(() => {
-    getDaysData(weekId).then((result) => {
-      setDays(result);
-    });
-  }, [weekId]);
+export default function HeaderDate({ weekDays }) {
   return (
     <div>
-      {days.map((item) => (
-        <Day key={item.dayOfWeek} day={item} />
+      {weekDays.map((item) => (
+        <Day day={item} key={item.dayOfWeek} />
       ))}
     </div>
   );

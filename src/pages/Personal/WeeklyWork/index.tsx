@@ -9,7 +9,7 @@ import { Col, Row } from 'antd';
 import styles from './index.less';
 import {
   getCurrentWeekWorks,
-  getWeekDateHeader,
+  getWeekDays,
   getWeekStatistics,
 } from '@/services/ant-design-pro/dailyWork';
 
@@ -18,8 +18,9 @@ function addItem() {
 }
 
 export default function WeeklyWork() {
-  const [weekDateHeader, setWeekDateHeader] = useState();
+  const [weekDays, setWeekDays] = useState([]);
   const [works, setWorks] = useState([]);
+  const [statistics, setStatistics] = useState([]);
 
   useEffect(() => {
     getCurrentWeekWorks().then((result) => {
@@ -28,19 +29,20 @@ export default function WeeklyWork() {
   }, []);
 
   useEffect(() => {
-    getWeekDateHeader().then((result) => {
-      setWeekDateHeader(result);
-    });
+    // 加载表头——周统计信息
+    getWeekStatistics().then((result) => setStatistics(result));
+    // 加载表头——本周每天对应的日期
+    getWeekDays().then((result) => setWeekDays(result));
   }, [works]);
 
   return (
     <div>
       <Row>
         <Col span={17}>
-          <HeaderButtons weekInfo={getWeekStatistics()} addItem={addItem} />
+          <HeaderButtons weekInfo={statistics} addItem={addItem} />
         </Col>
         <Col span={7}>
-          <HeaderDate weekId={weekDateHeader?.id} />
+          <HeaderDate weekDays={weekDays} />
         </Col>
       </Row>
       <hr className={styles.headerLine} />

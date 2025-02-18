@@ -37,7 +37,7 @@ function Step({ index, initialContent, addStep }) {
 }
 
 export default function Steps({ itemId }) {
-  const [steps, setSteps] = useState();
+  const [steps, setSteps] = useState([]);
 
   useEffect(() => {
     getSteps(itemId).then((result) => {

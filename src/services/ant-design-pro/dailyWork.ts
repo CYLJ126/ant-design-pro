@@ -6,8 +6,8 @@ import { jsonPost } from './api';
  *
  * @param weekId 第几周
  */
-export async function getWeekDateHeader(weekId?: number) {
-  return jsonPost('/dw/weeklyDays/weekDateHeader', { weekId: weekId });
+export async function getWeekDays(weekId?: number) {
+  return jsonPost('/dw/weeklyDays/weekDays', { weekId: weekId });
 }
 
 /**
@@ -16,7 +16,7 @@ export async function getWeekDateHeader(weekId?: number) {
  * @param workId 第几周
  */
 export async function getDaysData(workId?: number) {
-  return jsonPost('/dw/weeklyDays/list', { workId: workId });
+  return jsonPost('/dw/weeklyDays/listWeeklyDays', { workId: workId });
 }
 
 /**  ----------------- WeeklyDaysController end ----------------- */
@@ -38,7 +38,7 @@ export async function getWeekStatistics(weekId?: number) {
  * @param weekId 第几周
  */
 export async function getWorks(weekId?: number) {
-  return jsonPost('/dw/weeklyWork/list', { weekId: weekId });
+  return jsonPost('/dw/weeklyWork/listWorks', { weekId: weekId });
 }
 
 /**
@@ -59,7 +59,7 @@ export async function getCurrentWeekWorks() {
  * @param fatherId 事项 id
  */
 export async function getSteps(fatherId?: number) {
-  return jsonPost('/dw/steps/list', { fatherId: fatherId });
+  return jsonPost('/dw/steps/listSteps', { fatherId: fatherId });
 }
 
 /**  ----------------- StepsController end ----------------- */
