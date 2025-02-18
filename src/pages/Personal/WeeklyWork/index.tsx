@@ -46,21 +46,23 @@ export default function WeeklyWork() {
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      {works.map((work) => {
-        return (
-          <Row key={work.id}>
-            <Col span={5}>
-              <HeadInfo headParam={work} />
-            </Col>
-            <Col span={12} className={styles.stepCol}>
-              <Steps itemId={work.id} />
-            </Col>
-            <Col span={7}>
-              <DayRecords itemId={work.id} />
-            </Col>
-          </Row>
-        );
-      })}
+      <div className={styles.weeklyData}>
+        {works.map((work) => {
+          return (
+            <Row key={work.id}>
+              <Col span={5}>
+                <HeadInfo headParam={work} />
+              </Col>
+              <Col span={12} className={styles.stepCol}>
+                <Steps itemId={work.id} />
+              </Col>
+              <Col span={7}>
+                <DayRecords itemId={work.id} />
+              </Col>
+            </Row>
+          );
+        })}
+      </div>
     </div>
   );
 }
