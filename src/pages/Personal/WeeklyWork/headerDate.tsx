@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input, Row } from 'antd';
 import styles from './headerDate.less';
 
 function Day({ day }) {
@@ -14,10 +14,10 @@ function Day({ day }) {
 
 export default function HeaderDate({ weekDays }) {
   return (
-    <div>
+    <Row>
       {weekDays.map((item) => (
         <Day day={item} key={item.dayOfWeek} />
       ))}
-    </div>
+    </Row>
   );
 }
