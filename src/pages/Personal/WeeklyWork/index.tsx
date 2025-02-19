@@ -35,6 +35,9 @@ export default function WeeklyWork() {
     getWeekDays().then((result) => setWeekDays(result));
   }, [works]);
 
+  // 事项列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）
+  const worksHeight = window.innerHeight - 43 - 15 - 70 + 'px';
+
   return (
     <div>
       <Row>
@@ -46,7 +49,7 @@ export default function WeeklyWork() {
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      <div className={styles.weeklyData}>
+      <div className={styles.weeklyData} style={{ height: worksHeight }}>
         {works.map((work) => {
           return (
             <Row key={work.id}>
