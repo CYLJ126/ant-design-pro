@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Col, Input, Row } from 'antd';
 import {
   ExportOutlined,
@@ -46,6 +47,7 @@ function Step({ index, initialContent, addOrDeleteStep }) {
 
 export default function Steps({ workId, deleteWork }) {
   const [steps, setSteps] = useState([]);
+  const navigateTo = useNavigate();
 
   useEffect(() => {
     getSteps(workId).then((result) => {
@@ -107,7 +109,7 @@ export default function Steps({ workId, deleteWork }) {
       <Col span={23}>
         <ul className={styles.wrapper} style={{ height: height + 'px' }}>
           {steps
-            .sort((a, b) => a.key < b.key)
+            .sort((a, b) => a.key - b.key)
             .map((item) => (
               <li key={item.uuid} className={styles.itemStep}>
                 <Step
@@ -120,9 +122,19 @@ export default function Steps({ workId, deleteWork }) {
         </ul>
       </Col>
       <Col span={1} className={styles.myIconCol}>
-        <FastBackwardOutlined className={styles.myIconJump} />
+        <FastBackwardOutlined
+          className={styles.myIconJump}
+          onClick={() => {
+            navigateTo('/personal/daily-work');
+          }}
+        />
         <br />
-        <FastForwardOutlined className={styles.myIconJump} />
+        <FastForwardOutlined
+          className={styles.myIconJump}
+          onClick={() => {
+            navigateTo('/personal/monthly-work');
+          }}
+        />
         <br />
         <ExportOutlined className={styles.myIconContinue} />
         <br />
