@@ -58,19 +58,19 @@ function Day({ recordParam }) {
   );
 }
 
-export default function DayRecords({ itemId }) {
+export default function DayRecords({ workId }) {
   const [dayRecords, setDayRecords] = useState([]);
 
   useEffect(() => {
-    getDaysData(itemId).then((result) => {
+    getDaysData(workId).then((result) => {
       setDayRecords(result);
     });
-  }, [itemId]);
+  }, [workId]);
 
   return (
     <Row className={styles.dayProgress}>
       {dayRecords
-        .sort((a, b) => a.dayOfTarget < b.dayOfTarget)
+        .sort((a, b) => a.dayOfTarget - b.dayOfTarget)
         .map((day) => (
           <Day key={day.uuid} recordParam={day} />
         ))}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Steps from './steps';
 import DayRecords from './dayRecords';
 import HeadInfo from './headInfo';
@@ -8,19 +8,47 @@ import { Col, Row } from 'antd';
 // 图标依次为：跳转到每日计划，跳转到每月计划，展开，收起，事项推迟到下周
 import styles from './index.less';
 import {
+  addWork,
+  deleteWork,
   getCurrentWeekWorks,
   getWeekDays,
   getWeekStatistics,
 } from '@/services/ant-design-pro/dailyWork';
 
-function addItem() {
-  console.log('添加新项');
-}
-
 export default function WeeklyWork() {
   const [weekDays, setWeekDays] = useState([]);
   const [works, setWorks] = useState([]);
   const [statistics, setStatistics] = useState([]);
+  const stepsRef = useRef(null);
+
+  function addNewWork() {
+    console.log('添加新项');
+    let newWorks = [];
+    addWork().then((result) => {
+      if (result) {
+        newWorks.push(result);
+        works.map((item) => newWorks.push(item));
+        setWorks(newWorks);
+        // 移动到最上方
+        stepsRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  function deleteOneWork(workId) {
+    console.log('删除事项：' + workId);
+    deleteWork(workId).then((result) => {
+      if (result) {
+        let newWorks = [];
+        works.forEach((item) => {
+          if (item.id !== workId) {
+            newWorks.push(item);
+          }
+        });
+        setWorks(newWorks);
+      }
+    });
+  }
 
   useEffect(() => {
     getCurrentWeekWorks().then((result) => {
@@ -42,14 +70,14 @@ export default function WeeklyWork() {
     <div>
       <Row>
         <Col span={17}>
-          <HeaderButtons weekInfo={statistics} addItem={addItem} />
+          <HeaderButtons weekInfo={statistics} addWork={addNewWork} />
         </Col>
         <Col span={7}>
           <HeaderDate weekDays={weekDays} />
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      <div className={styles.weeklyData} style={{ height: worksHeight }}>
+      <div ref={stepsRef} className={styles.weeklyData} style={{ height: worksHeight }}>
         {works.map((work) => {
           return (
             <Row key={work.id}>
@@ -57,10 +85,10 @@ export default function WeeklyWork() {
                 <HeadInfo headParam={work} />
               </Col>
               <Col span={12} className={styles.stepCol}>
-                <Steps itemId={work.id} />
+                <Steps workId={work.id} deleteWork={deleteOneWork} />
               </Col>
               <Col span={7}>
-                <DayRecords itemId={work.id} />
+                <DayRecords workId={work.id} />
               </Col>
             </Row>
           );

@@ -42,6 +42,20 @@ export async function getWorks(weekId?: number) {
 }
 
 /**
+ * 添加新事项，并返回
+ */
+export async function addWork() {
+  return jsonPost('/dw/weeklyWork/add', {});
+}
+
+/**
+ * 删除指定事项
+ */
+export async function deleteWork(workId) {
+  return jsonPost('/dw/weeklyWork/delete', { workId: workId });
+}
+
+/**
  * 返回当前周的事项列表
  *
  */

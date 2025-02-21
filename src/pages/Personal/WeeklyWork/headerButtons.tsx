@@ -8,7 +8,7 @@ import styles from './headerButtons.less';
  */
 function showWeeklyStatistics() {}
 
-export default function HeaderButtons({ weekInfo, addItem }) {
+export default function HeaderButtons({ weekInfo, addWork }) {
   return (
     <Row>
       <span className={styles.whichWeek}>{'第' + weekInfo.weekId + '周'}</span>
@@ -22,7 +22,7 @@ export default function HeaderButtons({ weekInfo, addItem }) {
       <span className={`${styles.itemCount} ${styles.overdueItems}`}>
         {'逾期项 - ' + weekInfo.overdue}
       </span>
-      <PlusSquareOutlined onClick={addItem} className={styles.plusItem} />
+      <PlusSquareOutlined onClick={addWork} className={styles.plusItem} />
       <BarChartOutlined onClick={showWeeklyStatistics} className={styles.statistics} />
     </Row>
   );

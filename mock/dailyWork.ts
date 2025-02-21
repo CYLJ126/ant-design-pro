@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import dayjs from 'dayjs';
 
 export default {
   'POST /dw/weeklyDays/weekDays': (req: Request, res: Response) => {
@@ -261,6 +262,29 @@ export default {
         { key: 4, uuid: 4, content: '完成结算负责人培训；' },
         { key: 5, uuid: 5, content: '完成培训跟进；' },
       ],
+    });
+  },
+  'POST /dw/weeklyWork/add': (req: Request, res: Response) => {
+    res.send({
+      success: true,
+      code: 10000,
+      data: {
+        id: dayjs().unix(),
+        themeId: 1,
+        itemId: 8,
+        target: '',
+        score: 0,
+        proportion: 0,
+        startTime: '2025/01/24',
+        endTime: '2025/02/24',
+      },
+    });
+  },
+  'POST /dw/weeklyWork/delete': (req: Request, res: Response) => {
+    res.send({
+      success: true,
+      code: 10000,
+      data: true,
     });
   },
 };
