@@ -11,7 +11,7 @@ import 'dayjs/locale/zh-cn';
 export interface HeadContent {
   id: number;
   themeId: number;
-  itemId: number;
+  workId: number;
   target: string;
   score: number;
   proportion: number;
@@ -35,7 +35,7 @@ function saveHead(param) {
 export default function HeadInfo({ headParam }) {
   const [head, setHead] = useState(headParam);
   const [themeOptions, setThemeOptions] = useState([]);
-  const [itemOptions, setItemOptions] = useState([]);
+  const [workOptions, setWorkOptions] = useState([]);
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
     getSubTags({ name: '日课' }).then((rootTag) => {
@@ -45,7 +45,7 @@ export default function HeadInfo({ headParam }) {
     });
     if (headParam?.themeId) {
       getSubTags({ fatherId: headParam.themeId }).then((result) => {
-        setItemOptions(result);
+        setWorkOptions(result);
       });
     }
   }, []);
@@ -61,7 +61,7 @@ export default function HeadInfo({ headParam }) {
               options={themeOptions}
               onSelect={(value) => {
                 getSubTags({ fatherId: value }).then((result) => {
-                  setItemOptions(result);
+                  setWorkOptions(result);
                 });
                 setHead({ ...head, themeId: value });
               }}
@@ -78,11 +78,11 @@ export default function HeadInfo({ headParam }) {
         </Row>
         <Row>
           <Select
-            value={head.itemId}
-            className={styles.item}
-            options={itemOptions}
+            value={head.workId}
+            className={styles.work}
+            options={workOptions}
             onSelect={(value) => {
-              setHead({ ...head, itemId: value });
+              setHead({ ...head, workId: value });
             }}
           />
         </Row>

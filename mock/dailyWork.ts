@@ -38,7 +38,7 @@ export default {
         {
           id: 1,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -48,7 +48,7 @@ export default {
         {
           id: 2,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -58,7 +58,7 @@ export default {
         {
           id: 3,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -68,7 +68,7 @@ export default {
         {
           id: 4,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -78,7 +78,7 @@ export default {
         {
           id: 5,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -88,7 +88,7 @@ export default {
         {
           id: 6,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -98,7 +98,7 @@ export default {
         {
           id: 7,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -116,7 +116,7 @@ export default {
         {
           id: 1,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -126,7 +126,7 @@ export default {
         {
           id: 2,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -136,7 +136,7 @@ export default {
         {
           id: 3,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -146,7 +146,7 @@ export default {
         {
           id: 4,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -156,7 +156,7 @@ export default {
         {
           id: 5,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -166,7 +166,7 @@ export default {
         {
           id: 6,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -176,7 +176,7 @@ export default {
         {
           id: 7,
           themeId: 1,
-          itemId: 8,
+          workId: 8,
           target: '完成产品场景整理',
           score: 8.5,
           proportion: 65,
@@ -271,7 +271,7 @@ export default {
       data: {
         id: dayjs().unix(),
         themeId: 1,
-        itemId: 8,
+        workId: 8,
         target: '',
         score: 0,
         proportion: 0,
