@@ -63,7 +63,9 @@ export default function HeadInfo({ headParam }) {
                 getSubTags({ fatherId: value }).then((result) => {
                   setWorkOptions(result);
                 });
-                setHead({ ...head, themeId: value });
+                const temp = { ...head, workId: '', themeId: value };
+                setHead(temp);
+                saveHead(temp);
               }}
             />
           </Col>
@@ -82,7 +84,9 @@ export default function HeadInfo({ headParam }) {
             className={styles.work}
             options={workOptions}
             onSelect={(value) => {
-              setHead({ ...head, workId: value });
+              const temp = { ...head, workId: value };
+              setHead(temp);
+              setHead(temp);
             }}
           />
         </Row>
@@ -108,17 +112,25 @@ export default function HeadInfo({ headParam }) {
               ]}
               onChange={(date) => {
                 dayjs.extend(utc);
-                saveHead({
+                const temp = {
                   ...head,
                   startTime: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
                   endTime: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
-                });
+                };
+                saveHead(temp);
+                setHead(temp);
               }}
             />
           </div>
         </Row>
         <Row>
-          <Input.TextArea value={head.target} className={styles.target} />
+          <Input.TextArea
+            value={head.target}
+            className={styles.target}
+            onChange={(e) => setHead({ ...head, target: e.target.value })}
+            onPressEnter={() => saveHead(head)}
+            onBlur={() => saveHead(head)}
+          />
         </Row>
       </Col>
     </Row>

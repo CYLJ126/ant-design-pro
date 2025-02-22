@@ -4,7 +4,8 @@ import styles from './dayRecords.less';
 import { getDaysData } from '@/services/ant-design-pro/dailyWork';
 
 export interface DayContent {
-  fatherId: number;
+  id: number;
+  targetId: number;
   dayOfTarget: number;
   dayOfMonth: number;
   plannedProgress: number;
@@ -58,21 +59,21 @@ function Day({ recordParam }) {
   );
 }
 
-export default function DayRecords({ workId }) {
+export default function DayRecords({ targetId: targetId }) {
   const [dayRecords, setDayRecords] = useState([]);
 
   useEffect(() => {
-    getDaysData(workId).then((result) => {
+    getDaysData(targetId).then((result) => {
       setDayRecords(result);
     });
-  }, [workId]);
+  }, [targetId]);
 
   return (
     <Row className={styles.dayProgress}>
       {dayRecords
         .sort((a, b) => a.dayOfTarget - b.dayOfTarget)
         .map((day) => (
-          <Day key={day.uuid} recordParam={day} />
+          <Day key={day.id} recordParam={day} />
         ))}
     </Row>
   );

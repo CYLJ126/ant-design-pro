@@ -12,7 +12,7 @@ import {
   SolutionOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
-import { getSteps } from '@/services/ant-design-pro/dailyWork';
+import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
 
 function save(index: number, content: string) {
   console.log('下标：' + index + '，内容：' + content);
@@ -45,15 +45,15 @@ function Step({ index, initialContent, addOrDeleteStep }) {
   );
 }
 
-export default function Steps({ workId, deleteWork }) {
+export default function Steps({ targetId, deleteTarget }) {
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    getSteps(workId).then((result) => {
+    getSteps(targetId).then((result) => {
       setSteps(result);
     });
-  }, [workId]);
+  }, [targetId]);
 
   // true-收起；false-展开
   const [fold, setFold] = useState(true);
@@ -77,7 +77,7 @@ export default function Steps({ workId, deleteWork }) {
   function addOrDeleteStep(index: number, isDel: boolean) {
     if (index === 0 && isDel && steps.length === 1) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
-      deleteWork(workId);
+      deleteTarget(targetId);
       return;
     }
     let tempSteps = [];
@@ -99,6 +99,7 @@ export default function Steps({ workId, deleteWork }) {
       }
     }
     setSteps(tempSteps);
+    saveSteps(targetId, tempSteps);
     if (!fold) {
       setHeight(tempSteps.length * 30);
     }

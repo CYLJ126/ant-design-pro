@@ -192,7 +192,8 @@ export default {
       code: 10000,
       data: [
         {
-          fatherId: 1,
+          id: 1,
+          targetId: 1,
           dayOfTarget: 0,
           dayOfMonth: 9,
           plannedProgress: 20,
@@ -200,7 +201,8 @@ export default {
           score: 8,
         },
         {
-          fatherId: 1,
+          id: 2,
+          targetId: 1,
           dayOfTarget: 1,
           dayOfMonth: 10,
           plannedProgress: 40,
@@ -208,7 +210,8 @@ export default {
           score: 7,
         },
         {
-          fatherId: 1,
+          id: 3,
+          targetId: 1,
           dayOfTarget: 2,
           dayOfMonth: 11,
           plannedProgress: 50,
@@ -216,7 +219,8 @@ export default {
           score: 7,
         },
         {
-          fatherId: 1,
+          id: 4,
+          targetId: 1,
           dayOfTarget: 3,
           dayOfMonth: 12,
           plannedProgress: 60,
@@ -224,7 +228,8 @@ export default {
           score: 8,
         },
         {
-          fatherId: 1,
+          id: 5,
+          targetId: 1,
           dayOfTarget: 4,
           dayOfMonth: 13,
           plannedProgress: 75,
@@ -232,7 +237,8 @@ export default {
           score: 9,
         },
         {
-          fatherId: 1,
+          id: 6,
+          targetId: 1,
           dayOfTarget: 5,
           dayOfMonth: 14,
           plannedProgress: 100,
@@ -240,7 +246,8 @@ export default {
           score: 9,
         },
         {
-          fatherId: 1,
+          id: 7,
+          targetId: 1,
           dayOfTarget: 6,
           dayOfMonth: 15,
           plannedProgress: 100,

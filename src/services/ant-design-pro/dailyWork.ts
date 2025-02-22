@@ -44,7 +44,7 @@ export async function getWorks(weekId?: number) {
 /**
  * 添加新事项，并返回
  */
-export async function addWork() {
+export async function addTarget() {
   return jsonPost('/dw/weeklyWork/add', {});
 }
 
@@ -59,7 +59,7 @@ export async function deleteWork(workId) {
  * 返回当前周的事项列表
  *
  */
-export async function getCurrentWeekWorks() {
+export async function getCurrentWeekTargets() {
   return jsonPost('/dw/weeklyWork/listCurrent', {});
 }
 
@@ -70,10 +70,19 @@ export async function getCurrentWeekWorks() {
 /**
  * 返回目标或活动的步骤
  *
- * @param fatherId 事项 id
+ * @param targetId 事项 id
  */
-export async function getSteps(fatherId?: number) {
-  return jsonPost('/dw/steps/listSteps', { fatherId: fatherId });
+export async function getSteps(targetId?: number) {
+  return jsonPost('/dw/steps/listSteps', { targetId: targetId });
+}
+
+/**
+ * 返回目标或活动的步骤
+ *
+ * @param targetId 事项 id
+ */
+export async function saveSteps(targetId?: number, steps) {
+  return jsonPost('/dw/steps/saveSteps', { targetId: targetId, steps: steps });
 }
 
 /**  ----------------- StepsController end ----------------- */
