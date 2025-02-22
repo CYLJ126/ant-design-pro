@@ -14,24 +14,20 @@ import {
 import styles from './steps.less';
 import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
 
-function save(index: number, content: string) {
-  console.log('下标：' + index + '，内容：' + content);
-}
-
-function Step({ index, initialContent, addOrDeleteStep }) {
+function Step({ index, initialContent, saveCurrentSteps }) {
   const [content, setContent] = useState(initialContent);
   return (
     <Input
       size="small"
-      addonBefore={'Step' + (index + 1)}
+      addonBefore={'Step' + index}
       addonAfter={
         <div>
           <PlusSquareOutlined
-            onClick={() => addOrDeleteStep(index, false)}
+            onClick={() => saveCurrentSteps(index, 'add', '')}
             style={{ marginRight: '3px' }}
           />
           <MinusOutlined
-            onClick={() => addOrDeleteStep(index, true)}
+            onClick={() => saveCurrentSteps(index, 'del', '')}
             style={{ marginRight: '3px' }}
           />
           <SolutionOutlined />
@@ -39,8 +35,7 @@ function Step({ index, initialContent, addOrDeleteStep }) {
       }
       value={content}
       onChange={(e) => setContent(e.target.value)}
-      onPressEnter={(e) => save(index, e.target.value)}
-      onBlur={(e) => save(index, e.target.value)}
+      onBlur={(e) => saveCurrentSteps(index, 'save', e.target.value)}
     />
   );
 }
@@ -69,13 +64,14 @@ export default function Steps({ targetId, deleteTarget }) {
   };
 
   /**
-   * 在指定步骤后面添加一行新步骤，或删除当前步骤
+   * 保存当前步骤列表
    * 如果是在删除步骤，且当前只有一个步骤，则删除当前事项
    * @param index 指定步骤下标
-   * @param isDel true-删除当前步骤；false-在当前步骤后面添加新步骤；
+   * @param type 操作类型，save-保存；del-删除当前步骤；add-在当前步骤后面添加新步骤；
+   * @param content 当前步骤调整内容
    */
-  function addOrDeleteStep(index: number, isDel: boolean) {
-    if (index === 0 && isDel && steps.length === 1) {
+  function saveCurrentSteps(index: number, type, content) {
+    if (index === 0 && type === 'del' && steps.length === 1) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
       deleteTarget(targetId);
       return;
@@ -85,21 +81,37 @@ export default function Steps({ targetId, deleteTarget }) {
     // 生成列表的标识，每次渲染都不一样，因为使用 key（即下标）时，两次渲染时 key 一样，导致新增一行新步骤会有 bug。
     const date = new Date();
     const time = date.toLocaleTimeString();
-    for (let i = 0; i < steps.length; i++) {
-      if (isDel && i === index) {
+    for (let i = 1; i <= steps.length; i++) {
+      if (type === 'save' && i === index) {
+        steps[i - 1].content = content;
+      }
+      if (type === 'del' && i === index) {
         // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
         continue;
       }
-      tempSteps.push({ key: newIndex, uuid: time + newIndex, content: steps[i].content });
+      tempSteps.push({
+        orderId: newIndex + 1,
+        uuid: time + newIndex + 1,
+        targetId: targetId,
+        summaryId: steps[i - 1].summaryId,
+        progress: steps[i - 1].progress,
+        content: steps[i - 1].content,
+      });
       newIndex++;
-      if (i === index && !isDel) {
+      if (i === index && type === 'add') {
         // 增加一行空步骤
-        tempSteps.push({ key: newIndex, uuid: time + newIndex, content: '' });
+        tempSteps.push({
+          orderId: newIndex + 1,
+          uuid: time + newIndex + 1,
+          targetId: targetId,
+          content: '',
+          progress: 0,
+        });
         newIndex++;
       }
     }
     setSteps(tempSteps);
-    saveSteps(targetId, tempSteps);
+    saveSteps(tempSteps).then();
     if (!fold) {
       setHeight(tempSteps.length * 30);
     }
@@ -110,13 +122,13 @@ export default function Steps({ targetId, deleteTarget }) {
       <Col span={23}>
         <ul className={styles.wrapper} style={{ height: height + 'px' }}>
           {steps
-            .sort((a, b) => a.key - b.key)
+            .sort((a, b) => a.id - b.id)
             .map((item) => (
-              <li key={item.uuid} className={styles.itemStep}>
+              <li key={item.uuid ?? item.orderId} className={styles.itemStep}>
                 <Step
-                  index={item.key}
+                  index={item.orderId}
                   initialContent={item.content}
-                  addOrDeleteStep={addOrDeleteStep}
+                  saveCurrentSteps={saveCurrentSteps}
                 />
               </li>
             ))}

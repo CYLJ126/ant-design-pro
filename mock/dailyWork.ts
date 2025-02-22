@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import dayjs from 'dayjs';
 
 export default {
-  'POST /dw/weeklyDays/weekDays': (req: Request, res: Response) => {
+  'POST /dw/weeklyDays/listWeekDaysHeader': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -30,7 +30,7 @@ export default {
       },
     });
   },
-  'POST /dw/weeklyWork/listWorks': (req: Request, res: Response) => {
+  'POST /dw/weeklyWork/listTargets': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -108,7 +108,7 @@ export default {
       ],
     });
   },
-  'POST /dw/weeklyWork/listCurrent': (req: Request, res: Response) => {
+  'POST /dw/weeklyWork/listCurrentTargets': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -186,7 +186,7 @@ export default {
       ],
     });
   },
-  'POST /dw/weeklyDays/listWeeklyDays': (req: Request, res: Response) => {
+  'POST /dw/weeklyDays/listWeekDays': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -262,16 +262,23 @@ export default {
       success: true,
       code: 10000,
       data: [
-        { key: 0, uuid: 0, content: '完成雇主责任险了解；' },
-        { key: 1, uuid: 1, content: '完成对公险种了解；' },
-        { key: 2, uuid: 2, content: '完成相关保司资料整理；' },
-        { key: 3, uuid: 3, content: '完成PPT场景修改；' },
-        { key: 4, uuid: 4, content: '完成结算负责人培训；' },
-        { key: 5, uuid: 5, content: '完成培训跟进；' },
+        { id: 0, content: '完成雇主责任险了解；' },
+        { id: 1, content: '完成对公险种了解；' },
+        { id: 2, content: '完成相关保司资料整理；' },
+        { id: 3, content: '完成PPT场景修改；' },
+        { id: 4, content: '完成结算负责人培训；' },
+        { id: 5, content: '完成培训跟进；' },
       ],
     });
   },
-  'POST /dw/weeklyWork/add': (req: Request, res: Response) => {
+  'POST /dw/steps/saveSteps': (req: Request, res: Response) => {
+    res.send({
+      success: true,
+      code: 10000,
+      data: true,
+    });
+  },
+  'POST /dw/weeklyWork/addTarget': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,
@@ -287,7 +294,7 @@ export default {
       },
     });
   },
-  'POST /dw/weeklyWork/delete': (req: Request, res: Response) => {
+  'POST /dw/weeklyWork/deleteTarget': (req: Request, res: Response) => {
     res.send({
       success: true,
       code: 10000,

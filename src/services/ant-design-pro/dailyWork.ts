@@ -2,21 +2,30 @@ import { jsonPost } from './api';
 
 /**  ----------------- WeeklyDaysController start ----------------- */
 /**
- * 返回当前周对应的表头，即周一到周天
+ * #返回当前周对应的表头，即周一到周天
  *
  * @param weekId 第几周
  */
-export async function getWeekDays(weekId?: number) {
-  return jsonPost('/dw/weeklyDays/weekDays', { weekId: weekId });
+export async function getWeekDaysHeader(weekId?: number) {
+  return jsonPost('/dw/weeklyDays/listWeekDaysHeader', { weekId: weekId });
 }
 
 /**
- * 获取指定工作项的每周数据
+ * #查询当前日期是一年中的第几周
  *
- * @param workId 第几周
+ * @param date 日期
  */
-export async function getDaysData(workId?: number) {
-  return jsonPost('/dw/weeklyDays/listWeeklyDays', { workId: workId });
+export async function getWhichWeek(date) {
+  return jsonPost('/dw/weeklyDays/whichWeek', { date: date });
+}
+
+/**
+ * #获取指定事项的每周进度数据
+ *
+ * @param targetId 指定事项 ID
+ */
+export async function getDaysData(targetId?: number) {
+  return jsonPost('/dw/weeklyDays/listWeekDays', { targetId: targetId });
 }
 
 /**  ----------------- WeeklyDaysController end ----------------- */
@@ -24,7 +33,7 @@ export async function getDaysData(workId?: number) {
 /**  ----------------- WeeklyWorkController start ----------------- */
 
 /**
- * 返回指定周对应的统计数据
+ * #返回指定周对应的统计数据
  *
  * @param weekId 第几周
  */
@@ -33,34 +42,34 @@ export async function getWeekStatistics(weekId?: number) {
 }
 
 /**
- * 返回指定周的事项列表
+ * #返回指定周的事项列表
  *
  * @param weekId 第几周
  */
-export async function getWorks(weekId?: number) {
-  return jsonPost('/dw/weeklyWork/listWorks', { weekId: weekId });
+export async function getTargets(weekId?: number) {
+  return jsonPost('/dw/weeklyWork/listTargets', { weekId: weekId });
 }
 
 /**
- * 添加新事项，并返回
+ * #添加新事项，并返回
  */
 export async function addTarget() {
-  return jsonPost('/dw/weeklyWork/add', {});
+  return jsonPost('/dw/weeklyWork/addTarget', {});
 }
 
 /**
- * 删除指定事项
+ * #删除指定事项
  */
-export async function deleteWork(workId) {
-  return jsonPost('/dw/weeklyWork/delete', { workId: workId });
+export async function deleteTarget(targetId) {
+  return jsonPost('/dw/weeklyWork/deleteTarget', { targetId: targetId });
 }
 
 /**
- * 返回当前周的事项列表
+ * #返回当前周的事项列表
  *
  */
 export async function getCurrentWeekTargets() {
-  return jsonPost('/dw/weeklyWork/listCurrent', {});
+  return jsonPost('/dw/weeklyWork/listCurrentTargets', {});
 }
 
 /**  ----------------- WeeklyWorkController end ----------------- */
@@ -79,10 +88,10 @@ export async function getSteps(targetId?: number) {
 /**
  * 返回目标或活动的步骤
  *
- * @param targetId 事项 id
+ * @param steps 步骤列表
  */
-export async function saveSteps(targetId?: number, steps) {
-  return jsonPost('/dw/steps/saveSteps', { targetId: targetId, steps: steps });
+export async function saveSteps(steps) {
+  return jsonPost('/dw/steps/saveSteps', steps);
 }
 
 /**  ----------------- StepsController end ----------------- */

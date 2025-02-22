@@ -13,7 +13,7 @@ import { message } from 'antd';
  * @return ResultContext 类型
  */
 export function jsonPost(path, data, options?: { [key: string]: any }) {
-  return request<API.ResultContext>(path, {
+  return request<API.ResultContext>('/nip' + path, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

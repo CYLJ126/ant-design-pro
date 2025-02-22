@@ -9,13 +9,15 @@ import { Col, Row } from 'antd';
 import styles from './index.less';
 import {
   addTarget,
-  deleteWork,
-  getCurrentWeekTargets,
-  getWeekDays,
+  deleteTarget,
+  getTargets,
+  getWeekDaysHeader,
   getWeekStatistics,
+  getWhichWeek,
 } from '@/services/ant-design-pro/dailyWork';
 
 export default function WeeklyWork() {
+  const [whichWeek, setWhichWeek] = useState(0);
   const [weekDays, setWeekDays] = useState([]);
   const [targets, setTargets] = useState([]);
   const [statistics, setStatistics] = useState([]);
@@ -37,7 +39,7 @@ export default function WeeklyWork() {
 
   function deleteOneTarget(targetId) {
     console.log('删除事项：' + targetId);
-    deleteWork(targetId).then((result) => {
+    deleteTarget(targetId).then((result) => {
       if (result) {
         let newTargets = [];
         targets.forEach((item) => {
@@ -51,17 +53,23 @@ export default function WeeklyWork() {
   }
 
   useEffect(() => {
-    getCurrentWeekTargets().then((result) => {
-      setTargets(result);
+    getWhichWeek(new Date()).then((result) => {
+      setWhichWeek(result);
     });
   }, []);
 
   useEffect(() => {
-    // 加载表头——周统计信息
-    getWeekStatistics().then((result) => setStatistics(result));
-    // 加载表头——本周每天对应的日期
-    getWeekDays().then((result) => setWeekDays(result));
-  }, [targets]);
+    if (whichWeek !== 0) {
+      // 加载表头——周统计信息
+      getWeekStatistics(whichWeek).then((result) => setStatistics(result ?? {}));
+      // 加载表头——本周每天对应的日期
+      getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
+      // 加载本周目标列表
+      getTargets(whichWeek).then((result) => {
+        setTargets(result);
+      });
+    }
+  }, [whichWeek]);
 
   // 目标列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）
   const targetsHeight = window.innerHeight - 43 - 15 - 70 + 'px';
