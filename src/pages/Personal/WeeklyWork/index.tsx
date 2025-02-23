@@ -45,29 +45,14 @@ export default function WeeklyWork() {
   }
 
   function addNewTarget() {
-    console.log('添加新项');
-    let newTargets = [];
-    addTarget().then((result) => {
-      if (result) {
-        newTargets.push(result);
-        targets.map((item) => newTargets.push(item));
-        setTargets(newTargets);
-        // 移动到最上方
-        stepsRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      // 加载表头——周统计信息
-      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
+    addTarget().then(() => {
+      afterPartialUpdate();
     });
   }
 
   function deleteOneTarget(targetId) {
-    console.log('删除事项：' + targetId);
     deleteTarget({ id: targetId, weekId: whichWeek }).then(() => {
-      getTargets(whichWeek).then((result) => {
-        setTargets(result);
-      });
-      // 加载表头——周统计信息
-      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
+      afterPartialUpdate();
     });
   }
 

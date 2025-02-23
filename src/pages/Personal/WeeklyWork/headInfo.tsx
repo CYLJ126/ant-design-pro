@@ -59,6 +59,7 @@ export default function HeadInfo({ headParam, postUpdate }) {
   }
 
   useEffect(() => {
+    setHead(headParam);
     // 日课主题下拉内容，为标签“日课”的子标签
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
@@ -117,7 +118,7 @@ export default function HeadInfo({ headParam, postUpdate }) {
         <Row>
           <div className={styles.dateAndProgress}>
             <Progress
-              percent={30}
+              percent={head.progress}
               showInfo={false}
               strokeColor="#81d3f8"
               trailColor="#c6c6c6"
