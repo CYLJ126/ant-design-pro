@@ -20,7 +20,7 @@ export async function getWhichWeek(date) {
 }
 
 /**
- * #获取指定事项的每周进度数据
+ * #获取指定目标的每周进度数据
  *
  * @param targetId 指定事项 ID
  */
@@ -42,7 +42,7 @@ export async function getWeekStatistics(weekId?: number) {
 }
 
 /**
- * #返回指定周的事项列表
+ * #返回指定周的目标列表
  *
  * @param weekId 第几周
  */
@@ -51,25 +51,33 @@ export async function getTargets(weekId?: number) {
 }
 
 /**
- * #添加新事项，并返回
+ * #添加新目标，并返回
  */
 export async function addTarget() {
   return jsonPost('/dw/weeklyWork/addTarget', {});
 }
 
 /**
- * #删除指定事项
+ * #删除指定目标
  */
 export async function deleteTarget(targetId) {
   return jsonPost('/dw/weeklyWork/deleteTarget', { targetId: targetId });
 }
 
 /**
- * #返回当前周的事项列表
+ * #返回当前周的目标列表
  *
  */
 export async function getCurrentWeekTargets() {
   return jsonPost('/dw/weeklyWork/listCurrentTargets', {});
+}
+
+/**
+ * 更新当前目标信息
+ *
+ */
+export async function updateWeeklyWork(headInfo) {
+  return jsonPost('/dw/weeklyWork/updateWeeklyWork', headInfo);
 }
 
 /**  ----------------- WeeklyWorkController end ----------------- */
@@ -77,7 +85,7 @@ export async function getCurrentWeekTargets() {
 /**  ----------------- StepsController start ----------------- */
 
 /**
- * 返回目标或活动的步骤
+ * 返回目标的步骤
  *
  * @param targetId 事项 id
  */
@@ -86,7 +94,7 @@ export async function getSteps(targetId?: number) {
 }
 
 /**
- * 返回目标或活动的步骤
+ * 返回目标的步骤
  *
  * @param steps 步骤列表
  */

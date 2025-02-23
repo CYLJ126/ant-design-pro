@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Col, DatePicker, Input, Progress, Row, Select } from 'antd';
+import { Col, DatePicker, Input, message, Progress, Row, Select } from 'antd';
 import styles from './headInfo.less';
 import { getTags } from '@/services/ant-design-pro/base';
+import { updateWeeklyWork } from '@/services/ant-design-pro/dailyWork';
 import locale from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
@@ -30,6 +31,26 @@ async function getSubTags(param) {
 
 function saveHead(param) {
   console.log('保存内容：' + JSON.stringify(param));
+  if (!param.workId) {
+    message.error('事项 ID 不能为空！').then();
+    return;
+  }
+  if (!param.target) {
+    message.error('目标不能为空！').then();
+    return;
+  }
+  const headInfo = {
+    id: param.id,
+    weekId: param.weekId,
+    themeId: param.themeId,
+    workId: param.workId,
+    orderId: param.orderId,
+    target: param.target,
+    proportion: param.proportion,
+    startTime: param.startTime,
+    endTime: param.endTime,
+  };
+  updateWeeklyWork(headInfo).then();
 }
 
 export default function HeadInfo({ headParam }) {
@@ -48,7 +69,7 @@ export default function HeadInfo({ headParam }) {
         setWorkOptions(result);
       });
     }
-  }, []);
+  }, [headParam]);
 
   return (
     <Row>
@@ -86,7 +107,7 @@ export default function HeadInfo({ headParam }) {
             onSelect={(value) => {
               const temp = { ...head, workId: value };
               setHead(temp);
-              setHead(temp);
+              saveHead(temp);
             }}
           />
         </Row>
@@ -117,8 +138,8 @@ export default function HeadInfo({ headParam }) {
                   startTime: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
                   endTime: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
                 };
-                saveHead(temp);
                 setHead(temp);
+                saveHead(temp);
               }}
             />
           </div>
@@ -128,7 +149,6 @@ export default function HeadInfo({ headParam }) {
             value={head.target}
             className={styles.target}
             onChange={(e) => setHead({ ...head, target: e.target.value })}
-            onPressEnter={() => saveHead(head)}
             onBlur={() => saveHead(head)}
           />
         </Row>
