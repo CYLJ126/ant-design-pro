@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
-import { getDaysData } from '@/services/ant-design-pro/dailyWork';
+import { getDaysData, updateDayData } from '@/services/ant-design-pro/dailyWork';
 
 export interface DayContent {
   id: number;
@@ -15,6 +15,7 @@ export interface DayContent {
 
 function save(record) {
   console.log('日期数据：' + JSON.stringify(record));
+  updateDayData(record).then();
 }
 
 function Day({ recordParam }) {

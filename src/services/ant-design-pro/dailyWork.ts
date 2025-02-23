@@ -28,6 +28,15 @@ export async function getDaysData(targetId?: number) {
   return jsonPost('/dw/weeklyDays/listWeekDays', { targetId: targetId });
 }
 
+/**
+ * 更新对应天数的进度数据
+ *
+ * @param dayData 对应天数的进度数据
+ */
+export async function updateDayData(dayData) {
+  return jsonPost('/dw/weeklyDays/updateDayData', dayData);
+}
+
 /**  ----------------- WeeklyDaysController end ----------------- */
 
 /**  ----------------- WeeklyWorkController start ----------------- */
