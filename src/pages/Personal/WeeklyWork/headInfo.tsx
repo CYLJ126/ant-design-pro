@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, DatePicker, Input, message, Progress, Row, Select } from 'antd';
+import { Col, DatePicker, Input, InputNumber, message, Progress, Row, Select } from 'antd';
 import styles from './headInfo.less';
 import { getTags } from '@/services/ant-design-pro/base';
 import { updateWeeklyWork } from '@/services/ant-design-pro/dailyWork';
@@ -97,7 +97,20 @@ export default function HeadInfo({ headParam, postUpdate }) {
               <Input value={'' + head.score + '分'} className={styles.score} />
             </Row>
             <Row>
-              <Input value={head.proportion + '%'} className={styles.score} />
+              <InputNumber
+                step={5}
+                min={0}
+                max={100}
+                changeOnWheel={true}
+                addonAfter="%"
+                value={head.proportion}
+                className={styles.proportion}
+                onChange={(value) => {
+                  const temp = { ...head, proportion: value };
+                  setHead(temp);
+                }}
+                onBlur={() => saveHead(head)}
+              />
             </Row>
           </Col>
         </Row>
