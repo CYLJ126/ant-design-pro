@@ -13,12 +13,7 @@ export interface DayContent {
   score: number;
 }
 
-function save(record) {
-  console.log('日期数据：' + JSON.stringify(record));
-  updateDayData(record).then();
-}
-
-function Day({ recordParam }) {
+function Day({ recordParam, save }) {
   const [record, setRecord] = useState(recordParam);
 
   return (
@@ -60,8 +55,15 @@ function Day({ recordParam }) {
   );
 }
 
-export default function DayRecords({ targetId: targetId }) {
+export default function DayRecords({ targetId, postUpdate }) {
   const [dayRecords, setDayRecords] = useState([]);
+
+  function save(record) {
+    console.log('日期数据：' + JSON.stringify(record));
+    updateDayData(record).then(() => {
+      postUpdate();
+    });
+  }
 
   useEffect(() => {
     getDaysData(targetId).then((result) => {
@@ -74,7 +76,7 @@ export default function DayRecords({ targetId: targetId }) {
       {dayRecords
         .sort((a, b) => a.dayOfTarget - b.dayOfTarget)
         .map((day) => (
-          <Day key={day.id} recordParam={day} />
+          <Day key={day.id} recordParam={day} save={save} />
         ))}
     </Row>
   );

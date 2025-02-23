@@ -1,6 +1,11 @@
 import React from 'react';
 import { Row } from 'antd';
-import { BarChartOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import {
+  BarChartOutlined,
+  PlusSquareOutlined,
+  VerticalLeftOutlined,
+  VerticalRightOutlined,
+} from '@ant-design/icons';
 import styles from './headerButtons.less';
 
 /**
@@ -8,10 +13,12 @@ import styles from './headerButtons.less';
  */
 function showWeeklyStatistics() {}
 
-export default function HeaderButtons({ weekInfo, addTarget }) {
+export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
   return (
     <Row>
+      <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleWeek('former')} />
       <span className={styles.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
+      <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleWeek('latter')} />
       <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
       <span className={`${styles.itemCount} ${styles.completedItems}`}>
         {'完成项 - ' + weekInfo.completedWork}

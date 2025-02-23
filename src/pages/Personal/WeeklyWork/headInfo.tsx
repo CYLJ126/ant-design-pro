@@ -29,34 +29,35 @@ async function getSubTags(param) {
   );
 }
 
-function saveHead(param) {
-  console.log('保存内容：' + JSON.stringify(param));
-  if (!param.workId) {
-    message.error('事项 ID 不能为空！').then();
-    return;
-  }
-  if (!param.target) {
-    message.error('目标不能为空！').then();
-    return;
-  }
-  const headInfo = {
-    id: param.id,
-    weekId: param.weekId,
-    themeId: param.themeId,
-    workId: param.workId,
-    orderId: param.orderId,
-    target: param.target,
-    proportion: param.proportion,
-    startTime: param.startTime,
-    endTime: param.endTime,
-  };
-  updateWeeklyWork(headInfo).then();
-}
-
-export default function HeadInfo({ headParam }) {
+export default function HeadInfo({ headParam, postUpdate }) {
   const [head, setHead] = useState(headParam);
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
+
+  function saveHead(param) {
+    console.log('保存内容：' + JSON.stringify(param));
+    if (!param.workId) {
+      message.error('事项 ID 不能为空！').then();
+      return;
+    }
+    if (!param.target) {
+      message.error('目标不能为空！').then();
+      return;
+    }
+    const headInfo = {
+      id: param.id,
+      weekId: param.weekId,
+      themeId: param.themeId,
+      workId: param.workId,
+      orderId: param.orderId,
+      target: param.target,
+      proportion: param.proportion,
+      startTime: param.startTime,
+      endTime: param.endTime,
+    };
+    updateWeeklyWork(headInfo).then(() => postUpdate());
+  }
+
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
     getSubTags({ name: '日课' }).then((rootTag) => {

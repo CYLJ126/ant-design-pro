@@ -23,6 +23,27 @@ export default function WeeklyWork() {
   const [statistics, setStatistics] = useState([]);
   const stepsRef = useRef(null);
 
+  /**
+   * 切换周 ID
+   * @param type 类型：former-往前切换一周；latter-往后切换一周；
+   */
+  function toggleWeek(type) {
+    const delta = type === 'former' ? -1 : 1;
+    setWhichWeek(whichWeek + delta);
+  }
+
+  /**
+   * 更新完局部数据后需要更新的内容
+   */
+  function afterPartialUpdate() {
+    // 加载表头——周统计信息
+    getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
+    // 更新目标列表
+    getTargets(whichWeek).then((result) => {
+      setTargets(result);
+    });
+  }
+
   function addNewTarget() {
     console.log('添加新项');
     let newTargets = [];
@@ -34,15 +55,19 @@ export default function WeeklyWork() {
         // 移动到最上方
         stepsRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       }
+      // 加载表头——周统计信息
+      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
     });
   }
 
   function deleteOneTarget(targetId) {
     console.log('删除事项：' + targetId);
-    deleteTarget(targetId).then(() => {
+    deleteTarget({ id: targetId, weekId: whichWeek }).then(() => {
       getTargets(whichWeek).then((result) => {
         setTargets(result);
       });
+      // 加载表头——周统计信息
+      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
     });
   }
 
@@ -55,7 +80,7 @@ export default function WeeklyWork() {
   useEffect(() => {
     if (whichWeek !== 0) {
       // 加载表头——周统计信息
-      getWeekStatistics(whichWeek).then((result) => setStatistics(result ?? {}));
+      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
       // 加载表头——本周每天对应的日期
       getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
       // 加载本周目标列表
@@ -72,7 +97,7 @@ export default function WeeklyWork() {
     <div>
       <Row>
         <Col span={17}>
-          <HeaderButtons weekInfo={statistics} addTarget={addNewTarget} />
+          <HeaderButtons weekInfo={statistics} addTarget={addNewTarget} toggleWeek={toggleWeek} />
         </Col>
         <Col span={7}>
           <HeaderDate weekDays={weekDays} />
@@ -84,13 +109,13 @@ export default function WeeklyWork() {
           return (
             <Row key={target.id}>
               <Col span={5}>
-                <HeadInfo headParam={target} />
+                <HeadInfo headParam={target} postUpdate={afterPartialUpdate} />
               </Col>
               <Col span={12} className={styles.stepCol}>
                 <Steps targetId={target.id} deleteTarget={deleteOneTarget} />
               </Col>
               <Col span={7}>
-                <DayRecords targetId={target.id} />
+                <DayRecords targetId={target.id} postUpdate={afterPartialUpdate} />
               </Col>
             </Row>
           );

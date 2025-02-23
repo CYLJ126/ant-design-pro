@@ -69,8 +69,8 @@ export async function addTarget() {
 /**
  * #删除指定目标
  */
-export async function deleteTarget(targetId?: number) {
-  return jsonPost('/dw/weeklyWork/deleteTarget', { id: targetId });
+export async function deleteTarget(target) {
+  return jsonPost('/dw/weeklyWork/deleteTarget', target);
 }
 
 /**
