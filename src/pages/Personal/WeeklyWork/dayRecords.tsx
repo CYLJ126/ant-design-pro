@@ -27,6 +27,7 @@ function Day({ recordParam }) {
         step={5}
         min={0}
         max={100}
+        changeOnWheel={true}
         addonAfter="%"
         value={record.plannedProgress}
         onChange={(value) => setRecord({ ...record, plannedProgress: value })}
@@ -37,6 +38,7 @@ function Day({ recordParam }) {
         step={5}
         min={0}
         max={100}
+        changeOnWheel={true}
         addonAfter="%"
         value={record.actualProgress}
         onChange={(value) => setRecord({ ...record, actualProgress: value })}
@@ -47,6 +49,7 @@ function Day({ recordParam }) {
         step={1}
         min={0}
         max={10}
+        changeOnWheel={true}
         addonAfter="分"
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
