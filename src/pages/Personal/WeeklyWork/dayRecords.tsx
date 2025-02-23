@@ -14,7 +14,7 @@ export interface DayContent {
 }
 
 function save(record) {
-  console.log('数据：' + JSON.stringify(record));
+  console.log('日期数据：' + JSON.stringify(record));
 }
 
 function Day({ recordParam }) {
@@ -30,7 +30,6 @@ function Day({ recordParam }) {
         value={record.plannedProgress}
         onChange={(value) => setRecord({ ...record, plannedProgress: value })}
         onBlur={() => save(record)}
-        onPressEnter={() => save(record)}
       />
       <br />
       <InputNumber
@@ -41,7 +40,6 @@ function Day({ recordParam }) {
         value={record.actualProgress}
         onChange={(value) => setRecord({ ...record, actualProgress: value })}
         onBlur={() => save(record)}
-        onPressEnter={() => save(record)}
       />
       <br />
       <InputNumber
@@ -52,7 +50,6 @@ function Day({ recordParam }) {
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}
-        onPressEnter={() => save(record)}
       />
       <br />
     </div>

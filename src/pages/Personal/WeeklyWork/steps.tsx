@@ -71,7 +71,7 @@ export default function Steps({ targetId, deleteTarget }) {
    * @param content 当前步骤调整内容
    */
   function saveCurrentSteps(index: number, type, content) {
-    if (index === 0 && type === 'del' && steps.length === 1) {
+    if (index === 1 && type === 'del' && steps.length === 1) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
       deleteTarget(targetId);
       return;

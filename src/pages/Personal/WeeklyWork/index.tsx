@@ -39,16 +39,10 @@ export default function WeeklyWork() {
 
   function deleteOneTarget(targetId) {
     console.log('删除事项：' + targetId);
-    deleteTarget(targetId).then((result) => {
-      if (result) {
-        let newTargets = [];
-        targets.forEach((item) => {
-          if (item.id !== targetId) {
-            newTargets.push(item);
-          }
-        });
-        setTargets(newTargets);
-      }
+    deleteTarget(targetId).then(() => {
+      getTargets(whichWeek).then((result) => {
+        setTargets(result);
+      });
     });
   }
 
