@@ -60,7 +60,7 @@ function handleChinese(customProp: CustomProperty, text: string) {
       .replace(/\)/g, '）')
       .replace(/!/g, '！')
       .replace(/;/g, '；')
-      .replace(/％/g, '% ');
+      .replace(/％/g, '%');
   }
   if (customProp.withSpace) {
     // 添加空格
