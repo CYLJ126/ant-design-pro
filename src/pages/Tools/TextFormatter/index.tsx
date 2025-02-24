@@ -39,8 +39,8 @@ function handleBreakLine(text: string) {
 
 /**
  * 示例1：
- * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三Node.js国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工。
- * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工。
+ * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三Node.js国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工  ，  50   % ~ 60   %  , 这。
+ * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工，50%  ~ 60%，这。
  * @param customProp
  * @param text
  */
@@ -59,7 +59,8 @@ function handleChinese(customProp: CustomProperty, text: string) {
       .replace(/\(/g, '（')
       .replace(/\)/g, '）')
       .replace(/!/g, '！')
-      .replace(/;/g, '；');
+      .replace(/;/g, '；')
+      .replace(/％/g, '% ');
   }
   if (customProp.withSpace) {
     // 添加空格
@@ -73,17 +74,21 @@ function handleChinese(customProp: CustomProperty, text: string) {
     //压缩空格
     tempStr = tempStr.replace(/ +/g, ' ');
     //去除中文之间的空格，由于存在“中 中 中 中”这样交叉空格情况，所以要调用两次才能清完
-    tempStr = tempStr.replace(/([\u4e00-\u9fa5]) ([\u4e00-\u9fa5])/g, '$1$2');
-    tempStr = tempStr.replace(/([\u4e00-\u9fa5]) ([\u4e00-\u9fa5])/g, '$1$2');
+    tempStr = tempStr.replace(/([\u4e00-\u9fa5]) +([\u4e00-\u9fa5])/g, '$1$2');
+    tempStr = tempStr.replace(/([\u4e00-\u9fa5]) +([\u4e00-\u9fa5])/g, '$1$2');
   }
-  //去除标点符号和前后的空格
-  tempStr = tempStr.replace(/(\w) +([！，。？；（）‘’“”…、：【】])/g, '$1$2');
+  //去除标点符号前后的空格
+  tempStr = tempStr.replace(/ +([！，。？；（）‘’“”…、：【】])/g, '$1');
+  tempStr = tempStr.replace(/ +([！，。？；（）‘’“”…、：【】])/g, '$1');
+  tempStr = tempStr.replace(/([！，。？；（）‘’“”…、：【】]) +/g, '$1');
   tempStr = tempStr.replace(/([！，。？；（）‘’“”…、：【】]) +/g, '$1');
   // 格式化数字
   tempStr = tempStr.replace(/(\d) ?[.。] ?(\d)/g, '$1.$2');
   tempStr = tempStr.replace(/(\d) ?[,，] ?(\d)/g, '$1, $2');
   tempStr = tempStr.replace(/([$￥]) ?(\d)/g, '$1$2');
+  // 格式化百分号
   tempStr = tempStr.replace(/(\d) +%/g, '$1% ');
+  tempStr = tempStr.replace(/% +([！，。？；（）‘’“”…、：【】])/g, '%$1');
   // 格式化代码
   tempStr = tempStr.replace(/ ?` ?(.*?) ?` ?/g, ' `$1` ');
   // 英文之间的句点，形如 Node.js 还原
