@@ -40,12 +40,12 @@ const useStepStyle = (color) => {
 function Step({ step, saveCurrentSteps }) {
   const { orderId: index, status, content: initialContent } = { ...step };
   const [content, setContent] = useState(initialContent);
-  const { styles } = useStepStyle(status === 'INITIAL' ? '#81d3f8' : '#c6c6c6');
+  const { styles: stepStyle } = useStepStyle(status === 'INITIAL' ? '#81d3f8' : '#c6c6c6');
   return (
     <Input
       size="small"
       addonBefore={'Step' + index}
-      className={styles.step}
+      className={stepStyle.step}
       addonAfter={
         <div>
           <PlusSquareOutlined

@@ -20,7 +20,7 @@ export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const [weekDays, setWeekDays] = useState([]);
   const [targets, setTargets] = useState([]);
-  const [statistics, setStatistics] = useState([]);
+  const [statistics, setStatistics] = useState({});
   const stepsRef = useRef(null);
 
   /**
