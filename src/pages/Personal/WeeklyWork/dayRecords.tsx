@@ -55,7 +55,7 @@ function Day({ recordParam, save }) {
   );
 }
 
-export default function DayRecords({ targetId, postUpdate }) {
+export default function DayRecords({ targetId, weekId, postUpdate }) {
   const [dayRecords, setDayRecords] = useState([]);
 
   function save(record) {
@@ -66,7 +66,7 @@ export default function DayRecords({ targetId, postUpdate }) {
   }
 
   useEffect(() => {
-    getDaysData(targetId).then((result) => {
+    getDaysData(targetId, weekId).then((result) => {
       setDayRecords(result);
     });
   }, [targetId]);

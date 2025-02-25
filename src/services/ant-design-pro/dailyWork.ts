@@ -23,9 +23,10 @@ export async function getWhichWeek(date) {
  * #获取指定目标的每周进度数据
  *
  * @param targetId 指定事项 ID
+ * @param weekId 指定周 ID
  */
-export async function getDaysData(targetId?: number) {
-  return jsonPost('/dw/weeklyDays/listWeekDays', { targetId: targetId });
+export async function getDaysData(targetId?: number, weekId?: number) {
+  return jsonPost('/dw/weeklyDays/listWeekDays', { targetId: targetId, weekId: weekId });
 }
 
 /**

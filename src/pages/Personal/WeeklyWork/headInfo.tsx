@@ -16,8 +16,8 @@ export interface HeadContent {
   target: string;
   score: number;
   proportion: number;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
 }
 
 async function getSubTags(param) {
@@ -143,15 +143,15 @@ export default function HeadInfo({ headParam, postUpdate }) {
               format="MM/DD"
               locale={locale}
               defaultValue={[
-                dayjs(head.startTime, 'YYYY/MM/DD'),
-                dayjs(head.endTime, 'YYYY/MM/DD'),
+                dayjs(head.startDate, 'YYYY/MM/DD'),
+                dayjs(head.endDate, 'YYYY/MM/DD'),
               ]}
               onChange={(date) => {
                 dayjs.extend(utc);
                 const temp = {
                   ...head,
-                  startTime: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
-                  endTime: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
+                  startDate: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
+                  endDate: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
                 };
                 setHead(temp);
                 saveHead(temp);

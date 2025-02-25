@@ -100,7 +100,11 @@ export default function WeeklyWork() {
                 <Steps targetId={target.id} deleteTarget={deleteOneTarget} />
               </Col>
               <Col span={7}>
-                <DayRecords targetId={target.id} postUpdate={afterPartialUpdate} />
+                <DayRecords
+                  targetId={target.id}
+                  weekId={whichWeek}
+                  postUpdate={afterPartialUpdate}
+                />
               </Col>
             </Row>
           );
