@@ -9,6 +9,7 @@ import {
   FullscreenOutlined,
   MinusOutlined,
   PlusSquareOutlined,
+  CheckOutlined,
   SolutionOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
@@ -28,6 +29,10 @@ function Step({ index, initialContent, saveCurrentSteps }) {
           />
           <MinusOutlined
             onClick={() => saveCurrentSteps(index, 'del', '')}
+            style={{ marginRight: '3px' }}
+          />
+          <CheckOutlined
+            onClick={() => saveCurrentSteps(index, 'done', '')}
             style={{ marginRight: '3px' }}
           />
           <SolutionOutlined />
@@ -67,7 +72,7 @@ export default function Steps({ targetId, deleteTarget }) {
    * 保存当前步骤列表
    * 如果是在删除步骤，且当前只有一个步骤，则删除当前事项
    * @param index 指定步骤下标
-   * @param type 操作类型，save-保存；del-删除当前步骤；add-在当前步骤后面添加新步骤；
+   * @param type 操作类型，save-保存；del-删除当前步骤；add-在当前步骤后面添加新步骤；done-标记某个步骤为完成；
    * @param content 当前步骤调整内容
    */
   function saveCurrentSteps(index: number, type, content) {
@@ -84,8 +89,9 @@ export default function Steps({ targetId, deleteTarget }) {
     for (let i = 1; i <= steps.length; i++) {
       if (type === 'save' && i === index) {
         steps[i - 1].content = content;
-      }
-      if (type === 'del' && i === index) {
+      } else if (type === 'done' && i === index) {
+        steps[i - 1].status = 1;
+      } else if (type === 'del' && i === index) {
         // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
         continue;
       }
