@@ -45,7 +45,7 @@ export default function WeeklyWork() {
   }
 
   function addNewTarget() {
-    addTarget().then(() => {
+    addTarget(whichWeek).then(() => {
       afterPartialUpdate();
     });
   }

@@ -63,8 +63,8 @@ export async function getTargets(weekId?: number) {
 /**
  * #添加新目标，并返回
  */
-export async function addTarget() {
-  return jsonPost('/dw/weeklyWork/addTarget', {});
+export async function addTarget(weekId?: number) {
+  return jsonPost('/dw/weeklyWork/addTarget', { weekId: weekId });
 }
 
 /**
