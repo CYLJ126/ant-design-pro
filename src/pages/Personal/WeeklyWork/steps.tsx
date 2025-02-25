@@ -87,18 +87,22 @@ export default function Steps({ targetId, deleteTarget }) {
     const date = new Date();
     const time = date.toLocaleTimeString();
     for (let i = 1; i <= steps.length; i++) {
-      if (type === 'save' && i === index) {
-        steps[i - 1].content = content;
-      } else if (type === 'done' && i === index) {
-        steps[i - 1].status = 1;
-      } else if (type === 'del' && i === index) {
-        // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
-        continue;
+      if (i === index) {
+        if (type === 'save') {
+          steps[i - 1].content = content;
+        } else if (type === 'done') {
+          steps[i - 1].status = 1;
+        } else if (type === 'del') {
+          // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
+          continue;
+        }
       }
+
       tempSteps.push({
         orderId: newIndex + 1,
         uuid: time + newIndex + 1,
         targetId: targetId,
+        status: steps[i - 1].status ?? 0,
         summaryId: steps[i - 1].summaryId,
         progress: steps[i - 1].progress,
         content: steps[i - 1].content,
@@ -110,6 +114,7 @@ export default function Steps({ targetId, deleteTarget }) {
           orderId: newIndex + 1,
           uuid: time + newIndex + 1,
           targetId: targetId,
+          status: 0,
           content: '',
           progress: 0,
         });
