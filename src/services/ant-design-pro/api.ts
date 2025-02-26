@@ -25,22 +25,22 @@ export function jsonPost(path, data, options?: { [key: string]: any }) {
       return resultContext.data;
     } else {
       const errMsg = resultContext.desc?.subString(0, 40);
-      message.error('错误码【`${resultContext.code}`】错误信息【`${errMsg}`】').then((r) => {});
+      message.error(`错误码【${resultContext.code}】错误信息【${errMsg}】`).then((r) => {});
     }
   });
 }
 
-/** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey.pub */
+/** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey */
 export async function getPubKey(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/nip/auth/getPubKey.pub', {
+  return request<Record<string, any>>('/nip/auth/getPubKey', {
     method: 'POST',
     ...(options ?? {}),
   });
 }
 
-/** 获取当前用户信息 POST /nip/auth/onlineInfo.pub */
+/** 获取当前用户信息 POST /nip/auth/onlineInfo */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request<API.CurrentUser>('/nip/auth/onlineInfo.do', {
+  return request<API.CurrentUser>('/nip/auth/onlineInfo', {
     method: 'POST',
     ...(options ?? {}),
   });
@@ -54,7 +54,7 @@ export async function outLogin(options?: { [key: string]: any }) {
   });
 }
 
-/** 登录接口 POST /nip/auth/login.pub */
+/** 登录接口 POST /nip/auth/login */
 export async function login(
   body: {
     password: string | undefined;
@@ -63,7 +63,7 @@ export async function login(
   },
   options?: { [p: string]: any },
 ) {
-  return request<API.LoginResult>('/nip/auth/login.pub', {
+  return request<API.LoginResult>('/nip/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
