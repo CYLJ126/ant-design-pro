@@ -46,14 +46,13 @@ export default function HeadInfo({ headParam, postUpdate }) {
     }
     const headInfo = {
       id: param.id,
-      weekId: param.weekId,
       themeId: param.themeId,
       workId: param.workId,
       orderId: param.orderId,
       target: param.target,
       proportion: param.proportion,
-      startTime: param.startTime,
-      endTime: param.endTime,
+      startDate: param.startDate,
+      endDate: param.endDate,
     };
     updateWeeklyWork(headInfo).then(() => postUpdate());
   }
