@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
-import { getDaysData, updateDayData } from '@/services/ant-design-pro/dailyWork';
+import { listWeekDays, updateDayData } from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
 
 /**
@@ -56,9 +56,7 @@ function Day({ recordParam, target, save }) {
     color = '#81d3f8';
   }
   const { styles: dynamicStyle } = useStepStyle(color);
-  console.log(
-    'targetId: ' + record.targetId + ', date: ' + record.dayOfMonth + ', color: ' + color,
-  );
+  console.log('targetId: ' + target.id + ', date: ' + record.dayOfMonth + ', color: ' + color);
   return (
     <div>
       <InputNumber
@@ -106,14 +104,16 @@ export default function DayRecords({ target, weekId, postUpdate }) {
 
   function save(record) {
     console.log('日期数据：' + JSON.stringify(record));
-    updateDayData(record).then(() => {
-      postUpdate();
-    });
+    if (record.dayOfTarget > 0) {
+      updateDayData(record).then(() => {
+        postUpdate();
+      });
+    }
   }
 
   useEffect(() => {
-    getDaysData(target.targetId, weekId).then((result) => {
-      setDayRecords(result.sort((a, b) => a.dayOfTarget - b.dayOfTarget));
+    listWeekDays(target.id, weekId).then((result) => {
+      setDayRecords(result);
     });
   }, [weekId]);
 

@@ -25,7 +25,7 @@ export async function getWhichWeek(date) {
  * @param targetId 指定事项 ID
  * @param weekId 指定周 ID
  */
-export async function getDaysData(targetId?: number, weekId?: number) {
+export async function listWeekDays(targetId?: number, weekId?: number) {
   return jsonPost('/dw/weeklyDays/listWeekDays', { targetId: targetId, weekId: weekId });
 }
 
