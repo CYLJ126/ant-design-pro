@@ -115,12 +115,14 @@ export default function DayRecords({ target, weekId, postUpdate }) {
     listWeekDays(target.id, weekId).then((result) => {
       setDayRecords(result);
     });
-  }, [weekId]);
+  }, [target, weekId]);
 
+  // 要每次的 ID 都不一样，才能重新渲染，比如调整了目标的开始、截止日期，想要 <Day> 组件显示不同的颜色，则 key 必须加个时间戳
+  const timestamp = new Date().getTime();
   return (
     <Row className={styles.dayProgress}>
       {dayRecords.map((day) => (
-        <Day key={day.dayOfMonth} target={target} recordParam={day} save={save} />
+        <Day key={day.dayOfMonth + timestamp} target={target} recordParam={day} save={save} />
       ))}
     </Row>
   );
