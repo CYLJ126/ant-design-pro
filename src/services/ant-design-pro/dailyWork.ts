@@ -113,3 +113,39 @@ export async function saveSteps(steps) {
 }
 
 /**  ----------------- StepsController end ----------------- */
+
+/**  ----------------- DailyWorkController start ----------------- */
+
+/**
+ * 展示日课列表
+ * @param param 请求参数
+ */
+export async function listDailyWork(param) {
+  return jsonPost('/dw/dailyWork/listDailyWork', param);
+}
+
+/**
+ * 更新日课
+ * @param dailyWork 日课内容
+ */
+export async function updateDailyWork(dailyWork) {
+  return jsonPost('/dw/dailyWork/updateDailyWork', dailyWork);
+}
+
+/**
+ * 插入日课
+ * @param dailyWork 日课内容
+ */
+export async function insertDailyWork(dailyWork) {
+  return jsonPost('/dw/dailyWork/insertDailyWork', dailyWork);
+}
+
+/**
+ * 删除日课
+ * @param id 日课id
+ */
+export async function deleteDailyWork(id?: number) {
+  return jsonPost('/dw/dailyWork/deleteDailyWork', id);
+}
+
+/**  ----------------- DailyWorkController end ----------------- */

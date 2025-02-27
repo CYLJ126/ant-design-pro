@@ -1,6 +1,23 @@
 import React from 'react';
 import { Col, Input, Row, TimePicker } from 'antd';
 import styles from './activity.less';
+import { createStyles } from 'antd-style';
+
+const useDailyStyle = (color) => {
+  return createStyles(({ css }) => ({
+    dailyStyle: css`
+      .ant-input-group-addon {
+        border-color: ${color};
+        background-color: ${color};
+      }
+
+      .ant-input {
+        color: ${color};
+        border-color: ${color};
+      }
+    `,
+  }))();
+};
 
 function Time({ placeholder }) {
   return (
@@ -15,7 +32,10 @@ function Time({ placeholder }) {
   );
 }
 
-export default function DailyWork() {
+export default function DailyWork({ dailyWork }) {
+  const { styles: dynamicStyle } = useDailyStyle(
+    dailyWork.status === 'INITIAL' ? '#81d3f8' : '#c6c6c6',
+  );
   return (
     <Row>
       <Col span={3}>
@@ -30,9 +50,9 @@ export default function DailyWork() {
         <Row>
           <Col span={16}>
             <Row>
-              <Input className={styles.tagInput} value="工作" />
-              <Input className={styles.tagInput} value="60%" />
-              <Input className={styles.tagInput} value="10" />
+              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="工作" />
+              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="60%" />
+              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="10" />
             </Row>
             <Input className={styles.work} value="工作" />
           </Col>
