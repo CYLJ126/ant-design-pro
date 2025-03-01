@@ -118,10 +118,29 @@ export async function saveSteps(steps) {
 
 /**
  * 展示日课列表
- * @param param 请求参数
+ * @param currentDate 请求日期
  */
-export async function listDailyWork(param) {
-  return jsonPost('/dw/dailyWork/listDailyWork', param);
+export async function listDailyWork(currentDate) {
+  let start = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    0,
+    0,
+    0,
+  );
+  let end = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    23,
+    59,
+    59,
+  );
+  return jsonPost('/dw/dailyWork/listDailyWork', {
+    startDateTimeCeil: start,
+    startDateTimeFloor: end,
+  });
 }
 
 /**
@@ -145,7 +164,7 @@ export async function insertDailyWork(dailyWork) {
  * @param id 日课id
  */
 export async function deleteDailyWork(id?: number) {
-  return jsonPost('/dw/dailyWork/deleteDailyWork', id);
+  return jsonPost('/dw/dailyWork/deleteDailyWork', { id: id });
 }
 
 /**  ----------------- DailyWorkController end ----------------- */

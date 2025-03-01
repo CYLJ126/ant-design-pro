@@ -1,69 +1,87 @@
-import React from 'react';
-import { Col, Input, Row, TimePicker } from 'antd';
-import styles from './activity.less';
-import { createStyles } from 'antd-style';
+import React, { useState } from 'react';
+import { Col, Input, InputNumber, Row, TimePicker } from 'antd';
+import activityStyle from './activityStyle';
+import { insertDailyWork, updateDailyWork } from '@/services/ant-design-pro/dailyWork';
 
-const useDailyStyle = (color) => {
-  return createStyles(({ css }) => ({
-    dailyStyle: css`
-      .ant-input-group-addon {
-        border-color: ${color};
-        background-color: ${color};
-      }
+function save(param) {
+  if (param.id) {
+    updateDailyWork(param).then();
+  } else {
+    insertDailyWork(param).then();
+  }
+}
 
-      .ant-input {
-        color: ${color};
-        border-color: ${color};
-      }
-    `,
-  }))();
-};
-
-function Time({ placeholder }) {
+function Time({ placeholder, status }) {
+  const { styles: dynamicStyle } = activityStyle(status);
   return (
     <Row>
       <Col span={8}>
-        <hr className={styles.line} />
+        <hr className={dynamicStyle.line} />
       </Col>
       <Col span={16}>
-        <TimePicker format="HH:mm" className={styles.time} placeholder={placeholder} />
+        <TimePicker format="HH:mm" className={dynamicStyle.time} placeholder={placeholder} />
       </Col>
     </Row>
   );
 }
 
-export default function DailyWork({ dailyWork }) {
-  const { styles: dynamicStyle } = useDailyStyle(
-    dailyWork.status === 'INITIAL' ? '#81d3f8' : '#c6c6c6',
-  );
+export default function DailyWork({ dailyWorkParam }) {
+  const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
+  const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   return (
     <Row>
       <Col span={3}>
-        <Row style={{ marginBottom: '20px' }}>
-          <Time placeholder="开始时间" />
+        <Row style={{ marginBottom: '37.5px' }}>
+          <Time status={dailyWork.status} placeholder="开始时间" />
         </Row>
         <Row>
-          <Time placeholder="结束时间" />
+          <Time status={dailyWork.status} placeholder="结束时间" />
         </Row>
       </Col>
       <Col span={6}>
         <Row>
-          <Col span={16}>
+          <Col span={14}>
             <Row>
-              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="工作" />
-              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="60%" />
-              <Input className={`${dynamicStyle.dailyStyle} ${styles.tagInput}`} value="10" />
+              <Input className={dynamicStyle.theme} size={'small'} value={dailyWork.themeId} />
+              <InputNumber
+                className={`${dynamicStyle.number} ${dynamicStyle.proportion}`}
+                step={5}
+                min={0}
+                max={100}
+                size={'small'}
+                changeOnWheel={true}
+                addonAfter="%"
+                value={dailyWork.proportion}
+                onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
+                onBlur={() => save(dailyWork)}
+              />
+              <InputNumber
+                className={`${dynamicStyle.number} ${dynamicStyle.score}`}
+                step={1}
+                min={0}
+                max={10}
+                size={'small'}
+                changeOnWheel={true}
+                value={dailyWork.score}
+                handleVisible={true}
+                onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
+                onBlur={() => save(dailyWork)}
+              />
             </Row>
-            <Input className={styles.work} value="工作" />
+            <Input size={'small'} className={dynamicStyle.work} value={dailyWork.workId} />
           </Col>
-          <Col span={8}></Col>
+          <Col span={10}></Col>
         </Row>
         <Row>
-          <Input className={styles.activityName} value="10" />
+          <Input className={dynamicStyle.target} value={dailyWork.content} />
         </Row>
       </Col>
       <Col span={15}>
-        <Input.TextArea />
+        <Input.TextArea
+          className={dynamicStyle.content}
+          onChange={(e) => setDailyWork({ ...dailyWork, target: e.target.value })}
+          onBlur={() => save(dailyWork)}
+        />
       </Col>
     </Row>
   );
