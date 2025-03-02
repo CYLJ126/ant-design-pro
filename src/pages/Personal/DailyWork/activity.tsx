@@ -18,10 +18,17 @@ function save(param) {
   if (!param.themeId || !param.workId || !param.targetId) {
     message.error('请完善目标信息');
   }
-  if (param.id) {
-    updateDailyWork(param).then();
+  let data = {
+    id: param.id,
+    targetId: param.targetId,
+    score: param.score,
+    proportion: param.proportion,
+    content: param.content,
+  };
+  if (data.id) {
+    updateDailyWork(data).then();
   } else {
-    insertDailyWork(param).then();
+    insertDailyWork(data).then();
   }
 }
 
@@ -68,7 +75,7 @@ export default function DailyWork({ dailyWorkParam }) {
       getTargets({ workId: dailyWork.workId }).then((result) => {
         setTargetOptions(
           result.map((item) => {
-            return { id: item.id, value: item.target };
+            return { value: item.id, label: item.target };
           }),
         );
       });
@@ -162,8 +169,9 @@ export default function DailyWork({ dailyWorkParam }) {
         </Col>
         <Col span={15}>
           <Input.TextArea
+            value={dailyWork.content}
             className={dynamicStyle.content}
-            onChange={(e) => setDailyWork({ ...dailyWork, target: e.target.value })}
+            onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
             onBlur={() => save(dailyWork)}
           />
         </Col>

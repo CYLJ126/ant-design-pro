@@ -107,14 +107,25 @@ export default function activityStyle(status) {
       }
     `,
     target: css`
-      width: 100%-5px;
+      width: calc(100% - 5px);
       height: 25px;
-      border: 1.5px solid ${frontColor};
-      color: ${frontColor};
       margin-left: 5px;
-      font-size: 16px;
+      margin-bottom: 5px;
+      border-radius: 5px;
 
-      :hover {
+      .ant-select-selector {
+        border: 1.5px solid ${frontColor} !important;
+        background-color: ${backColor} !important;
+      }
+
+      .ant-select-arrow {
+        display: none;
+      }
+
+      .ant-select-selection-item {
+        text-align: center;
+        font-size: 14px;
+        padding: 0 !important;
         color: ${frontColor};
       }
     `,
