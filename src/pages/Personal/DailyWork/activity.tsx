@@ -4,6 +4,10 @@ import activityStyle from './activityStyle';
 import styles from './activity.less';
 import { getTargets, insertDailyWork, updateDailyWork } from '@/services/ant-design-pro/dailyWork';
 import { getTags } from '@/services/ant-design-pro/base';
+import dayjs from 'dayjs';
+// 格式化时间为本地时间
+import utc from 'dayjs-plugin-utc';
+import 'dayjs/locale/zh-cn';
 
 async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'on' });
@@ -14,44 +18,67 @@ async function getSubTags(param) {
   );
 }
 
-function save(param) {
-  if (!param.themeId || !param.workId || !param.targetId) {
-    message.error('请完善目标信息');
-  }
-  let data = {
-    id: param.id,
-    targetId: param.targetId,
-    score: param.score,
-    proportion: param.proportion,
-    content: param.content,
-  };
-  if (data.id) {
-    updateDailyWork(data).then();
-  } else {
-    insertDailyWork(data).then();
-  }
-}
-
-function Time({ placeholder, status }) {
-  const { styles: dynamicStyle } = activityStyle(status);
+function Time({ dailyWork, save }) {
+  const { styles: dynamicStyle } = activityStyle(dailyWork.status);
+  dayjs.extend(utc);
   return (
     <Row>
       <Col span={8}>
         <hr className={dynamicStyle.line} />
       </Col>
       <Col span={16}>
-        <TimePicker format="HH:mm" className={dynamicStyle.time} placeholder={placeholder} />
+        <TimePicker
+          defaultValue={dayjs(dailyWork[dailyWork.mark]).utc().local()}
+          format="HH:mm"
+          className={dynamicStyle.time}
+          placeholder={dailyWork.placeholder}
+          onChange={(time, timeString) => {
+            let temp = { ...dailyWork };
+            const dateStr = dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD');
+            if (dailyWork.mark === 'startTime') {
+              temp.startTimeStr = dateStr + ' ' + timeString + ':00';
+              temp.endTimeStr =
+                dateStr + ' ' + dayjs(dailyWork.endTime).utc().local().format('HH:mm:ss');
+            } else {
+              temp.endTimeStr = dateStr + ' ' + timeString + ':59';
+              temp.startTimeStr =
+                dateStr + ' ' + dayjs(dailyWork.startTime).utc().local().format('HH:mm:ss');
+            }
+            save(temp);
+          }}
+        />
       </Col>
     </Row>
   );
 }
 
-export default function DailyWork({ dailyWorkParam }) {
+export default function DailyWork({ dailyWorkParam, postUpdate }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
+
+  function save(param) {
+    if (!param.themeId || !param.workId || !param.targetId) {
+      message.error('请完善目标信息');
+    }
+    let data = {
+      id: param.id,
+      startTime: param.startTimeStr,
+      endTime: param.endTimeStr,
+      targetId: param.targetId,
+      score: param.score,
+      proportion: param.proportion,
+      content: param.content,
+    };
+    if (data.id) {
+      updateDailyWork(data).then();
+    } else {
+      insertDailyWork(data).then();
+    }
+    postUpdate();
+  }
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
@@ -87,10 +114,16 @@ export default function DailyWork({ dailyWorkParam }) {
       <Row>
         <Col span={3}>
           <Row style={{ marginBottom: '64px' }}>
-            <Time status={dailyWork.status} placeholder="开始时间" />
+            <Time
+              dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
+              save={save}
+            />
           </Row>
           <Row>
-            <Time status={dailyWork.status} placeholder="结束时间" />
+            <Time
+              dailyWork={{ ...dailyWork, mark: 'endTime', placeholder: '结束时间' }}
+              save={save}
+            />
           </Row>
         </Col>
         <Col span={6}>

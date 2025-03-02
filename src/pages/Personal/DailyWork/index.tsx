@@ -19,14 +19,20 @@ export default function DailyWork() {
     setWhichDay(temp);
   }
 
+  function postUpdate() {
+    let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
+    let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
+    dayjs.extend(utc);
+    start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
+    end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
+    listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end }).then((result) => {
+      setDailyWorks(result);
+    });
+  }
+
   function addBlankDailyWork() {
     const blankOne = {
       status: 'INITIAL',
-      // status: 'DONE',
-      themeId: '1',
-      workId: '1',
-      targetId: '1',
-      targetShow: '整理PPT方案',
       proportion: 0,
       startTime: new Date(),
       endTime: new Date(),
@@ -40,14 +46,7 @@ export default function DailyWork() {
   }
 
   useEffect(() => {
-    let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
-    let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
-    dayjs.extend(utc);
-    start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
-    end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
-    listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end }).then((result) => {
-      setDailyWorks(result);
-    });
+    postUpdate();
   }, [whichDay]);
 
   const time = new Date().getTime();
@@ -59,7 +58,7 @@ export default function DailyWork() {
           <Header whichDay={whichDay} add={addBlankDailyWork} toggleDay={toggleDay} />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
-            return <Activity key={item.id + time} dailyWorkParam={item} />;
+            return <Activity key={item.id + time} postUpdate={postUpdate} dailyWorkParam={item} />;
           })}
         </Col>
         <Col span={3}></Col>
