@@ -17,8 +17,8 @@ export default function DailyWork() {
 
   function addBlankDailyWork() {
     const blankOne = {
-      // status: 'INITIAL',
-      status: 'DONE',
+      status: 'INITIAL',
+      // status: 'DONE',
       themeId: '工作',
       workId: 'E户通技术负责人',
       proportion: 0,

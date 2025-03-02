@@ -59,29 +59,60 @@ export default function activityStyle(status) {
       }
     `,
     theme: css`
-      width: 40px;
+      width: calc(100% - 5px);
+      height: 55px;
       padding: 0;
       margin-left: 5px;
       margin-bottom: 5px;
-      font-weight: bold;
-      text-align: center;
-      font-size: 14px;
-      background-color: ${frontColor};
-      color: ${backColor};
-      border: 1.5px solid ${frontColor};
+      border-radius: 5px;
+      border: none;
 
-      :hover {
+      .ant-select-selector {
+        border: none;
+        background-color: ${frontColor} !important;
+      }
+
+      .ant-select-arrow {
+        display: none;
+      }
+
+      .ant-select-selection-item {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        padding: 0 !important;
+        color: ${backColor};
+      }
+    `,
+    work: css`
+      width: calc(100% - 5px);
+      margin-left: 5px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+
+      .ant-select-selector {
+        border: 1.5px solid ${frontColor} !important;
+        background-color: ${backColor} !important;
+      }
+
+      .ant-select-arrow {
+        display: none;
+      }
+
+      .ant-select-selection-item {
+        text-align: center;
+        font-size: 14px;
+        padding: 0 !important;
         color: ${frontColor};
-        background-color: ${backColor};
       }
     `,
     target: css`
       width: 100%-5px;
-      height: 30px;
+      height: 25px;
       border: 1.5px solid ${frontColor};
       color: ${frontColor};
       margin-left: 5px;
-      font-size: 18px;
+      font-size: 16px;
 
       :hover {
         color: ${frontColor};
@@ -130,23 +161,10 @@ export default function activityStyle(status) {
         background-color: ${frontColor};
       }
     `,
-    work: css`
-      width: 141px;
-      margin-left: 5px;
-      margin-bottom: 5px;
-      background-color: ${frontColor};
-      color: ${backColor};
-      border: 1.5px solid ${frontColor};
-
-      :hover {
-        color: ${frontColor};
-        background-color: ${backColor};
-      }
-    `,
     score: css`
       border: 1.5px solid ${frontColor};
       border-radius: 5px;
-      width: 40px;
+      width: calc(100% - 5px);
       height: 25px;
       padding: 0;
       margin-bottom: 5px;
@@ -159,7 +177,7 @@ export default function activityStyle(status) {
 
       .ant-input-number-handler-wrap {
         width: 16px !important;
-        left: 22px !important;
+        left: 30px !important;
         border: none;
       }
 
@@ -168,7 +186,7 @@ export default function activityStyle(status) {
       }
     `,
     proportion: css`
-      width: 52px;
+      width: calc(100% - 5px);
 
       .ant-input-number-input {
         padding-left: 2px;
@@ -176,16 +194,22 @@ export default function activityStyle(status) {
 
       .ant-input-number-handler-wrap {
         width: 16px !important;
-        left: 32px !important;
+        left: 30px !important;
         border: none;
       }
     `,
     content: css`
       width: 100%-5px;
-      height: 89.5px !important;
+      height: 114px !important;
       color: ${frontColor};
       border: 1.5px solid ${frontColor};
       margin-left: 5px;
+    `,
+    separator: css`
+      width: 100%;
+      height: 2px;
+      background-color: ${frontColor};
+      border: none;
     `,
   }))();
 }
