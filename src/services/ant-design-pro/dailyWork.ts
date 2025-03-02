@@ -151,7 +151,7 @@ export async function deleteDailyWork(id?: number) {
 }
 
 export async function markDone(id?: number, status?: string) {
-  return jsonPost('/dw/dailyWork/handleDoneOrDelete', { id: id, status: status });
+  return jsonPost('/dw/dailyWork/switchDailyWorkStatus', { id: id, status: status });
 }
 
 /**  ----------------- DailyWorkController end ----------------- */
