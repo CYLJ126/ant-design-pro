@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, InputNumber, message, Row, Select, TimePicker } from 'antd';
+import {
+  CheckOutlined,
+  DeleteOutlined,
+  RiseOutlined,
+  SolutionOutlined,
+  UndoOutlined,
+  VerticalAlignMiddleOutlined,
+} from '@ant-design/icons';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
-import { getTargets, insertDailyWork, updateDailyWork } from '@/services/ant-design-pro/dailyWork';
+import {
+  deleteDailyWork,
+  getTargets,
+  insertDailyWork,
+  markDone,
+  updateDailyWork,
+} from '@/services/ant-design-pro/dailyWork';
 import { getTags } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
@@ -78,6 +92,19 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
       insertDailyWork(data).then();
     }
     postUpdate();
+  }
+
+  function handleDoneOrDelete(id, type) {
+    if (type === 'delete') {
+      // 删除
+      deleteDailyWork(id).then(() => {
+        postUpdate();
+      });
+    } else {
+      markDone(id, type).then(() => {
+        postUpdate();
+      });
+    }
   }
 
   useEffect(() => {
@@ -185,7 +212,38 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                 }}
               />
             </Col>
-            <Col span={12}></Col>
+            <Col span={12} style={{ paddingLeft: '10px' }}>
+              <Row>
+                <DeleteOutlined
+                  className={dynamicStyle.icons}
+                  onClick={() => {
+                    handleDoneOrDelete(dailyWork.id, 'delete');
+                  }}
+                />
+                {dailyWork.status === 'INITIAL' ? (
+                  <CheckOutlined
+                    className={dynamicStyle.icons}
+                    onClick={() => {
+                      handleDoneOrDelete(dailyWork.id, 'DONE');
+                    }}
+                  />
+                ) : (
+                  <UndoOutlined
+                    className={dynamicStyle.icons}
+                    onClick={() => {
+                      handleDoneOrDelete(dailyWork.id, 'INITIAL');
+                    }}
+                  />
+                )}
+                <VerticalAlignMiddleOutlined className={dynamicStyle.icons} />
+              </Row>
+              <Row>
+                <RiseOutlined className={dynamicStyle.icons} />
+              </Row>
+              <Row>
+                <SolutionOutlined className={dynamicStyle.icons} />
+              </Row>
+            </Col>
           </Row>
           <Row>
             <Select

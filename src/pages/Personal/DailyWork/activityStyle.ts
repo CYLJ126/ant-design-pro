@@ -222,5 +222,14 @@ export default function activityStyle(status) {
       background-color: ${frontColor};
       border: none;
     `,
+    icons: css`
+      svg {
+        margin-left: 10px;
+        margin-bottom: 4px;
+        width: 25px;
+        height: 25px;
+        color: ${frontColor};
+      }
+    `,
   }))();
 }
