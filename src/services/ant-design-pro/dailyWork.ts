@@ -155,3 +155,14 @@ export async function markDone(id?: number, status?: string) {
 }
 
 /**  ----------------- DailyWorkController end ----------------- */
+
+/**  ----------------- TodoWorkController start ----------------- */
+/**
+ * 查询待办任务
+ * @param param 请求参数
+ */
+export async function listTodoWork(param) {
+  return jsonPost('/dw/todoWork/listTodoWork', param);
+}
+
+/**  ----------------- TodoWorkController end ----------------- */

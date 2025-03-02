@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
+import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
 
 export default function DailyWork() {
   const [whichDay, setWhichDay] = useState(new Date());
@@ -58,10 +59,12 @@ export default function DailyWork() {
           <Header whichDay={whichDay} add={addBlankDailyWork} toggleDay={toggleDay} />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
-            return <Activity key={item.id + time} postUpdate={postUpdate} dailyWorkParam={item} />;
+            return <Activity key={item.id + time} dailyWorkParam={item} postUpdate={postUpdate} />;
           })}
         </Col>
-        <Col span={3}></Col>
+        <Col span={3}>
+          <TodoWorkWrap />
+        </Col>
       </Row>
     </div>
   );
