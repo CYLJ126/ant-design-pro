@@ -1,4 +1,6 @@
 import { jsonPost } from './api';
+// 格式化时间为本地时间
+import 'dayjs/locale/zh-cn';
 
 /**  ----------------- WeeklyDaysController start ----------------- */
 /**
@@ -54,10 +56,10 @@ export async function getWeekStatistics(weekId?: number) {
 /**
  * #返回指定周的目标列表
  *
- * @param weekId 第几周
+ * @param param 请求参数
  */
-export async function getTargets(weekId?: number) {
-  return jsonPost('/dw/weeklyWork/listTargets', { weekId: weekId });
+export async function getTargets(param) {
+  return jsonPost('/dw/weeklyWork/listTargets', param);
 }
 
 /**
@@ -118,29 +120,10 @@ export async function saveSteps(steps) {
 
 /**
  * 展示日课列表
- * @param currentDate 请求日期
+ * @param param 请求参数
  */
-export async function listDailyWork(currentDate) {
-  let start = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate(),
-    0,
-    0,
-    0,
-  );
-  let end = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate(),
-    23,
-    59,
-    59,
-  );
-  return jsonPost('/dw/dailyWork/listDailyWork', {
-    startDateTimeCeil: start,
-    startDateTimeFloor: end,
-  });
+export async function listDailyWork(param) {
+  return jsonPost('/dw/dailyWork/listDailyWork', param);
 }
 
 /**

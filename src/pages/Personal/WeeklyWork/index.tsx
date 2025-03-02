@@ -39,7 +39,7 @@ export default function WeeklyWork() {
     // 加载表头——周统计信息
     getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
     // 更新目标列表
-    getTargets(whichWeek).then((result) => {
+    getTargets({ weekId: whichWeek }).then((result) => {
       setTargets(result);
     });
   }
@@ -69,7 +69,7 @@ export default function WeeklyWork() {
       // 加载表头——本周每天对应的日期
       getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
       // 加载本周目标列表
-      getTargets(whichWeek).then((result) => {
+      getTargets({ weekId: whichWeek }).then((result) => {
         setTargets(result);
       });
     }

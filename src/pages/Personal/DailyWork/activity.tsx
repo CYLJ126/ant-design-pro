@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, InputNumber, Row, Select, TimePicker } from 'antd';
+import { Col, Input, InputNumber, message, Row, Select, TimePicker } from 'antd';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
-import { insertDailyWork, updateDailyWork } from '@/services/ant-design-pro/dailyWork';
+import { getTargets, insertDailyWork, updateDailyWork } from '@/services/ant-design-pro/dailyWork';
 import { getTags } from '@/services/ant-design-pro/base';
 
 async function getSubTags(param) {
@@ -15,6 +15,9 @@ async function getSubTags(param) {
 }
 
 function save(param) {
+  if (!param.themeId || !param.workId || !param.targetId) {
+    message.error('请完善目标信息');
+  }
   if (param.id) {
     updateDailyWork(param).then();
   } else {
@@ -40,6 +43,7 @@ export default function DailyWork({ dailyWorkParam }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
+  const [targetOptions, setTargetOptions] = useState([]);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
 
   useEffect(() => {
@@ -49,12 +53,27 @@ export default function DailyWork({ dailyWorkParam }) {
         setThemeOptions(result);
       });
     });
+  }, [dailyWork]);
+
+  useEffect(() => {
     if (dailyWork?.themeId) {
       getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
         setWorkOptions(result);
       });
     }
-  }, [dailyWork]);
+  }, [dailyWork.themeId]);
+
+  useEffect(() => {
+    if (dailyWork?.workId) {
+      getTargets({ workId: dailyWork.workId }).then((result) => {
+        setTargetOptions(
+          result.map((item) => {
+            return { id: item.id, value: item.target };
+          }),
+        );
+      });
+    }
+  }, [dailyWork.workId]);
 
   return (
     <div className={styles.activity}>
@@ -77,10 +96,7 @@ export default function DailyWork({ dailyWorkParam }) {
                     className={dynamicStyle.theme}
                     options={themeOptions}
                     onSelect={(value) => {
-                      getSubTags({ fatherId: value }).then((result) => {
-                        setWorkOptions(result);
-                      });
-                      const temp = { ...dailyWork, workId: '', themeId: value };
+                      const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
                       setDailyWork(temp);
                       save(temp);
                     }}
@@ -123,7 +139,7 @@ export default function DailyWork({ dailyWorkParam }) {
                 className={dynamicStyle.work}
                 options={workOptions}
                 onSelect={(value) => {
-                  const temp = { ...dailyWork, workId: value };
+                  const temp = { ...dailyWork, workId: value, targetId: '' };
                   setDailyWork(temp);
                   save(temp);
                 }}
@@ -132,7 +148,16 @@ export default function DailyWork({ dailyWorkParam }) {
             <Col span={12}></Col>
           </Row>
           <Row>
-            <Input className={dynamicStyle.target} value={dailyWork.content} />
+            <Select
+              value={dailyWork.targetId}
+              className={dynamicStyle.target}
+              options={targetOptions}
+              onSelect={(value) => {
+                const temp = { ...dailyWork, targetId: value };
+                setDailyWork(temp);
+                save(temp);
+              }}
+            />
           </Row>
         </Col>
         <Col span={15}>

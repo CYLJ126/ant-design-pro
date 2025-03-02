@@ -4,6 +4,10 @@ import { Col, Row } from 'antd';
 import styles from './index.less';
 import Activity from './activity';
 import { listDailyWork } from '@/services/ant-design-pro/dailyWork';
+import dayjs from 'dayjs';
+// 格式化时间为本地时间
+import utc from 'dayjs-plugin-utc';
+import 'dayjs/locale/zh-cn';
 
 export default function DailyWork() {
   const [whichDay, setWhichDay] = useState(new Date());
@@ -19,8 +23,10 @@ export default function DailyWork() {
     const blankOne = {
       status: 'INITIAL',
       // status: 'DONE',
-      themeId: '工作',
-      workId: 'E户通技术负责人',
+      themeId: '1',
+      workId: '1',
+      targetId: '1',
+      targetShow: '整理PPT方案',
       proportion: 0,
       startTime: new Date(),
       endTime: new Date(),
@@ -34,7 +40,12 @@ export default function DailyWork() {
   }
 
   useEffect(() => {
-    listDailyWork(new Date()).then((result) => {
+    let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
+    let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
+    dayjs.extend(utc);
+    start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
+    end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
+    listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end }).then((result) => {
       setDailyWorks(result);
     });
   }, [whichDay]);

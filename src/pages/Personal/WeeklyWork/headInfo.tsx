@@ -3,7 +3,6 @@ import { Col, DatePicker, Input, InputNumber, message, Progress, Row, Select } f
 import styles from './headInfo.less';
 import { getTags } from '@/services/ant-design-pro/base';
 import { updateWeeklyWork } from '@/services/ant-design-pro/dailyWork';
-import locale from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
@@ -140,7 +139,6 @@ export default function HeadInfo({ headParam, postUpdate }) {
               className={styles.date}
               placeholder={['开始', '结束']}
               format="MM/DD"
-              locale={locale}
               defaultValue={[
                 dayjs(head.startDate, 'YYYY/MM/DD'),
                 dayjs(head.endDate, 'YYYY/MM/DD'),
