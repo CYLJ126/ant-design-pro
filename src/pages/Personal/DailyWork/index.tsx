@@ -30,14 +30,14 @@ export default function DailyWork() {
     });
   }
 
-  function addBlankDailyWork() {
+  function addBlankDailyWork(date) {
     const blankOne = {
       status: 'INITIAL',
       proportion: 0,
-      startTime: new Date(),
-      endTime: new Date(),
+      startTime: date,
+      endTime: date,
       score: 0,
-      content: '整理PPT方案',
+      content: '',
     };
     const list = [];
     list.push(blankOne);

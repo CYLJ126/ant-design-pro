@@ -74,7 +74,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
 
   function save(param) {
-    if (!param.themeId || !param.workId || !param.targetId) {
+    if (!param.targetId) {
       message.error('请完善目标信息');
     }
     let data = {
@@ -87,9 +87,21 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
       content: param.content,
     };
     if (data.id) {
-      updateDailyWork(data).then();
+      updateDailyWork(data).then((result) => {
+        if (result) {
+          message.success('更新成功！');
+        } else {
+          message.error('更新失败！');
+        }
+      });
     } else {
-      insertDailyWork(data).then();
+      insertDailyWork(data).then((result) => {
+        if (result) {
+          message.success('新增成功！');
+        } else {
+          message.error('新增失败！');
+        }
+      });
     }
     postUpdate();
   }
@@ -100,6 +112,20 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
       deleteDailyWork(id).then(() => {
         postUpdate();
       });
+    } else if (type === 'push') {
+      let start = dayjs(dailyWork.startTime).add(1, 'day');
+      let end = dayjs(dailyWork.endTime).add(1, 'day');
+      let startTimeStr = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm') + ':00';
+      let endTimeStr = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm') + ':59';
+      let newOne = {
+        targetId: dailyWork.targetId,
+        score: 0,
+        proportion: dailyWork.proportion,
+        content: dailyWork.content,
+        startTimeStr: startTimeStr,
+        endTimeStr: endTimeStr,
+      };
+      save(newOne);
     } else {
       markDone(id, type).then(() => {
         postUpdate();
@@ -238,7 +264,12 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                 <VerticalAlignMiddleOutlined className={dynamicStyle.icons} />
               </Row>
               <Row>
-                <RiseOutlined className={dynamicStyle.icons} />
+                <RiseOutlined
+                  className={dynamicStyle.icons}
+                  onClick={() => {
+                    handleDoneOrDelete(dailyWork.id, 'push');
+                  }}
+                />
               </Row>
               <Row>
                 <SolutionOutlined className={dynamicStyle.icons} />
