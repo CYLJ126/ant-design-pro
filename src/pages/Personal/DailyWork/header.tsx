@@ -9,13 +9,16 @@ import {
   VerticalRightOutlined,
 } from '@ant-design/icons';
 import styles from './header.less';
+import dayjs from 'dayjs';
 
-export default function Header({ add, toggleDay }) {
+export default function Header({ whichDay, add, toggleDay }) {
   return (
     <div>
       <Row>
         <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleDay('former')} />
-        <span className={styles.whichDay}>2025/02/25</span>
+        <span className={styles.whichDay}>
+          {dayjs(whichDay ?? new Date()).format('YYYY/MM/DD')}
+        </span>
         <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleDay('latter')} />
         <StepBackwardOutlined className={styles.fold} />
         <StepForwardOutlined className={styles.fold} />

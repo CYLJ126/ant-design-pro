@@ -45,7 +45,7 @@ export default function DailyWork() {
       <hr className={styles.vertical} />
       <Row>
         <Col span={18}>
-          <Header add={addBlankDailyWork} toggleDay={toggleDay} />
+          <Header whichDay={whichDay} add={addBlankDailyWork} toggleDay={toggleDay} />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
             return <Activity key={item.id + time} dailyWorkParam={item} />;
