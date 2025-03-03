@@ -165,4 +165,28 @@ export async function listTodoWork(param) {
   return jsonPost('/dw/todoWork/listTodoWork', param);
 }
 
+/**
+ * 插入待办任务
+ * @param param 请求参数
+ */
+export async function insertTodoWork(param) {
+  return jsonPost('/dw/todoWork/insertTodoWork', param);
+}
+
+/**
+ * 更新待办任务
+ * @param param 请求参数
+ */
+export async function updateTodoWork(param) {
+  return jsonPost('/dw/todoWork/updateTodoWork', param);
+}
+
+/**
+ * 删除待办任务
+ * @param id 请求参数 ID
+ */
+export async function deleteTodoWork(id?: number) {
+  return jsonPost('/dw/todoWork/updateTodoWork', { id: id });
+}
+
 /**  ----------------- TodoWorkController end ----------------- */

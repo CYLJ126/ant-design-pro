@@ -7,6 +7,7 @@ import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import { listTodoWork } from '@/services/ant-design-pro/dailyWork';
 import TodoWork from './todoWork';
+import { PlusOutlined } from '@ant-design/icons';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -26,6 +27,20 @@ export default function TodoWorkWrap() {
     });
   }
 
+  function addTodo() {
+    let temp = {
+      startDate: date,
+      priority: 10,
+      status: 'INITIAL',
+      title: '',
+      content: '',
+    };
+    let newList = [];
+    newList.push(temp);
+    newList.push(...todoWorks);
+    setTodoWorks(newList);
+  }
+
   useEffect(() => {
     listTodos();
   }, [date]);
@@ -42,12 +57,13 @@ export default function TodoWorkWrap() {
             setDate(date);
           }}
         />
+        <PlusOutlined onClick={addTodo} />
       </Row>
       <Row>
         <ul>
           {todoWorks.map((item) => (
             <li key={item.id + time}>
-              <TodoWork todoParam={item} />
+              <TodoWork todoParam={item} postUpdate={listTodos} />
             </li>
           ))}
         </ul>
