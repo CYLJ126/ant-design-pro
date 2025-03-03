@@ -1,5 +1,5 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+import { login } from '@/services/ant-design-pro/base';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { encrypt } from '@/common/crypto';
 import {

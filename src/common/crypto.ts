@@ -1,6 +1,6 @@
 import NodeRSA from 'node-rsa';
 import * as crypto from 'crypto';
-import { getPubKey } from '@/services/ant-design-pro/api';
+import { getPubKey } from '@/services/ant-design-pro/base';
 
 async function initial() {
   const result = await getPubKey();
