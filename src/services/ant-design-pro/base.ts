@@ -1,23 +1,52 @@
 import { request } from '@umijs/max';
+import { jsonPost } from './api';
+
+/**  ----------------- TagController start ----------------- */
 
 /** 获取用户标签 POST /nip/base/tag/listTags */
-export async function getTags(data, options?: { [key: string]: any }) {
-  return request<any>('/nip/base/tag/listTags', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: data,
-    ...(options ?? {}),
-  });
+export async function getTags(param) {
+  return jsonPost('/base/tag/listTags', param);
 }
 
+/**
+ * 插入标签
+ * @param param 标签对象
+ */
+export async function addTag(param) {
+  return jsonPost('/base/tag/addTag', param);
+}
+
+/**
+ * 更新标签
+ * @param param 标签对象
+ */
+export async function updateTag(param) {
+  return jsonPost('/base/tag/updateTag', param);
+}
+
+/**
+ * 删除标签
+ * @param id 标签 ID
+ */
+export async function deleteTag(id?: number) {
+  return jsonPost('/base/tag/deleteTag', { id: id });
+}
+
+/**
+ * 标签重排序
+ * @param params 标签列表
+ */
+export async function reorderTags(params) {
+  return jsonPost('/base/tag/reorderTags', params);
+}
+
+/**  ----------------- TagController end ----------------- */
+
+/**  ----------------- AuthorizationController start ----------------- */
+
 /** 获取公钥，用于加密敏感信息 POST /nip/auth/getPubKey */
-export async function getPubKey(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/nip/auth/getPubKey', {
-    method: 'POST',
-    ...(options ?? {}),
-  });
+export async function getPubKey() {
+  return jsonPost('/auth/getPubKey', {});
 }
 
 /** 获取当前用户信息 POST /nip/auth/onlineInfo */
@@ -46,3 +75,5 @@ export async function login(
     ...(options ?? {}),
   });
 }
+
+/**  ----------------- AuthorizationController end ----------------- */

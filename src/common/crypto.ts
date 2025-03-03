@@ -4,8 +4,8 @@ import { getPubKey } from '@/services/ant-design-pro/base';
 
 async function initial() {
   const result = await getPubKey();
-  if (result?.data) {
-    const rsa = new NodeRSA(result.data, 'pkcs8-public-pem');
+  if (result) {
+    const rsa = new NodeRSA(result, 'pkcs8-public-pem');
     rsa.setOptions({ encryptionScheme: 'pkcs1' });
     return rsa;
   } else {

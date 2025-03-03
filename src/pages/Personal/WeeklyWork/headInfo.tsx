@@ -22,7 +22,7 @@ export interface HeadContent {
 async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'on' });
   return (
-    result?.data?.map((item) => {
+    result?.map((item) => {
       return { value: item.id, label: item.name };
     }) || []
   );
