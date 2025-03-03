@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Col, Input, InputNumber, message, Row } from 'antd';
+import { Input, InputNumber, message, Row } from 'antd';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
-  UndoOutlined,
   CheckOutlined,
   CloseOutlined,
+  UndoOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignTopOutlined,
 } from '@ant-design/icons';
@@ -48,7 +48,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
   }
 
   return (
-    <div>
+    <div className={dynamicStyle.todoWrap}>
       <Row>
         <InputNumber
           size={'small'}
@@ -57,6 +57,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
           min={1}
           changeOnWheel={true}
           value={todo.priority}
+          className={dynamicStyle.priority}
           onChange={(value) => setTodo({ ...todo, priority: value })}
           onBlur={() => save(todo)}
         />
@@ -90,31 +91,27 @@ export default function TodoWork({ todoParam, postUpdate }) {
           className={dynamicStyle.icons}
           onClick={() => save({ ...todo, startDate: dayjs(todo.startDate).add(1, 'day') })}
         />
+        {todo.fold ? (
+          // 展开
+          <VerticalAlignBottomOutlined
+            className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
+            onClick={() => setTodo({ ...todo, fold: true })}
+          />
+        ) : (
+          // 收起
+          <VerticalAlignTopOutlined
+            className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
+            onClick={() => setTodo({ ...todo, fold: false })}
+          />
+        )}
       </Row>
       <Row>
-        <Col span={22}>
-          <Input
-            value={todo.title}
-            className={dynamicStyle.title}
-            onChange={(e) => setTodo({ ...todo, title: e.target.value })}
-            onBlur={() => save(todo)}
-          />
-        </Col>
-        <Col span={2}>
-          {todo.fold ? (
-            // 展开
-            <VerticalAlignBottomOutlined
-              className={dynamicStyle.icon}
-              onClick={() => setTodo({ ...todo, fold: true })}
-            />
-          ) : (
-            // 收起
-            <VerticalAlignTopOutlined
-              className={dynamicStyle.icon}
-              onClick={() => setTodo({ ...todo, fold: false })}
-            />
-          )}
-        </Col>
+        <Input
+          value={todo.title}
+          className={dynamicStyle.title}
+          onChange={(e) => setTodo({ ...todo, title: e.target.value })}
+          onBlur={() => save(todo)}
+        />
       </Row>
       {!todo.fold && (
         <Row>

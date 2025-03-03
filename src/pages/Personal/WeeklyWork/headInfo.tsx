@@ -20,7 +20,7 @@ export interface HeadContent {
 }
 
 async function getSubTags(param) {
-  const result = await getTags({ ...param, status: 'on' });
+  const result = await getTags({ ...param, status: 'DOING' });
   return (
     result?.map((item) => {
       return { value: item.id, label: item.name };

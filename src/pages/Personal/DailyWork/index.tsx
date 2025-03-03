@@ -62,7 +62,7 @@ export default function DailyWork() {
             return <Activity key={item.id + time} dailyWorkParam={item} postUpdate={postUpdate} />;
           })}
         </Col>
-        <Col span={3}>
+        <Col span={6}>
           <TodoWorkWrap />
         </Col>
       </Row>

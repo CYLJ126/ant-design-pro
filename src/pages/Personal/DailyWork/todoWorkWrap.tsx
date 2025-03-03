@@ -7,7 +7,7 @@ import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import { listTodoWork } from '@/services/ant-design-pro/dailyWork';
 import TodoWork from './todoWork';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -15,6 +15,11 @@ export default function TodoWorkWrap() {
   const [date, setDate] = useState(dayjs());
   const [todoWorks, setTodoWorks] = useState([]);
   const { styles: dynamicStyle } = todoWorkWrapStyle();
+
+  function toggleDay(type) {
+    let temp = date.add(type === 'former' ? -1 : 1, 'day');
+    setDate(temp);
+  }
 
   function listTodos() {
     dayjs.extend(utc);
@@ -47,26 +52,32 @@ export default function TodoWorkWrap() {
 
   const time = new Date().getTime();
   return (
-    <div>
-      <Row>
-        <DatePicker
-          defaultValue={dayjs(date, dateFormat)}
-          className={dynamicStyle.date}
-          format={dateFormat}
-          onChange={(date) => {
-            setDate(date);
-          }}
-        />
-        <PlusOutlined onClick={addTodo} />
+    <div className={dynamicStyle.wrap}>
+      <Row className={dynamicStyle.headRow}>
+        <div className={dynamicStyle.headDiv}>
+          <VerticalRightOutlined
+            className={dynamicStyle.forwardDay}
+            onClick={() => toggleDay('former')}
+          />
+          <DatePicker
+            defaultValue={dayjs(date, dateFormat)}
+            className={dynamicStyle.date}
+            format={dateFormat}
+            onChange={(date) => {
+              setDate(date);
+            }}
+          />
+          <VerticalLeftOutlined
+            className={dynamicStyle.forwardDay}
+            onClick={() => toggleDay('latter')}
+          />
+        </div>
+        <PlusOutlined onClick={addTodo} className={dynamicStyle.headPlus} />
       </Row>
       <Row>
-        <ul>
-          {todoWorks.map((item) => (
-            <li key={item.id + time}>
-              <TodoWork todoParam={item} postUpdate={listTodos} />
-            </li>
-          ))}
-        </ul>
+        {todoWorks.map((item) => (
+          <TodoWork key={item.id + time} todoParam={item} postUpdate={listTodos} />
+        ))}
       </Row>
     </div>
   );
