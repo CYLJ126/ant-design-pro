@@ -2,11 +2,9 @@ import { createStyles } from 'antd-style';
 
 export default function todoWorkStyle(status) {
   let color = status === 'DONE' ? '#63bd89' : '#81d3f8';
-  let backgroundColor = status === 'DONE' ? '#63bd89' : '#b5d8f7';
   return createStyles(({ css }) => ({
     todoWrap: css`
-      // background-color: ${backgroundColor};
-      margin-bottom: 5px;
+      margin-top: 5px;
       width: 90%;
       margin-left: 5%;
 
@@ -18,6 +16,10 @@ export default function todoWorkStyle(status) {
         background-color: transparent;
       }
     `,
+    operation: css`
+      border-radius: 5px 5px 0 0;
+      background-color: ${color};
+    `,
     priority: css`
       height: 25px;
       width: 80px;
@@ -25,6 +27,20 @@ export default function todoWorkStyle(status) {
 
       .ant-input-number-group-addon {
         padding: 2px;
+        border: none;
+        color: #ffffff;
+      }
+
+      .ant-input-number {
+        border: none;
+      }
+
+      .ant-input-number-input {
+        border: none;
+        border-radius: 0;
+        color: #ffffff;
+        font-weight: bold;
+        background-color: ${color} !important;
       }
     `,
     icons: css`
@@ -32,15 +48,18 @@ export default function todoWorkStyle(status) {
       height: 25px;
       border: 3px;
       margin-left: 5px;
-      color: ${color};
+      color: #ffffff;
     `,
     title: css`
       width: 100%;
       height: 25px;
       color: white;
       background-color: ${color};
+      opacity: 0.75;
       border: none;
       border-radius: 0;
+      text-align: center;
+      font-weight: bold;
 
       :hover {
         background-color: ${color};
@@ -48,10 +67,12 @@ export default function todoWorkStyle(status) {
     `,
     content: css`
       width: 100%;
-      border-radius: 0;
+      height: 75px !important;
+      border-radius: 0 0 5px 5px;
       border: none;
-      color: white;
-      background-color: #b5d8f7;
+      color: #ffffff;
+      background-color: ${color};
+      opacity: 0.5;
 
       :hover {
         background-color: #b5d8f7;

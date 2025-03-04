@@ -49,7 +49,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
 
   return (
     <div className={dynamicStyle.todoWrap}>
-      <Row>
+      <Row className={dynamicStyle.operation}>
         <InputNumber
           size={'small'}
           addonBefore={'优先级'}
@@ -94,13 +94,13 @@ export default function TodoWork({ todoParam, postUpdate }) {
           // 展开
           <VerticalAlignBottomOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => setTodo({ ...todo, fold: true })}
+            onClick={() => setTodo({ ...todo, fold: false })}
           />
         ) : (
           // 收起
           <VerticalAlignTopOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => setTodo({ ...todo, fold: false })}
+            onClick={() => setTodo({ ...todo, fold: true })}
           />
         )}
       </Row>
