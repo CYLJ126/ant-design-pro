@@ -54,7 +54,7 @@ export default function TodoWorkWrap() {
   return (
     <div className={dynamicStyle.wrap}>
       <Row className={dynamicStyle.headRow}>
-        <div className={dynamicStyle.headDiv}>
+        <Row className={dynamicStyle.headDiv}>
           <VerticalRightOutlined
             className={dynamicStyle.forwardDay}
             onClick={() => toggleDay('former')}
@@ -71,7 +71,7 @@ export default function TodoWorkWrap() {
             className={dynamicStyle.forwardDay}
             onClick={() => toggleDay('latter')}
           />
-        </div>
+        </Row>
         <PlusOutlined onClick={addTodo} className={dynamicStyle.headPlus} />
       </Row>
       <Row>

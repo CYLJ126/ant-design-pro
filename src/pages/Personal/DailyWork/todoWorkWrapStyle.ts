@@ -22,16 +22,15 @@ export default function todoWorkWrapStyle() {
       margin-right: auto;
     `,
     forwardDay: css`
-      top: 10px;
-
       svg {
         width: 25px;
         height: 25px;
-        color: #81d3f8;
+        color: #d1abbb;
       }
     `,
     date: css`
-      height: 45px;
+      margin-top: 6px !important;
+      height: 35px;
       width: 130px;
       border: none;
       background-color: #e2ccf7;
