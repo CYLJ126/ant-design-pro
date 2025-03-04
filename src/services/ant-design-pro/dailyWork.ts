@@ -186,7 +186,7 @@ export async function updateTodoWork(param) {
  * @param id 请求参数 ID
  */
 export async function deleteTodoWork(id?: number) {
-  return jsonPost('/dw/todoWork/updateTodoWork', { id: id });
+  return jsonPost('/dw/todoWork/deleteTodoWork', { id: id });
 }
 
 /**  ----------------- TodoWorkController end ----------------- */

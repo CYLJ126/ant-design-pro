@@ -34,7 +34,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
     let temp = {
       id: null,
       status: param.status,
-      startDate: dayjs(todo.startDate).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+      startDate: dayjs(param.startDate).utc().local().format('YYYY-MM-DD HH:mm:ss'),
       title: param.title,
       content: param.content,
       priority: param.priority,
@@ -77,8 +77,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
         <CloseOutlined
           className={dynamicStyle.icons}
           onClick={() => {
-            deleteTodoWork(todo.id).then();
-            postUpdate();
+            deleteTodoWork(todo.id).then(() => postUpdate());
           }}
         />
         {/* 推入前一天 */}
