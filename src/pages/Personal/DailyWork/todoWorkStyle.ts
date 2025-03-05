@@ -64,6 +64,10 @@ export default function todoWorkStyle(status) {
       :hover {
         background-color: ${color};
       }
+
+      :focus {
+        background-color: ${color};
+      }
     `,
     content: css`
       width: 100%;
@@ -75,7 +79,13 @@ export default function todoWorkStyle(status) {
       opacity: 0.5;
 
       :hover {
-        background-color: #b5d8f7;
+        background-color: ${color};
+        opacity: 0.5;
+      }
+
+      :focus {
+        background-color: ${color};
+        opacity: 0.5;
       }
     `,
   }))();
