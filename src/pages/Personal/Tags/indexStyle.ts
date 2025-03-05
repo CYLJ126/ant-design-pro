@@ -1,8 +1,9 @@
 import { createStyles } from 'antd-style';
 
 export default function tagStyle(title, color, level) {
-  const titleWidth = title.length * 14 + 25;
-  let opacity = 1 - level / 10;
+  let titleWidth = title.length * 14 + 25;
+  titleWidth = titleWidth < 40 ? 45 : titleWidth;
+  let opacity = 1 - level / 5;
   opacity = opacity < 0.3 ? 0.3 : opacity;
   return createStyles(({ css }) => ({
     title: css`

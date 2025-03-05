@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input, Space, Tree, TreeNodeProps } from 'antd';
 import {
   DownOutlined,
@@ -35,43 +35,64 @@ function Title({ tagDto, handleFunc }) {
   );
 }
 
-function generateTag(tagDto, handleFunc) {
-  return {
-    title: <Title tagDto={tagDto} handleFunc={handleFunc} />,
-    key: tagDto.id + tagDto.time,
-    icon: <TagOutlined />,
-  };
-}
-
-function generateTags(tagList, level, time, handleTag) {
-  if (!tagList || tagList === []) {
-    return [];
-  }
-  let colorIndex = 0;
-  return tagList.map((item) => {
-    let tagColor = colors[colorIndex % 7];
-    let tag: TreeNodeProps = generateTag(
-      { ...item, color: tagColor, level: level, time: time },
-      handleTag,
-    );
-    colorIndex++;
-    tag.children = generateTags(item.subTags, level + 1, time, handleTag);
-    return tag;
-  });
-}
-
 export default function Tags() {
   const [trees, setTrees] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const treeRef = useRef(null);
 
-  function addNewTag(tags, currentTag) {
+  function generateTag(tagDto, handleFunc) {
+    return {
+      id: tagDto.id,
+      title: <Title tagDto={tagDto} handleFunc={handleFunc} />,
+      key: tagDto.id + tagDto.time,
+      level: tagDto.level,
+      color: tagDto.color,
+      fatherId: tagDto.fatherId,
+      icon: <TagOutlined />,
+    };
+  }
+
+  function generateTags(tagList, level, time, handle) {
+    if (!tagList || tagList === []) {
+      return [];
+    }
+    let colorIndex = 0;
+    return tagList.map((item) => {
+      let tagColor = colors[colorIndex % 7];
+      let tag: TreeNodeProps = generateTag(
+        { ...item, color: tagColor, level: level, time: time },
+        handle,
+      );
+      colorIndex++;
+      tag.children = generateTags(item.children, level + 1, time, handle);
+      return tag;
+    });
+  }
+
+  function addNewTag(tags, currentTag, handle) {
     return tags.map((item) => {
       // 只支持一次新增一个标签，只有向后端插入了有 id 了才支持新增另一个标签
       if (item.id === currentTag.id) {
-        let subTags = item.subTags ?? [];
-        subTags.push({ key: item.key + new Date().getTime(), title: '' });
-      } else if (item.subTags) {
+        let children = item.children ?? [];
+        let tempTime = new Date().getTime();
+        children.push(
+          generateTag(
+            {
+              key: item.key + tempTime,
+              time: tempTime,
+              level: item.level + 1,
+              name: '标签',
+              fatherId: item.id,
+              color: item.color,
+            },
+            handle,
+          ),
+        );
+        item.children = children;
+        setExpandedKeys([item.key]);
+      } else if (item.children) {
         // 查找下级标签
-        item.subTags = addNewTag(item.subTags, currentTag);
+        item.children = addNewTag(item.children, currentTag, handle);
       }
       return item;
     });
@@ -100,8 +121,13 @@ export default function Tags() {
         });
       }
     } else if (tag.type === 'add') {
-      setTrees(addNewTag(trees, tag));
+      let newTags = addNewTag(treeRef.current.props.treeData, tag, handleTag);
+      setTrees(newTags);
     }
+  }
+
+  function onExpand(expandedKeys) {
+    setExpandedKeys([...expandedKeys]);
   }
 
   useEffect(() => {
@@ -112,10 +138,12 @@ export default function Tags() {
 
   return (
     <Tree
+      ref={treeRef}
       showLine
       showIcon
       draggable
-      defaultExpandAll
+      expandedKeys={expandedKeys}
+      onExpand={onExpand}
       switcherIcon={<DownOutlined />}
       treeData={trees}
     />
