@@ -27,8 +27,8 @@ export default function TodoWork({ todoParam, postUpdate }) {
 
   function save(param) {
     console.log('保存参数：' + JSON.stringify(param));
-    if (!param.title || !param.content || !param.priority) {
-      message.error('请完善待办信息！');
+    if (!param.title) {
+      message.error('请填写待办标题！');
       return;
     }
     let temp = {
@@ -112,7 +112,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
           onBlur={() => save(todo)}
         />
       </Row>
-      {!todo.fold && (
+      {!todo.fold && todo.content && (
         <Row>
           <Input.TextArea
             value={todo.content}
