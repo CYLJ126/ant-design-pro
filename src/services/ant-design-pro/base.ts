@@ -8,6 +8,10 @@ export async function getTags(param) {
   return jsonPost('/base/tag/listTags', param);
 }
 
+export async function listRecursive(param) {
+  return jsonPost('/base/tag/listRecursive', param);
+}
+
 /**
  * 插入标签
  * @param param 标签对象

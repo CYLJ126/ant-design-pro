@@ -1,50 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Tree, Input, Space } from 'antd';
+import { Input, Space, Tree, TreeNodeProps } from 'antd';
 import {
   DownOutlined,
   MinusCircleOutlined,
-  TagOutlined,
   PlusCircleOutlined,
+  TagOutlined,
 } from '@ant-design/icons';
 import tagStyle from './indexStyle';
+import { addTag, deleteTag, listRecursive, updateTag } from '@/services/ant-design-pro/base';
 
 const colors = ['#ce2416', '#f78922', '#f6c114', '#64bd89', '#59aec6', '#2484b6', '#7f3b83'];
-
-const treeJson = [
-  {
-    name: '日课',
-    id: 24,
-    subTags: [
-      {
-        name: '工作',
-        id: 1,
-      },
-      {
-        name: '治学',
-        id: 2,
-      },
-      {
-        name: '修身',
-        id: 3,
-      },
-    ],
-  },
-  {
-    name: '项目目',
-    id: 29,
-    subTags: [],
-  },
-  {
-    name: '其他其他',
-    id: 30,
-    subTags: [
-      {
-        name: '其他',
-        id: 31,
-      },
-    ],
-  },
-];
 
 function Title({ tagDto, handleFunc }) {
   const [title, setTitle] = useState(tagDto.name);
@@ -56,14 +21,15 @@ function Title({ tagDto, handleFunc }) {
           className={dynamicStyle.title}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => handleFunc(tagDto.id, title, 'update')}
+          onBlur={() => handleFunc({ ...tagDto, name: title, type: 'update' })}
         />
       </Space.Compact>
       <Space.Compact>
-        <PlusCircleOutlined onClick={() => handleFunc(tagDto.id, title, 'add')} />
+        {/*在当前标签的最后一个子标签中添加一个新标签*/}
+        <PlusCircleOutlined onClick={() => handleFunc({ ...tagDto, type: 'add' })} />
       </Space.Compact>
       <Space.Compact>
-        <MinusCircleOutlined onClick={() => handleFunc(tagDto.id, title, 'delete')} />
+        <MinusCircleOutlined onClick={() => handleFunc({ ...tagDto, type: 'delete' })} />
       </Space.Compact>
     </Space>
   );
@@ -84,7 +50,10 @@ function generateTags(tagList, level, time, handleTag) {
   let colorIndex = 0;
   return tagList.map((item) => {
     let tagColor = colors[colorIndex % 7];
-    let tag = generateTag({ ...item, color: tagColor, level: level, time: time }, handleTag);
+    let tag: TreeNodeProps = generateTag(
+      { ...item, color: tagColor, level: level, time: time },
+      handleTag,
+    );
     colorIndex++;
     tag.children = generateTags(item.subTags, level + 1, time, handleTag);
     return tag;
@@ -94,15 +63,61 @@ function generateTags(tagList, level, time, handleTag) {
 export default function Tags() {
   const [trees, setTrees] = useState([]);
 
-  function handleTag(id, title, type) {
-    console.log('参数【id: ' + id + ' , title: ' + title + ' , type: ' + type);
+  function addNewTag(tags, currentTag) {
+    return tags.map((item) => {
+      // 只支持一次新增一个标签，只有向后端插入了有 id 了才支持新增另一个标签
+      if (item.id === currentTag.id) {
+        let subTags = item.subTags ?? [];
+        subTags.push({ key: item.key + new Date().getTime(), title: '' });
+      } else if (item.subTags) {
+        // 查找下级标签
+        item.subTags = addNewTag(item.subTags, currentTag);
+      }
+      return item;
+    });
+  }
+
+  function handleTag(tag) {
+    console.log('参数【id: ' + tag.id + ' , title: ' + tag.title + ' , type: ' + tag.type);
+    if (tag.type === 'delete') {
+      deleteTag(tag.id).then(() => {
+        listRecursive({}).then((result) => {
+          setTrees(generateTags(result, 1, new Date().getTime(), handleTag));
+        });
+      });
+    } else if (tag.type === 'update') {
+      if (tag.id) {
+        updateTag(tag).then(() => {
+          listRecursive({}).then((result) => {
+            setTrees(generateTags(result, 1, new Date().getTime(), handleTag));
+          });
+        });
+      } else {
+        addTag(tag).then(() => {
+          listRecursive({}).then((result) => {
+            setTrees(generateTags(result, 1, new Date().getTime(), handleTag));
+          });
+        });
+      }
+    } else if (tag.type === 'add') {
+      setTrees(addNewTag(trees, tag));
+    }
   }
 
   useEffect(() => {
-    setTrees(generateTags(treeJson, 1, new Date().getTime(), handleTag));
+    listRecursive({}).then((result) => {
+      setTrees(generateTags(result, 1, new Date().getTime(), handleTag));
+    });
   }, []);
 
   return (
-    <Tree showLine showIcon defaultExpandAll switcherIcon={<DownOutlined />} treeData={trees} />
+    <Tree
+      showLine
+      showIcon
+      draggable
+      defaultExpandAll
+      switcherIcon={<DownOutlined />}
+      treeData={trees}
+    />
   );
 }
