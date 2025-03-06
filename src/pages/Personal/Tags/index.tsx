@@ -1,42 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Space, Tree, TreeNodeProps } from 'antd';
-import { DownOutlined, TagOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import tagStyle from './indexStyle';
 import { addTag, deleteTag, listRecursive, updateTag } from '@/services/ant-design-pro/base';
 import AddIcon from '@/icons/AddIcon';
 import DeleteIcon from '@/icons/DeleteIcon';
+import TagIcon from '@/icons/TagIcon';
 
 const colors = ['#ce2416', '#f78922', '#f6c114', '#64bd89', '#59aec6', '#2484b6', '#7f3b83'];
 
 function Title({ tagDto, handleFunc }) {
-  const [title, setTitle] = useState(tagDto.name);
+  const [title, setTitle] = useState(tagDto.title);
   const { styles: dynamicStyle } = tagStyle(title, tagDto.color, tagDto.level);
   return (
-    <Space size="small">
+    <Space>
       <Space.Compact>
         <Input
           className={dynamicStyle.title}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => handleFunc({ ...tagDto, name: title, type: 'update' })}
+          onBlur={() => handleFunc({ ...tagDto, title: title, type: 'update' })}
         />
       </Space.Compact>
-      <Space.Compact className={dynamicStyle.addIcon}>
+      <Space.Compact
+        className={dynamicStyle.addIcon}
+        onClick={() => handleFunc({ ...tagDto, type: 'add' })}
+      >
         {/*在当前标签的最后一个子标签中添加一个新标签*/}
-        <AddIcon
-          width={20}
-          height={20}
-          color={tagDto.color}
-          onClick={() => handleFunc({ ...tagDto, type: 'add' })}
-        />
+        <AddIcon width={20} height={20} color={tagDto.color} />
       </Space.Compact>
-      <Space.Compact className={dynamicStyle.deleteIcon}>
-        <DeleteIcon
-          width={23}
-          height={23}
-          color={tagDto.color}
-          onClick={() => handleFunc({ ...tagDto, type: 'delete' })}
-        />
+      <Space.Compact
+        className={dynamicStyle.deleteIcon}
+        onClick={() => handleFunc({ ...tagDto, type: 'delete' })}
+      >
+        <DeleteIcon width={23} height={23} color={tagDto.color} />
       </Space.Compact>
     </Space>
   );
@@ -55,7 +52,7 @@ export default function Tags() {
       level: tagDto.level,
       color: tagDto.color,
       fatherId: tagDto.fatherId,
-      icon: <TagOutlined />,
+      icon: <TagIcon width={18} height={18} color={tagDto.color} margin="7px 15px 0 0" />,
     };
   }
 
@@ -67,7 +64,7 @@ export default function Tags() {
     return tagList.map((item) => {
       let tagColor = colors[colorIndex % 7];
       let tag: TreeNodeProps = generateTag(
-        { ...item, color: tagColor, level: level, time: time },
+        { ...item, title: item.name, color: tagColor, level: level, time: time },
         handle,
       );
       colorIndex++;
@@ -88,7 +85,7 @@ export default function Tags() {
               key: item.key + tempTime,
               time: tempTime,
               level: item.level + 1,
-              name: '标签',
+              title: '标签',
               fatherId: item.id,
               color: item.color,
             },
@@ -107,6 +104,8 @@ export default function Tags() {
 
   function handleTag(tag) {
     console.log('参数【id: ' + tag.id + ' , title: ' + tag.title + ' , type: ' + tag.type);
+    // 后端字段名转换
+    tag.name = tag.title;
     if (tag.type === 'delete') {
       deleteTag(tag.id).then(() => {
         listRecursive({}).then((result) => {
