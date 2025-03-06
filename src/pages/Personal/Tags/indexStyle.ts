@@ -21,5 +21,15 @@ export default function tagStyle(title, color, level) {
         background-color: ${color};
       }
     `,
+    addIcon: css`
+      position: absolute;
+      top: 3px;
+    `,
+    deleteIcon: css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      //right: -30px;
+    `,
   }))();
 }

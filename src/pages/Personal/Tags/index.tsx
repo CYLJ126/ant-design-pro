@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Space, Tree, TreeNodeProps } from 'antd';
-import {
-  DownOutlined,
-  MinusCircleOutlined,
-  PlusCircleOutlined,
-  TagOutlined,
-} from '@ant-design/icons';
+import { DownOutlined, TagOutlined } from '@ant-design/icons';
 import tagStyle from './indexStyle';
 import { addTag, deleteTag, listRecursive, updateTag } from '@/services/ant-design-pro/base';
+import AddIcon from '@/icons/AddIcon';
+import DeleteIcon from '@/icons/DeleteIcon';
 
 const colors = ['#ce2416', '#f78922', '#f6c114', '#64bd89', '#59aec6', '#2484b6', '#7f3b83'];
 
@@ -15,7 +12,7 @@ function Title({ tagDto, handleFunc }) {
   const [title, setTitle] = useState(tagDto.name);
   const { styles: dynamicStyle } = tagStyle(title, tagDto.color, tagDto.level);
   return (
-    <Space size="middle">
+    <Space size="small">
       <Space.Compact>
         <Input
           className={dynamicStyle.title}
@@ -24,12 +21,22 @@ function Title({ tagDto, handleFunc }) {
           onBlur={() => handleFunc({ ...tagDto, name: title, type: 'update' })}
         />
       </Space.Compact>
-      <Space.Compact>
+      <Space.Compact className={dynamicStyle.addIcon}>
         {/*在当前标签的最后一个子标签中添加一个新标签*/}
-        <PlusCircleOutlined onClick={() => handleFunc({ ...tagDto, type: 'add' })} />
+        <AddIcon
+          width={20}
+          height={20}
+          color={tagDto.color}
+          onClick={() => handleFunc({ ...tagDto, type: 'add' })}
+        />
       </Space.Compact>
-      <Space.Compact>
-        <MinusCircleOutlined onClick={() => handleFunc({ ...tagDto, type: 'delete' })} />
+      <Space.Compact className={dynamicStyle.deleteIcon}>
+        <DeleteIcon
+          width={23}
+          height={23}
+          color={tagDto.color}
+          onClick={() => handleFunc({ ...tagDto, type: 'delete' })}
+        />
       </Space.Compact>
     </Space>
   );
