@@ -77,6 +77,9 @@ export default function todoWorkStyle(status) {
       color: #ffffff;
       background-color: ${color};
       opacity: 0.5;
+      // 支持滚动，但不显示滚动条
+      overflow: auto;
+      scrollbar-width: none;
 
       :hover {
         background-color: ${color};

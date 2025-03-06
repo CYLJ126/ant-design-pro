@@ -21,7 +21,7 @@ import {
 } from '@/services/ant-design-pro/dailyWork';
 
 export default function TodoWork({ todoParam, postUpdate }) {
-  const [todo, setTodo] = useState({ ...todoParam, fold: false });
+  const [todo, setTodo] = useState(todoParam);
   const { styles: dynamicStyle } = todoWorkStyle(todo.status);
   dayjs.extend(utc);
 
@@ -40,7 +40,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
       priority: param.priority,
     };
     if (!param.id) {
-      insertTodoWork(temp).then(() => postUpdate());
+      insertTodoWork(temp).then(() => postUpdate(temp));
     } else {
       temp.id = param.id;
       updateTodoWork(temp).then(() => postUpdate());
@@ -112,7 +112,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
           onBlur={() => save(todo)}
         />
       </Row>
-      {!todo.fold && todo.content && (
+      {!todo.fold && (
         <Row>
           <Input.TextArea
             value={todo.content}
