@@ -1,7 +1,9 @@
 import { createStyles } from 'antd-style';
+import { calculateStringValue } from '@/common/stringUtil';
 
 export default function tagStyle(title, color, level) {
-  let titleWidth = title.length * 14 + 25;
+  // 计算字符长度
+  let titleWidth = calculateStringValue(title);
   titleWidth = titleWidth < 40 ? 45 : titleWidth;
   let opacity = 1 - level / 5;
   opacity = opacity < 0.3 ? 0.3 : opacity;
@@ -18,6 +20,7 @@ export default function tagStyle(title, color, level) {
       color: #ffffff;
       background-color: ${color};
       opacity: ${opacity};
+      text-align: center;
 
       :hover {
         background-color: ${color};

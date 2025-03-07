@@ -97,7 +97,7 @@ export default function Tags() {
           level: item.level + 1,
           title: '新标签',
           fatherId: item.id,
-          color: item.color,
+          color: '#919191',
         };
         children.push(generateTag(toAdd, handle));
         item.children = children;
@@ -165,7 +165,6 @@ export default function Tags() {
       ref={treeRef}
       showLine
       showIcon
-      draggable
       expandedKeys={expandedKeys}
       onExpand={onExpand}
       switcherIcon={<DownOutlined />}
