@@ -31,7 +31,7 @@ export default function TodoWorkWrap() {
       setTodoWorks(
         result.map((item) => {
           // 有内容时展开，没内容时收起
-          item.fold = !item.content;
+          item.fold = !item.content || item.status === 'DONE';
           if (newAdd?.title === item.title) {
             // 如果是刚刚新增的，还没有 content 就保存了，这时，也要保持展开，支持内容编辑
             item.fold = false;
