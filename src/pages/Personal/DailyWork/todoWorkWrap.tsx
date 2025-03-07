@@ -71,7 +71,7 @@ export default function TodoWorkWrap() {
             onClick={() => toggleDay('former')}
           />
           <DatePicker
-            defaultValue={dayjs(date, dateFormat)}
+            value={dayjs(date, dateFormat)}
             className={dynamicStyle.date}
             format={dateFormat}
             onChange={(date) => {

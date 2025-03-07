@@ -39,6 +39,11 @@ export default function todoWorkWrapStyle() {
         background-color: #e2ccf7;
       }
 
+      // focus 且鼠标不在输入框上时的样式
+      :focus-within {
+        background-color: #e2ccf7;
+      }
+
       .ant-picker-input {
         input {
           color: white;
