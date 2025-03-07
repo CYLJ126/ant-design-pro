@@ -29,11 +29,9 @@ export default function tagStyle(title, color, level) {
     `,
     addIcon: css`
       position: absolute;
-      top: 3px;
+      top: 4px;
     `,
     deleteIcon: css`
-      top: 0;
-      left: 0;
       padding-left: 15px;
     `,
   }))();
