@@ -33,7 +33,7 @@ export default function DailyWork() {
 
   function addBlankDailyWork(date) {
     const blankOne = {
-      status: 'INITIAL',
+      status: 'DOING',
       proportion: 0,
       startTime: date,
       endTime: date,

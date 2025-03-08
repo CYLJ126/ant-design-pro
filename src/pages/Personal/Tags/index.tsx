@@ -95,6 +95,7 @@ export default function Tags() {
           key: item.key + tempTime,
           time: tempTime,
           level: item.level + 1,
+          status: 'DOING',
           title: '新标签',
           fatherId: item.id,
           color: '#919191',
