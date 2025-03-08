@@ -1,22 +1,22 @@
 import { createStyles } from 'antd-style';
 
 export default function todoWorkWrapStyle() {
-  let arrowColor = '#d1abbb';
-  let headBackgroundColor = '#e9ddf5';
-  let backgroundColor = '#e2ccf7';
+  const arrowColor = '#ffffff';
+  const backgroundColor = '#ccebf7';
+  const headBackgroundColor = '#81d3f8';
   return createStyles(({ css }) => ({
     wrap: css`
       width: 95%;
       // 取视口高度的90%
       height: 90vh;
-      background-color: ${headBackgroundColor};
+      background-color: ${backgroundColor};
       margin-left: 20px;
       border-radius: 10px;
       box-shadow: -3px 5px 7px #bdc4bd;
     `,
     headRow: css`
       height: 50px;
-      background-color: ${backgroundColor};
+      background-color: ${headBackgroundColor};
       border-radius: 10px 10px 0 0;
     `,
     headDiv: css`
@@ -32,19 +32,19 @@ export default function todoWorkWrapStyle() {
       }
     `,
     date: css`
-      margin-top: 6px !important;
+      margin-top: 8px !important;
       height: 35px;
       width: 130px;
       border: none;
-      background-color: ${backgroundColor};
+      background-color: ${headBackgroundColor};
 
       :hover {
-        background-color: ${backgroundColor};
+        background-color: ${headBackgroundColor};
       }
 
       // focus 且鼠标不在输入框上时的样式
       :focus-within {
-        background-color: ${backgroundColor};
+        background-color: ${headBackgroundColor};
       }
 
       .ant-picker-input {
@@ -57,7 +57,7 @@ export default function todoWorkWrapStyle() {
 
         input:hover {
           color: white;
-          background-color: ${backgroundColor};
+          background-color: ${headBackgroundColor};
           cursor: pointer;
         }
       }

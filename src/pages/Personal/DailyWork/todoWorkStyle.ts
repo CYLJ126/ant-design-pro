@@ -1,7 +1,8 @@
 import { createStyles } from 'antd-style';
 
 export default function todoWorkStyle(status) {
-  let color = status === 'DONE' ? '#63bd89' : '#81d3f8';
+  let color = status === 'DONE' ? '#63bd89' : '#6294a5';
+  let contentColor = status === 'DONE' ? '#92d1b4' : '#8bbbcc';
   return createStyles(({ css }) => ({
     todoWrap: css`
       margin-top: 5px;
@@ -55,7 +56,7 @@ export default function todoWorkStyle(status) {
       height: 25px;
       color: white;
       background-color: ${color};
-      opacity: 0.75;
+      opacity: 0.8;
       border: none;
       border-radius: 0;
       text-align: center;
@@ -71,24 +72,20 @@ export default function todoWorkStyle(status) {
     `,
     content: css`
       width: 100%;
-      height: 75px !important;
       border-radius: 0 0 5px 5px;
       border: none;
       color: #ffffff;
-      background-color: ${color};
-      opacity: 0.5;
+      background-color: ${contentColor};
       // 支持滚动，但不显示滚动条
       overflow: auto;
       scrollbar-width: none;
 
       :hover {
-        background-color: ${color};
-        opacity: 0.5;
+        background-color: ${contentColor};
       }
 
       :focus {
-        background-color: ${color};
-        opacity: 0.5;
+        background-color: ${contentColor};
       }
     `,
   }))();

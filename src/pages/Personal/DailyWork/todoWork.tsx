@@ -115,6 +115,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
       {!todo.fold && (
         <Row>
           <Input.TextArea
+            autoSize
             value={todo.content}
             className={dynamicStyle.content}
             onChange={(e) => setTodo({ ...todo, content: e.target.value })}
