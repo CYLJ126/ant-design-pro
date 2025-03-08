@@ -5,7 +5,7 @@ export default function tagStyle(title, color, level) {
   // 计算字符长度
   let titleWidth = calculateStringValue(title);
   titleWidth = titleWidth < 40 ? 45 : titleWidth;
-  let opacity = 1 - level / 5;
+  let opacity = 1 - level / 10;
   opacity = opacity < 0.3 ? 0.3 : opacity;
   return createStyles(({ css }) => ({
     tag: css`
@@ -21,6 +21,7 @@ export default function tagStyle(title, color, level) {
       background-color: ${color};
       opacity: ${opacity};
       text-align: center;
+      border: none;
 
       :hover {
         background-color: ${color};

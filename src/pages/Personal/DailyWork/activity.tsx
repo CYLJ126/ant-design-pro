@@ -68,6 +68,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
+  const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
 
   function save(param) {
     if (!param.targetId) {
@@ -238,7 +239,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                 <DeleteIcon
                   width={25}
                   height={25}
-                  color="#81d3f8"
+                  color={color}
                   onClick={() => {
                     handleDoneOrDelete(dailyWork.id, 'delete');
                   }}
@@ -248,6 +249,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                   <SuccessIcon
                     width={20}
                     height={20}
+                    color={color}
                     margin="3px 0 0 4px"
                     onClick={() => {
                       handleDoneOrDelete(dailyWork.id, 'DONE');
@@ -256,7 +258,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                 ) : (
                   // 待办
                   <UndoOutlined
-                    className={dynamicStyle.icons}
+                    className={dynamicStyle.todoIcon}
                     onClick={() => {
                       handleDoneOrDelete(dailyWork.id, 'INITIAL');
                     }}
@@ -270,6 +272,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                 <ArrowRightIcon
                   width={23}
                   height={24}
+                  color={color}
                   margin="2px 0 0 2px"
                   onClick={() => {
                     handleDoneOrDelete(dailyWork.id, 'push');

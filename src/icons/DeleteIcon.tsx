@@ -8,6 +8,10 @@ const useStyle = function tagStyle(width, height, color) {
       height: ${height}px;
       fill: ${color};
 
+      :hover {
+        cursor: pointer;
+      }
+
       line {
         stroke: ${color};
       }
@@ -19,7 +23,7 @@ const useStyle = function tagStyle(width, height, color) {
   }))();
 };
 
-export default function DeleteIcon({ width, height, color }) {
+export default function DeleteIcon({ width, height, color, onClick }) {
   const { styles } = useStyle(width, height, color);
-  return <DeleteSvg className={styles.delete} />;
+  return <DeleteSvg onClick={onClick} className={styles.delete} />;
 }

@@ -8,11 +8,15 @@ const useStyle = function tagStyle(width, height, color, margin) {
       height: ${height}px;
       fill: ${color};
       margin: ${margin};
+
+      :hover {
+        cursor: pointer;
+      }
     `,
   }))();
 };
 
-export default function SuccessIcon({ width, height, color, margin }) {
+export default function SuccessIcon({ width, height, color, margin, onClick }) {
   const { styles } = useStyle(width, height, color, margin);
-  return <CheckedSuccessSvg className={styles.success} />;
+  return <CheckedSuccessSvg onClick={onClick} className={styles.success} />;
 }

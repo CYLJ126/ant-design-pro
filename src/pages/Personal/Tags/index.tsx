@@ -24,12 +24,14 @@ function Title({ tagDto, handleFunc }) {
           onBlur={() => handleFunc({ ...tagDto, title: title, type: 'update' })}
         />
       </Space.Compact>
-      <Space.Compact
-        className={dynamicStyle.addIcon}
-        onClick={() => handleFunc({ ...tagDto, type: 'add' })}
-      >
+      <Space.Compact className={dynamicStyle.addIcon}>
         {/*在当前标签的最后一个子标签中添加一个新标签*/}
-        <AddIcon width={20} height={20} color={tagDto.color} />
+        <AddIcon
+          width={20}
+          height={20}
+          color={tagDto.color}
+          onClick={() => handleFunc({ ...tagDto, type: 'add' })}
+        />
       </Space.Compact>
       <Space.Compact
         className={dynamicStyle.deleteIcon}
@@ -125,6 +127,9 @@ export default function Tags() {
     // 后端字段名转换
     tag.name = tag.title;
     if (tag.type === 'delete') {
+      if (!tag.id) {
+        return;
+      }
       deleteTag(tag.id).then(() => {
         postUpdate(handleTag);
       });

@@ -6,6 +6,10 @@ const useStyle = function tagStyle(width, height, color, margin) {
     tag: css`
       margin: ${margin};
 
+      :hover {
+        cursor: pointer;
+      }
+
       svg {
         width: ${width}px;
         height: ${height}px;
@@ -15,7 +19,7 @@ const useStyle = function tagStyle(width, height, color, margin) {
   }))();
 };
 
-export default function TagIcon({ width, height, color, margin }) {
+export default function TagIcon({ width, height, color, margin, onClick }) {
   const { styles } = useStyle(width, height, color, margin);
-  return <TagOutlined className={styles.tag} />;
+  return <TagOutlined onClick={onClick} className={styles.tag} />;
 }

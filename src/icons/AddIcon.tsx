@@ -7,11 +7,15 @@ const useStyle = function tagStyle(width, height, color) {
       width: ${width}px;
       height: ${height}px;
       fill: ${color};
+
+      :hover {
+        cursor: pointer;
+      }
     `,
   }))();
 };
 
-export default function AddIcon({ width, height, color }) {
+export default function AddIcon({ width, height, color, onClick }) {
   const { styles } = useStyle(width, height, color);
-  return <AddSvg className={styles.add} />;
+  return <AddSvg onClick={onClick} className={styles.add} />;
 }

@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 export default function activityStyle(status) {
   let frontColor, backColor;
   if (status === 'DONE') {
-    frontColor = '#63bd89';
+    frontColor = '#6294a5';
     backColor = '#ffffff';
   } else {
     frontColor = '#81d3f8';
@@ -231,8 +231,26 @@ export default function activityStyle(status) {
         height: 22px;
         color: ${frontColor};
       }
+
+      :hover {
+        cursor: pointer;
+      }
+    `,
+    todoIcon: css`
+      :hover {
+        cursor: pointer;
+      }
+      svg {
+        width: 22px;
+        height: 22px;
+        color: ${frontColor};
+      }
     `,
     summaryIcon: css`
+      :hover {
+        cursor: pointer;
+      }
+
       svg {
         margin-top: 8px;
         margin-left: 2px;

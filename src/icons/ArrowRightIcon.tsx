@@ -6,13 +6,20 @@ const useStyle = function iconStyle(width, height, color, margin) {
     arrowRight: css`
       width: ${width}px;
       height: ${height}px;
-      stroke: ${color};
       margin: ${margin};
+
+      :hover {
+        cursor: pointer;
+      }
+
+      path {
+        stroke: ${color};
+      }
     `,
   }))();
 };
 
-export default function ArrowRightIcon({ width, height, color, margin }) {
+export default function ArrowRightIcon({ width, height, color, margin, onClick }) {
   const { styles } = useStyle(width, height, color, margin);
-  return <ArrowRightFromArcSvg className={styles.arrowRight} />;
+  return <ArrowRightFromArcSvg onClick={onClick} className={styles.arrowRight} />;
 }
