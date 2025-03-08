@@ -75,7 +75,7 @@ export default function todoWorkWrapStyle() {
       svg {
         width: 27px;
         height: 27px;
-        color: #81d3f8;
+        color: ${arrowColor};
       }
     `,
   }))();

@@ -1,8 +1,9 @@
 import { createStyles } from 'antd-style';
 
-export default function todoWorkStyle(status) {
-  let color = status === 'DONE' ? '#63bd89' : '#6294a5';
-  let contentColor = status === 'DONE' ? '#92d1b4' : '#8bbbcc';
+export default function todoWorkStyle(todo) {
+  let color = todo.status === 'DONE' ? '#63bd89' : '#6294a5';
+  let contentColor = todo.status === 'DONE' ? '#92d1b4' : '#8bbbcc';
+  let headRadius = todo.foldFlag === 'YES' ? '0' : '0 0 5px 5px';
   return createStyles(({ css }) => ({
     todoWrap: css`
       margin-top: 5px;
@@ -58,7 +59,7 @@ export default function todoWorkStyle(status) {
       background-color: ${color};
       opacity: 0.8;
       border: none;
-      border-radius: 0;
+      border-radius: ${headRadius};
       text-align: center;
       font-weight: bold;
 

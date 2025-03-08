@@ -22,7 +22,7 @@ import {
 
 export default function TodoWork({ todoParam, postUpdate }) {
   const [todo, setTodo] = useState(todoParam);
-  const { styles: dynamicStyle } = todoWorkStyle(todo.status);
+  const { styles: dynamicStyle } = todoWorkStyle(todo);
   dayjs.extend(utc);
 
   function save(param) {
@@ -34,13 +34,14 @@ export default function TodoWork({ todoParam, postUpdate }) {
     let temp = {
       id: null,
       status: param.status,
+      foldFlag: param.foldFlag,
       startDate: dayjs(param.startDate).utc().local().format('YYYY-MM-DD HH:mm:ss'),
       title: param.title,
       content: param.content,
       priority: param.priority,
     };
     if (!param.id) {
-      insertTodoWork(temp).then(() => postUpdate(temp));
+      insertTodoWork(temp).then(() => postUpdate());
     } else {
       temp.id = param.id;
       updateTodoWork(temp).then(() => postUpdate());
@@ -90,17 +91,17 @@ export default function TodoWork({ todoParam, postUpdate }) {
           className={dynamicStyle.icons}
           onClick={() => save({ ...todo, startDate: dayjs(todo.startDate).add(1, 'day') })}
         />
-        {todo.fold ? (
+        {todo.foldFlag === 'NO' ? (
           // 展开
           <VerticalAlignBottomOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => setTodo({ ...todo, fold: false })}
+            onClick={() => save({ ...todo, foldFlag: 'YES' })}
           />
         ) : (
           // 收起
           <VerticalAlignTopOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => setTodo({ ...todo, fold: true })}
+            onClick={() => save({ ...todo, foldFlag: 'NO' })}
           />
         )}
       </Row>
@@ -112,7 +113,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
           onBlur={() => save(todo)}
         />
       </Row>
-      {!todo.fold && (
+      {todo.foldFlag === 'YES' && (
         <Row>
           <Input.TextArea
             autoSize

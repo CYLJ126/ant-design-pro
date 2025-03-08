@@ -21,24 +21,14 @@ export default function TodoWorkWrap() {
     setDate(temp);
   }
 
-  function listTodos(newAdd) {
+  function listTodos() {
     dayjs.extend(utc);
     let temp = dayjs(date).utc().local().format(dateFormat);
     listTodoWork({
       startDateTimeFloor: temp + ' 00:00:00',
       startDateTimeCeil: temp + ' 23:59:59',
     }).then((result) => {
-      setTodoWorks(
-        result.map((item) => {
-          // 有内容时展开，没内容时收起
-          item.fold = !item.content || item.status === 'DONE';
-          if (newAdd?.title === item.title) {
-            // 如果是刚刚新增的，还没有 content 就保存了，这时，也要保持展开，支持内容编辑
-            item.fold = false;
-          }
-          return item;
-        }),
-      );
+      setTodoWorks(result);
     });
   }
 
@@ -49,7 +39,7 @@ export default function TodoWorkWrap() {
       status: 'INITIAL',
       title: '',
       content: '',
-      fold: false,
+      foldFlag: 'YES',
     };
     let newList = [];
     newList.push(temp);
@@ -58,7 +48,7 @@ export default function TodoWorkWrap() {
   }
 
   useEffect(() => {
-    listTodos();
+    listTodos(null);
   }, [date]);
 
   const time = new Date().getTime();
@@ -87,11 +77,7 @@ export default function TodoWorkWrap() {
       </Row>
       <Row>
         {todoWorks.map((item) => (
-          <TodoWork
-            key={item.id + time}
-            todoParam={item}
-            postUpdate={(newAdd) => listTodos(newAdd)}
-          />
+          <TodoWork key={item.id + time} todoParam={item} postUpdate={listTodos} />
         ))}
       </Row>
     </div>
