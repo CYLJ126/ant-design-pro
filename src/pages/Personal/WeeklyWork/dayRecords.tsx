@@ -50,7 +50,7 @@ function Day({ recordParam, target, save }) {
     color = '#c6c6c6';
   } else if (curDate < new Date()) {
     // 如果当前日期小于今天，显示绿色
-    color = '#63bd89';
+    color = '#5bb1c9';
   } else {
     // 默认显示蓝色
     color = '#81d3f8';

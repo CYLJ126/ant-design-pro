@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, DatePicker, Input, InputNumber, message, Progress, Row, Select } from 'antd';
+import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
 import styles from './headInfo.less';
 import { getTags } from '@/services/ant-design-pro/base';
 import { updateWeeklyWork } from '@/services/ant-design-pro/dailyWork';
@@ -35,12 +35,8 @@ export default function HeadInfo({ headParam, postUpdate }) {
 
   function saveHead(param) {
     console.log('保存内容：' + JSON.stringify(param));
-    if (!param.workId) {
-      message.error('事项 ID 不能为空！').then();
-      return;
-    }
-    if (!param.target) {
-      message.error('目标不能为空！').then();
+    if (!param.workId || !param.target) {
+      console.log('事项 ID 或目标描述为空');
       return;
     }
     const headInfo = {

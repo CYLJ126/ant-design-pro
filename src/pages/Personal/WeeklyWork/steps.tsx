@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Col, Input, Row } from 'antd';
 import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CheckOutlined,
   ExportOutlined,
   FastBackwardOutlined,
   FastForwardOutlined,
@@ -9,9 +12,8 @@ import {
   FullscreenOutlined,
   MinusOutlined,
   PlusSquareOutlined,
-  CheckOutlined,
-  UndoOutlined,
   SolutionOutlined,
+  UndoOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
 import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
@@ -40,7 +42,7 @@ const useStepStyle = (color) => {
 function Step({ step, saveCurrentSteps }) {
   const { orderId: index, status, content: initialContent } = { ...step };
   const [content, setContent] = useState(initialContent);
-  const { styles: dynamicStyle } = useStepStyle(status === 'INITIAL' ? '#81d3f8' : '#c6c6c6');
+  const { styles: dynamicStyle } = useStepStyle(status === 'INITIAL' ? '#81d3f8' : '#5bb1c9');
   return (
     <Input
       size="small"
@@ -48,6 +50,14 @@ function Step({ step, saveCurrentSteps }) {
       className={dynamicStyle.stepStyle}
       addonAfter={
         <div>
+          <ArrowUpOutlined
+            onClick={() => saveCurrentSteps(index, 'up', '')}
+            style={{ marginRight: '2px' }}
+          />
+          <ArrowDownOutlined
+            onClick={() => saveCurrentSteps(index, 'down', '')}
+            style={{ marginRight: '2px' }}
+          />
           <PlusSquareOutlined
             onClick={() => saveCurrentSteps(index, 'add', '')}
             style={{ marginRight: '3px' }}
@@ -109,71 +119,91 @@ export default function Steps({ targetId, deleteTarget }) {
    * @param content 当前步骤调整内容
    */
   function saveCurrentSteps(index: number, type, content) {
+    let tempSteps = [];
     if (index === 1 && type === 'del' && steps.length === 1) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
       deleteTarget(targetId);
       return;
-    }
-    let tempSteps = [];
-    let newIndex = 0;
-    // 生成列表的标识，每次渲染都不一样，因为使用 key（即下标）时，两次渲染时 key 一样，导致新增一行新步骤会有 bug。
-    const date = new Date();
-    const time = date.toLocaleTimeString();
-    for (let i = 1; i <= steps.length; i++) {
-      if (i === index) {
-        if (type === 'save') {
-          steps[i - 1].content = content;
-        } else if (type === 'done') {
-          steps[i - 1].status = 'DONE';
-        } else if (type === 'todo') {
-          steps[i - 1].status = 'INITIAL';
-        } else if (type === 'del') {
-          // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
-          continue;
-        }
+    } else if (type === 'up' || type === 'down') {
+      if (index === 1 && type === 'up') {
+        // 第一个不能再往上调顺序
+        return;
+      } else if (index === steps.length && type === 'down') {
+        // 最后一个不能再往下调顺序
+        return;
+      } else if (1 === steps.length) {
+        // 只有一个步骤时不能调顺序
+        return;
+      } else {
+        tempSteps = [...steps];
+        const swap = tempSteps[index - 1];
+        let toIndex = index - 1 + (type === 'up' ? -1 : 1);
+        const toSwap = tempSteps[toIndex];
+        tempSteps[toIndex] = swap;
+        tempSteps[index - 1] = toSwap;
       }
+    } else {
+      let newIndex = 0;
+      // 生成列表的标识，每次渲染都不一样，因为使用 key（即下标）时，两次渲染时 key 一样，导致新增一行新步骤会有 bug。
+      const date = new Date();
+      const time = date.toLocaleTimeString();
+      for (let i = 1; i <= steps.length; i++) {
+        if (i === index) {
+          if (type === 'save') {
+            steps[i - 1].content = content;
+          } else if (type === 'done') {
+            steps[i - 1].status = 'DONE';
+          } else if (type === 'todo') {
+            steps[i - 1].status = 'INITIAL';
+          } else if (type === 'del') {
+            // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
+            continue;
+          }
+        }
 
-      tempSteps.push({
-        orderId: newIndex + 1,
-        uuid: time + newIndex + 1,
-        targetId: targetId,
-        status: steps[i - 1].status ?? 'INITIAL',
-        summaryId: steps[i - 1].summaryId,
-        progress: steps[i - 1].progress,
-        content: steps[i - 1].content,
-      });
-      newIndex++;
-      if (i === index && type === 'add') {
-        // 增加一行空步骤
         tempSteps.push({
           orderId: newIndex + 1,
           uuid: time + newIndex + 1,
           targetId: targetId,
-          status: 'INITIAL',
-          content: '',
-          progress: 0,
+          status: steps[i - 1].status ?? 'INITIAL',
+          summaryId: steps[i - 1].summaryId,
+          progress: steps[i - 1].progress,
+          content: steps[i - 1].content,
         });
         newIndex++;
+        if (i === index && type === 'add') {
+          // 增加一行空步骤
+          tempSteps.push({
+            orderId: newIndex + 1,
+            uuid: time + newIndex + 1,
+            targetId: targetId,
+            status: 'INITIAL',
+            content: '',
+            progress: 0,
+          });
+          newIndex++;
+        }
       }
     }
-    setSteps(tempSteps);
-    saveSteps(tempSteps).then();
+    // setSteps(tempSteps);
+    saveSteps(tempSteps).then((result) => {
+      setSteps(result);
+    });
     if (!fold) {
       setHeight(tempSteps.length * 30);
     }
   }
 
+  const time = new Date().getTime();
   return (
     <Row>
       <Col span={23}>
         <ul className={styles.wrapper} style={{ height: height + 'px' }}>
-          {steps
-            .sort((a, b) => a.id - b.id)
-            .map((item) => (
-              <li key={item.uuid ?? item.orderId} className={styles.itemStep}>
-                <Step step={item} saveCurrentSteps={saveCurrentSteps} />
-              </li>
-            ))}
+          {steps.map((item) => (
+            <li key={item.orderId + '_' + time} className={styles.itemStep}>
+              <Step step={item} saveCurrentSteps={saveCurrentSteps} />
+            </li>
+          ))}
         </ul>
       </Col>
       <Col span={1} className={styles.myIconCol}>

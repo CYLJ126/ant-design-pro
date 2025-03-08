@@ -11,14 +11,12 @@ import {
   addTarget,
   deleteTarget,
   getTargets,
-  getWeekDaysHeader,
   getWeekStatistics,
   getWhichWeek,
 } from '@/services/ant-design-pro/dailyWork';
 
 export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
-  const [weekDays, setWeekDays] = useState([]);
   const [targets, setTargets] = useState([]);
   const [statistics, setStatistics] = useState({});
   const stepsRef = useRef(null);
@@ -66,8 +64,6 @@ export default function WeeklyWork() {
     if (whichWeek !== 0) {
       // 加载表头——周统计信息
       getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
-      // 加载表头——本周每天对应的日期
-      getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
       // 加载本周目标列表
       getTargets({ weekId: whichWeek }).then((result) => {
         setTargets(result);
@@ -85,7 +81,7 @@ export default function WeeklyWork() {
           <HeaderButtons weekInfo={statistics} addTarget={addNewTarget} toggleWeek={toggleWeek} />
         </Col>
         <Col span={7}>
-          <HeaderDate weekDays={weekDays} />
+          <HeaderDate whichWeek={whichWeek} />
         </Col>
       </Row>
       <hr className={styles.headerLine} />

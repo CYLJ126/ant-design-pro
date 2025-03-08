@@ -18,16 +18,18 @@ function showWeeklyStatistics() {
 export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
   let color;
   if (weekInfo.proportion < 100) {
-    color = '#63bd89';
+    color = '#81d3f8';
   } else if (weekInfo.proportion > 100) {
     color = '#ff0000';
   } else {
-    color = '#81d3f8';
+    color = '#5bb1c9';
   }
   return (
     <Row>
+      {/* 向前一周 */}
       <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleWeek('former')} />
       <span className={styles.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
+      {/* 向后一周 */}
       <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleWeek('latter')} />
       <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
       <span
@@ -49,7 +51,9 @@ export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
       <span className={`${styles.itemCount} ${styles.overdueItems}`}>
         {'逾期项 - ' + weekInfo.overdueWork}
       </span>
+      {/* 添加新目标 */}
       <PlusSquareOutlined onClick={addTarget} className={styles.plusItem} />
+      {/* 周统计数据 */}
       <BarChartOutlined onClick={showWeeklyStatistics} className={styles.statistics} />
     </Row>
   );
