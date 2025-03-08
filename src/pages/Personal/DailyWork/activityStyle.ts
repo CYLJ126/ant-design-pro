@@ -2,11 +2,11 @@ import { createStyles } from 'antd-style';
 
 export default function activityStyle(status) {
   let frontColor, backColor;
-  if (status === 'INITIAL') {
-    frontColor = '#81d3f8';
+  if (status === 'DONE') {
+    frontColor = '#63bd89';
     backColor = '#ffffff';
   } else {
-    frontColor = '#63bd89';
+    frontColor = '#81d3f8';
     backColor = '#ffffff';
   }
   return createStyles(({ css }) => ({

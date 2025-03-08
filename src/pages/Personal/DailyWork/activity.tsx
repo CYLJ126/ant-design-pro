@@ -75,7 +75,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
 
   function save(param) {
     if (!param.targetId) {
-      message.error('请完善目标信息');
+      return;
     }
     let data = {
       id: param.id,
@@ -88,22 +88,19 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
     };
     if (data.id) {
       updateDailyWork(data).then((result) => {
-        if (result) {
-          message.success('更新成功！');
-        } else {
+        if (!result) {
           message.error('更新失败！');
         }
+        postUpdate();
       });
     } else {
       insertDailyWork(data).then((result) => {
-        if (result) {
-          message.success('新增成功！');
-        } else {
+        if (!result) {
           message.error('新增失败！');
         }
+        postUpdate();
       });
     }
-    postUpdate();
   }
 
   function handleDoneOrDelete(id, type) {
@@ -135,6 +132,7 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
+    console.log('获取日课列表');
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
