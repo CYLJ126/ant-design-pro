@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Input, InputNumber, message, Row, Select, TimePicker } from 'antd';
-import {
-  CheckOutlined,
-  DeleteOutlined,
-  RiseOutlined,
-  SolutionOutlined,
-  UndoOutlined,
-  VerticalAlignMiddleOutlined,
-} from '@ant-design/icons';
+import { FullscreenExitOutlined, SolutionOutlined, UndoOutlined } from '@ant-design/icons';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
 import {
@@ -22,6 +15,9 @@ import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
+import DeleteIcon from '@/icons/DeleteIcon';
+import ArrowRightIcon from '@/icons/ArrowRightIcon';
+import SuccessIcon from '@/icons/SuccessIcon';
 
 async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'DOING' });
@@ -238,20 +234,27 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
             </Col>
             <Col span={12} style={{ paddingLeft: '10px' }}>
               <Row>
-                <DeleteOutlined
-                  className={dynamicStyle.icons}
+                {/* 删除 */}
+                <DeleteIcon
+                  width={25}
+                  height={25}
+                  color="#81d3f8"
                   onClick={() => {
                     handleDoneOrDelete(dailyWork.id, 'delete');
                   }}
                 />
                 {dailyWork.status === 'INITIAL' ? (
-                  <CheckOutlined
-                    className={dynamicStyle.icons}
+                  // 完成
+                  <SuccessIcon
+                    width={20}
+                    height={20}
+                    margin="3px 0 0 4px"
                     onClick={() => {
                       handleDoneOrDelete(dailyWork.id, 'DONE');
                     }}
                   />
                 ) : (
+                  // 待办
                   <UndoOutlined
                     className={dynamicStyle.icons}
                     onClick={() => {
@@ -259,18 +262,23 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
                     }}
                   />
                 )}
-                <VerticalAlignMiddleOutlined className={dynamicStyle.icons} />
+                {/* 折叠 */}
+                <FullscreenExitOutlined className={dynamicStyle.foldIcon} />
               </Row>
               <Row>
-                <RiseOutlined
-                  className={dynamicStyle.icons}
+                {/* 推到下一天 */}
+                <ArrowRightIcon
+                  width={23}
+                  height={24}
+                  margin="2px 0 0 2px"
                   onClick={() => {
                     handleDoneOrDelete(dailyWork.id, 'push');
                   }}
                 />
               </Row>
               <Row>
-                <SolutionOutlined className={dynamicStyle.icons} />
+                {/* 总结 */}
+                <SolutionOutlined className={dynamicStyle.summaryIcon} />
               </Row>
             </Col>
           </Row>

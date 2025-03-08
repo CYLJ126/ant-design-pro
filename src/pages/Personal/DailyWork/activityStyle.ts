@@ -222,12 +222,23 @@ export default function activityStyle(status) {
       background-color: ${frontColor};
       border: none;
     `,
-    icons: css`
+    foldIcon: css`
       svg {
-        margin-left: 10px;
+        margin-top: 2px;
+        margin-left: 5px;
         margin-bottom: 4px;
-        width: 25px;
-        height: 25px;
+        width: 22px;
+        height: 22px;
+        color: ${frontColor};
+      }
+    `,
+    summaryIcon: css`
+      svg {
+        margin-top: 8px;
+        margin-left: 2px;
+        margin-bottom: 4px;
+        width: 22px;
+        height: 22px;
         color: ${frontColor};
       }
     `,
