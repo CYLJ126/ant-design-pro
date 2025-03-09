@@ -11,15 +11,13 @@ import {
   addTarget,
   deleteTarget,
   getTargets,
-  getWeekStatistics,
   getWhichWeek,
 } from '@/services/ant-design-pro/dailyWork';
 
 export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const [targets, setTargets] = useState([]);
-  const [statistics, setStatistics] = useState({});
-  const stepsRef = useRef(null);
+  const headButtonsRef = useRef(null);
 
   /**
    * 切换周 ID
@@ -34,8 +32,8 @@ export default function WeeklyWork() {
    * 更新完局部数据后需要更新的内容
    */
   function afterPartialUpdate() {
-    // 加载表头——周统计信息
-    getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
+    // 刷新表头——周统计信息
+    headButtonsRef.current?.refreshStatistics(whichWeek);
     // 更新目标列表
     getTargets({ weekId: whichWeek }).then((result) => {
       setTargets(result);
@@ -62,8 +60,6 @@ export default function WeeklyWork() {
 
   useEffect(() => {
     if (whichWeek !== 0) {
-      // 加载表头——周统计信息
-      getWeekStatistics(whichWeek).then((result) => setStatistics({ ...result, aimId: whichWeek }));
       // 加载本周目标列表
       getTargets({ weekId: whichWeek }).then((result) => {
         setTargets(result);
@@ -78,14 +74,19 @@ export default function WeeklyWork() {
     <div>
       <Row>
         <Col span={17}>
-          <HeaderButtons weekInfo={statistics} addTarget={addNewTarget} toggleWeek={toggleWeek} />
+          <HeaderButtons
+            ref={headButtonsRef}
+            whichWeek={whichWeek}
+            addTarget={addNewTarget}
+            toggleWeek={toggleWeek}
+          />
         </Col>
         <Col span={7}>
           <HeaderDate whichWeek={whichWeek} />
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      <div ref={stepsRef} className={styles.weeklyData} style={{ height: targetsHeight }}>
+      <div className={styles.weeklyData} style={{ height: targetsHeight }}>
         {targets.map((target) => {
           return (
             <Row key={target.id}>

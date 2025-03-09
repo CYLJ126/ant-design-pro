@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row } from 'antd';
 import {
   BarChartOutlined,
@@ -8,16 +8,31 @@ import {
   VerticalRightOutlined,
 } from '@ant-design/icons';
 import headerButtonsStyle from './headerButtonsStyle';
+import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
 
-/**
- * 显示周统计和周总结
- */
-function showWeeklyStatistics() {
-  console.log('周统计');
-}
-
-export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
+export default function HeaderButtons({ whichWeek, addTarget, toggleWeek }) {
+  const [weekInfo, setWeekInfo] = useState({ aimId: whichWeek });
   const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
+
+  /**
+   * 显示周统计和周总结
+   */
+  function showWeeklyStatistics(whichWeek) {
+    console.log('周统计: ' + whichWeek);
+  }
+
+  /**
+   * 刷新周统计数据
+   */
+  function refreshStatistics(whichWeek) {
+    updateWeeklyStatistics(whichWeek).then((result) => setWeekInfo(result));
+  }
+
+  useEffect(() => {
+    // 加载表头——周统计信息
+    getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
+  }, [whichWeek]);
+
   return (
     <Row>
       {/* 向前一周 */}
@@ -47,8 +62,14 @@ export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
       {/* 添加新目标 */}
       <PlusSquareOutlined onClick={addTarget} className={dynamicStyle.plusItem} />
       {/* 周统计数据 */}
-      <BarChartOutlined onClick={showWeeklyStatistics} className={dynamicStyle.statistics} />
-      <ReloadOutlined onClick={showWeeklyStatistics} className={dynamicStyle.refresh} />
+      <BarChartOutlined
+        onClick={() => showWeeklyStatistics(whichWeek)}
+        className={dynamicStyle.statistics}
+      />
+      <ReloadOutlined
+        onClick={() => refreshStatistics(whichWeek)}
+        className={dynamicStyle.refresh}
+      />
     </Row>
   );
 }

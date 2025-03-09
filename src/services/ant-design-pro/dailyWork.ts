@@ -54,6 +54,15 @@ export async function getWeekStatistics(weekId?: number) {
 }
 
 /**
+ * 更新指定周对应的统计数据
+ *
+ * @param weekId 第几周
+ */
+export async function updateWeeklyStatistics(weekId?: number) {
+  return jsonPost('/dw/weeklyWork/updateWeeklyStatistics', { weekId: weekId });
+}
+
+/**
  * #返回指定周的目标列表
  *
  * @param param 请求参数
