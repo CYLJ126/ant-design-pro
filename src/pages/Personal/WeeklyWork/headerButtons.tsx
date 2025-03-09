@@ -3,10 +3,11 @@ import { Row } from 'antd';
 import {
   BarChartOutlined,
   PlusSquareOutlined,
+  ReloadOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
-import styles from './headerButtons.less';
+import headerButtonsStyle from './headerButtonsStyle';
 
 /**
  * 显示周统计和周总结
@@ -16,45 +17,38 @@ function showWeeklyStatistics() {
 }
 
 export default function HeaderButtons({ weekInfo, addTarget, toggleWeek }) {
-  let color;
-  if (weekInfo.proportion < 100) {
-    color = '#81d3f8';
-  } else if (weekInfo.proportion > 100) {
-    color = '#ff0000';
-  } else {
-    color = '#5bb1c9';
-  }
+  const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
   return (
     <Row>
       {/* 向前一周 */}
-      <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleWeek('former')} />
-      <span className={styles.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
+      <VerticalRightOutlined
+        className={dynamicStyle.forwardWeek}
+        onClick={() => toggleWeek('former')}
+      />
+      <span className={dynamicStyle.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
       {/* 向后一周 */}
-      <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleWeek('latter')} />
-      <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
-      <span
-        key={new Date().getTime()}
-        className={styles.proportion}
-        style={{
-          color: color,
-          border: `1.5px solid ${color}`,
-        }}
-      >
+      <VerticalLeftOutlined
+        className={dynamicStyle.forwardWeek}
+        onClick={() => toggleWeek('latter')}
+      />
+      <span className={dynamicStyle.weeklyScore}>{'' + weekInfo.score + '分'}</span>
+      <span key={new Date().getTime()} className={dynamicStyle.proportion}>
         {'' + weekInfo.proportion + '%'}
       </span>
-      <span className={`${styles.itemCount} ${styles.completedItems}`}>
+      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.completedItems}`}>
         {'完成项 - ' + weekInfo.completedWork}
       </span>
-      <span className={`${styles.itemCount} ${styles.todoItems}`}>
+      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
         {'待办项 - ' + weekInfo.todoWork}
       </span>
-      <span className={`${styles.itemCount} ${styles.overdueItems}`}>
+      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.overdueItems}`}>
         {'逾期项 - ' + weekInfo.overdueWork}
       </span>
       {/* 添加新目标 */}
-      <PlusSquareOutlined onClick={addTarget} className={styles.plusItem} />
+      <PlusSquareOutlined onClick={addTarget} className={dynamicStyle.plusItem} />
       {/* 周统计数据 */}
-      <BarChartOutlined onClick={showWeeklyStatistics} className={styles.statistics} />
+      <BarChartOutlined onClick={showWeeklyStatistics} className={dynamicStyle.statistics} />
+      <ReloadOutlined onClick={showWeeklyStatistics} className={dynamicStyle.refresh} />
     </Row>
   );
 }
