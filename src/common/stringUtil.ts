@@ -25,7 +25,7 @@ function charValue(char) {
     // 标点符号
     return 7;
   } else {
-    return 0; // 其他字符，可以根据需要返回其他值或忽略
+    return 7; // 其他字符，可以根据需要返回其他值或忽略
   }
 }
 
