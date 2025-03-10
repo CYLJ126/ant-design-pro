@@ -13,11 +13,16 @@ import {
   getTargets,
   getWhichWeek,
 } from '@/services/ant-design-pro/dailyWork';
+import dayjs from 'dayjs';
+// 格式化时间为本地时间
+import utc from 'dayjs-plugin-utc';
+import 'dayjs/locale/zh-cn';
 
 export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const [targets, setTargets] = useState([]);
   const headButtonsRef = useRef(null);
+  dayjs.extend(utc);
 
   /**
    * 切换周 ID
@@ -53,7 +58,8 @@ export default function WeeklyWork() {
   }
 
   useEffect(() => {
-    getWhichWeek(new Date()).then((result) => {
+    let date = dayjs().utc().local().format('YYYY-MM-DD');
+    getWhichWeek(date).then((result) => {
       setWhichWeek(result);
     });
   }, []);
