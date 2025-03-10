@@ -215,6 +215,9 @@ export default function activityStyle(status) {
       color: ${frontColor};
       border: 1.5px solid ${frontColor};
       margin-left: 5px;
+      // 支持滚动，但不显示滚动条
+      overflow: auto;
+      scrollbar-width: none;
     `,
     separator: css`
       width: 100%;
