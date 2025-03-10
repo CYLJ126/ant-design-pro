@@ -109,8 +109,8 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
     } else if (type === 'push') {
       let start = dayjs(dailyWork.startTime).add(1, 'day');
       let end = dayjs(dailyWork.endTime).add(1, 'day');
-      let startTimeStr = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm') + ':00';
-      let endTimeStr = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm') + ':59';
+      let startTimeStr = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
+      let endTimeStr = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
       let newOne = {
         targetId: dailyWork.targetId,
         score: 0,
