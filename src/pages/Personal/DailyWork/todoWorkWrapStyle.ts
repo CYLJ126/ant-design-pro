@@ -13,6 +13,9 @@ export default function todoWorkWrapStyle() {
       margin-left: 20px;
       border-radius: 10px;
       box-shadow: -3px 5px 7px #bdc4bd;
+      // 支持滚动，但不显示滚动条
+      overflow: auto;
+      scrollbar-width: none;
     `,
     headRow: css`
       height: 50px;
