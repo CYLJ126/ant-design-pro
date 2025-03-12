@@ -22,7 +22,7 @@ export default function Header({ whichDay, add, toggleDay }) {
         <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleDay('latter')} />
         <StepBackwardOutlined className={styles.fold} />
         <StepForwardOutlined className={styles.fold} />
-        <PlusSquareOutlined className={styles.plusItem} onClick={() => add(new Date())} />
+        <PlusSquareOutlined className={styles.plusItem} onClick={() => add(whichDay)} />
         <ExportOutlined className={styles.toWeekly} />
       </Row>
     </div>

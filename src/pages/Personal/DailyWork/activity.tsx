@@ -30,6 +30,7 @@ async function getSubTags(param) {
 
 function Time({ dailyWork, save }) {
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
+  const [date, setDate] = useState(dayjs(dailyWork[dailyWork.mark]).utc().local());
   dayjs.extend(utc);
   return (
     <Row>
@@ -38,7 +39,7 @@ function Time({ dailyWork, save }) {
       </Col>
       <Col span={16}>
         <TimePicker
-          defaultValue={dayjs(dailyWork[dailyWork.mark]).utc().local()}
+          value={date}
           format="HH:mm"
           className={dynamicStyle.time}
           placeholder={dailyWork.placeholder}
@@ -54,6 +55,7 @@ function Time({ dailyWork, save }) {
               temp.startTimeStr =
                 dateStr + ' ' + dayjs(dailyWork.startTime).utc().local().format('HH:mm:ss');
             }
+            setDate(time);
             save(temp);
           }}
         />
@@ -62,7 +64,7 @@ function Time({ dailyWork, save }) {
   );
 }
 
-export default function DailyWork({ dailyWorkParam, postUpdate }) {
+export default function Activity({ dailyWorkParam, postUpdate }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
@@ -76,8 +78,9 @@ export default function DailyWork({ dailyWorkParam, postUpdate }) {
     }
     let data = {
       id: param.id,
-      startTime: param.startTimeStr,
-      endTime: param.endTimeStr,
+      startTime:
+        param.startTimeStr || dayjs(param.startTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+      endTime: param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
       targetId: param.targetId,
       score: param.score,
       proportion: param.proportion,
