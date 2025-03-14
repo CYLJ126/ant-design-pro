@@ -26,7 +26,6 @@ export default function TodoWork({ todoParam, postUpdate }) {
   dayjs.extend(utc);
 
   function save(param) {
-    console.log('保存参数：' + JSON.stringify(param));
     if (!param.title) {
       message.error('请填写待办标题！');
       return;

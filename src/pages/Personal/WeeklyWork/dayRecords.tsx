@@ -56,7 +56,6 @@ function Day({ recordParam, target, save }) {
     color = '#81d3f8';
   }
   const { styles: dynamicStyle } = useStepStyle(color);
-  console.log('targetId: ' + target.id + ', date: ' + record.dayOfMonth + ', color: ' + color);
   return (
     <div>
       <InputNumber

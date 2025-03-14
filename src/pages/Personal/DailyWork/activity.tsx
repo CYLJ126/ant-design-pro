@@ -132,7 +132,6 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
-    console.log('获取日课列表');
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
