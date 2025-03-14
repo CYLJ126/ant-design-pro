@@ -137,7 +137,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
         setThemeOptions(result);
       });
     });
-  }, [dailyWork]);
+  }, []);
 
   useEffect(() => {
     if (dailyWork?.themeId) {
