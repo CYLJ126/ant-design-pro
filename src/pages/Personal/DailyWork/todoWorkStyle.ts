@@ -89,5 +89,28 @@ export default function todoWorkStyle(todo) {
         background-color: ${contentColor};
       }
     `,
+    datePicker: css`
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      border: none;
+      padding: 0;
+      background-color: ${color};
+
+      :hover {
+        background-color: ${color};
+        cursor: pointer;
+      }
+
+      :focus-within {
+        background-color: ${color};
+      }
+
+      .anticon {
+        svg {
+          color: #ffffff;
+        }
+      }
+    `,
   }))();
 }

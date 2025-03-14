@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputNumber, message, Row } from 'antd';
+import { Input, InputNumber, message, Row, DatePicker } from 'antd';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -103,6 +103,14 @@ export default function TodoWork({ todoParam, postUpdate }) {
             onClick={() => save({ ...todo, foldFlag: 'NO' })}
           />
         )}
+        <DatePicker
+          inputReadOnly
+          allowClear={false}
+          size="small"
+          defaultValue={dayjs(todo.startDate).utc().local()}
+          className={dynamicStyle.datePicker}
+          onChange={(date) => save({ ...todo, startDate: date })}
+        />
       </Row>
       <Row>
         <Input
