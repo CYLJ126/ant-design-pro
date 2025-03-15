@@ -9,10 +9,12 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
+import KeepAlive from 'react-activation';
 
-export default function DailyWork() {
+function DailyWork() {
   const [whichDay, setWhichDay] = useState(new Date());
   const [dailyWorks, setDailyWorks] = useState([]);
+  dayjs.extend(utc);
 
   function toggleDay(type) {
     let temp = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate());
@@ -23,7 +25,6 @@ export default function DailyWork() {
   function postUpdate() {
     let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
     let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
-    dayjs.extend(utc);
     start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
     end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
     listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end }).then((result) => {
@@ -69,3 +70,11 @@ export default function DailyWork() {
     </div>
   );
 }
+
+export default () => {
+  return (
+    <KeepAlive name="dailyWork">
+      <DailyWork />
+    </KeepAlive>
+  );
+};

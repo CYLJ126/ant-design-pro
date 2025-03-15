@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Checkbox, Input, InputNumber, Select } from 'antd';
 import styles from './index.less';
+import KeepAlive from 'react-activation';
 
 /**
  * 格式化配置选项，由用户在页面选择
@@ -244,7 +245,7 @@ const initialListProp: ListProperty = {
   withBlankLine: true,
 };
 
-export default function TextFormatter() {
+function TextFormatter() {
   // 文本处理
   const [textObj, setTextObj] = useState(initialText);
   const [prop, setProp] = useState(initialProp);
@@ -381,3 +382,11 @@ export default function TextFormatter() {
     </div>
   );
 }
+
+export default () => {
+  return (
+    <KeepAlive name="textFormatter">
+      <TextFormatter />
+    </KeepAlive>
+  );
+};
