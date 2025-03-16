@@ -9,9 +9,24 @@ import React from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { ColorPicker } from 'antd';
+import { listRecursiveMenus } from '@/services/ant-design-pro/rbac';
+import IconMap from '@/icons/IconMap';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
+function transfer(rawMenu) {
+  let one = {
+    id: rawMenu.id,
+    name: rawMenu.menuName,
+    path: rawMenu.menuUrl,
+    icon: IconMap[rawMenu.icon] || '',
+  };
+  if (rawMenu.children && rawMenu.children.length > 0) {
+    one.routes = rawMenu.children.map((subRawMenu) => transfer(subRawMenu));
+  }
+  return one;
+}
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -60,6 +75,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
     ],
+    menu: {
+      params: {
+        // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request https://beta-pro.ant.design/docs/advanced-menu-cn
+        userId: initialState?.currentUser?.userid,
+      },
+      request: async () => {
+        const rawMenus = await listRecursiveMenus({});
+        return rawMenus.map((rawMenu) => transfer(rawMenu));
+      },
+    },
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
