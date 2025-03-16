@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Steps from './steps';
 import DayRecords from './dayRecords';
 import HeadInfo from './headInfo';
@@ -22,7 +22,6 @@ import KeepAlive from 'react-activation';
 function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const [targets, setTargets] = useState([]);
-  const headButtonsRef = useRef(null);
   dayjs.extend(utc);
 
   /**
@@ -38,8 +37,7 @@ function WeeklyWork() {
    * 更新完局部数据后需要更新的内容
    */
   function afterPartialUpdate() {
-    // 刷新表头——周统计信息
-    headButtonsRef.current?.refreshStatistics(whichWeek);
+    // 刷新表头——周统计信息 TODO
     // 更新目标列表
     getTargets({ weekId: whichWeek }).then((result) => {
       setTargets(result);
@@ -81,12 +79,7 @@ function WeeklyWork() {
     <div>
       <Row>
         <Col span={17}>
-          <HeaderButtons
-            ref={headButtonsRef}
-            whichWeek={whichWeek}
-            addTarget={addNewTarget}
-            toggleWeek={toggleWeek}
-          />
+          <HeaderButtons whichWeek={whichWeek} addTarget={addNewTarget} toggleWeek={toggleWeek} />
         </Col>
         <Col span={7}>
           <HeaderDate whichWeek={whichWeek} />
