@@ -97,7 +97,7 @@ function WeeklyWork() {
                 <Steps targetId={target.id} deleteTarget={deleteOneTarget} />
               </Col>
               <Col span={7}>
-                <DayRecords target={target} weekId={whichWeek} postUpdate={afterPartialUpdate} />
+                <DayRecords target={target} weekId={whichWeek} />
               </Col>
             </Row>
           );

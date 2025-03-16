@@ -41,7 +41,7 @@ export interface DayContent {
   score: number;
 }
 
-function Day({ recordParam, target, save }) {
+function Day({ recordParam, target }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
   let color;
@@ -56,6 +56,17 @@ function Day({ recordParam, target, save }) {
     color = '#81d3f8';
   }
   const { styles: dynamicStyle } = useStepStyle(color);
+
+  function save(record) {
+    console.log('日期数据：' + JSON.stringify(record));
+    if (record.dayOfTarget > 0) {
+      updateDayData(record).then(() => {
+        // TODO 更新头部数据
+        // postUpdate();
+      });
+    }
+  }
+
   return (
     <div>
       <InputNumber
@@ -98,17 +109,8 @@ function Day({ recordParam, target, save }) {
   );
 }
 
-export default function DayRecords({ target, weekId, postUpdate }) {
+export default function DayRecords({ target, weekId }) {
   const [dayRecords, setDayRecords] = useState([]);
-
-  function save(record) {
-    console.log('日期数据：' + JSON.stringify(record));
-    if (record.dayOfTarget > 0) {
-      updateDayData(record).then(() => {
-        postUpdate();
-      });
-    }
-  }
 
   useEffect(() => {
     listWeekDays(target.id, weekId).then((result) => {
@@ -121,7 +123,7 @@ export default function DayRecords({ target, weekId, postUpdate }) {
   return (
     <Row className={styles.dayProgress}>
       {dayRecords.map((day) => (
-        <Day key={day.dayOfMonth + timestamp} target={target} recordParam={day} save={save} />
+        <Day key={day.dayOfMonth + timestamp} target={target} recordParam={day} />
       ))}
     </Row>
   );
