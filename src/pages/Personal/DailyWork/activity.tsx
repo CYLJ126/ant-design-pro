@@ -149,7 +149,10 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
 
   useEffect(() => {
     if (dailyWork?.workId) {
-      getTargets({ workId: dailyWork.workId }).then((result) => {
+      getTargets({
+        workId: dailyWork.workId,
+        whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
+      }).then((result) => {
         setTargetOptions(
           result.map((item) => {
             return { value: item.id, label: item.target };

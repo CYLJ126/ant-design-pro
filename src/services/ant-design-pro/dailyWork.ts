@@ -63,7 +63,7 @@ export async function updateWeeklyStatistics(weekId?: number) {
 }
 
 /**
- * #返回指定周的目标列表
+ * 返回指定周的目标列表
  *
  * @param param 请求参数
  */
