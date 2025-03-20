@@ -2,7 +2,6 @@ import { createStyles } from 'antd-style';
 
 export default function headerDateStyle(date) {
   const backgroundColor = new Date(date).getTime() < new Date().getTime() ? '#5bb1c9' : '#81d3f8';
-  console.log('颜色：' + backgroundColor);
   return createStyles(({ css }) => ({
     dayOfWeek: css`
       width: 50px;

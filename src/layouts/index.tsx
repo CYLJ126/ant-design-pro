@@ -1,79 +1,68 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Outlet } from 'umi';
+import { Outlet, useModel, history } from 'umi';
 import { AliveScope } from 'react-activation';
-import { Flex, Tag } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import tagStyle from './TagStyle';
 import { RouteContext } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
+import { MenuTabProps } from '@/models/exitMenus';
 
-interface TagInfo {
-  path: string;
-  title?: string;
-  isActive?: boolean;
-}
-
-const initTags: TagInfo[] = [
-  {
-    title: '首页',
-    path: '/welcome',
-    isActive: true,
-  },
-];
-
-export default function Layout() {
-  const [tags, setTags] = useState(initTags);
-  const navigate = useNavigate();
+export default function Layout(props: any) {
+  console.log('属性：' + JSON.stringify(props));
   const { location } = useContext(RouteContext);
+  const { pathname } = location;
+  const [activeKey, setActiveKey] = useState<string>('');
+  const { exitMenus, updateMenus } = useModel('exitMenus', (model) => ({
+    exitMenus: model.exitMenus,
+    updateMenus: model.updateMenus,
+  }));
 
-  const handleTab = (tag: TagInfo, type: string) => {
-    if (type === 'click') {
-      // 点击标签跳转
-      const newTags = tags.map((item) => {
-        item.isActive = item.path === tag.path;
-        return item;
-      });
-      setTags(newTags);
-      navigate(tag.path);
-    }
-  };
+  // 不需要缓存的路由
+  const noCacheRoutes = ['/', '/user/login'];
 
   useEffect(() => {
-    // 点击左侧菜单跳转
-    /*let exist = false;
-    const newTags: TagInfo[] = tags.map(item => {
-      exist = item.path === location.pathname;
-      return {...item, isActive: exist};
-    });
-    if(!exist) {
-      newTags.push({path: location.pathname, isActive: true});
+    if (noCacheRoutes.includes(pathname)) return;
+    const arr: MenuTabProps[] = exitMenus.filter((item: MenuTabProps) => item.key !== pathname);
+    if (arr.length === exitMenus.length) {
+      const activeMenu: MenuTabProps = {
+        tab: '新增',
+        key: pathname,
+        closable: exitMenus.length > 0, // 新增时，第一个页面不能删除
+      };
+      arr.push(activeMenu);
+
+      updateMenus(arr);
+    } else if (exitMenus.length === 1) {
+      // 删除时,只剩一个标签去掉删除图标
+      const data = exitMenus;
+      data[0].closable = false;
+      updateMenus(data);
     }
-    setTags(newTags);*/
+    setActiveKey(pathname);
   }, [location]);
 
+  const onTabChange = (key: string) => {
+    history.push(key);
+    setActiveKey(key);
+  };
+
   return (
-    <>
-      <Flex gap="4px 0" wrap>
-        {tags.map((tag) => {
-          const { styles: dynamicStyle } = tagStyle(tag.isActive);
-          const time = new Date().getTime();
-          return (
-            <Tag
-              key={time + '_' + tag.path}
-              className={dynamicStyle.tag}
-              onClick={() => handleTab(tag, 'click')}
-              onClose={(e) => {
-                e.preventDefault();
-                handleTab(tag, 'close');
-              }}
-            >
-              {tag.title}
-            </Tag>
-          );
-        })}
-      </Flex>
+    <PageContainer
+      tabList={exitMenus}
+      onTabChange={onTabChange}
+      header={{
+        title: null,
+      }}
+      tabProps={{
+        type: 'editable-card',
+        hideAdd: true,
+        activeKey,
+        tabBarStyle: {
+          paddingBottom: '3px',
+        },
+      }}
+    >
       <AliveScope>
         <Outlet />
       </AliveScope>
-    </>
+    </PageContainer>
   );
 }
