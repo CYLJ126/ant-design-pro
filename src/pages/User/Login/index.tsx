@@ -102,7 +102,6 @@ const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const intl = useIntl();
-  const { initialMenuMap } = useModel('menuMap');
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -135,8 +134,6 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         // 设置用户信息
         await fetchUserInfo();
-        // 设置菜单信息
-        initialMenuMap();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') ?? '/');
         return;
