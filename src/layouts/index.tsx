@@ -3,10 +3,12 @@ import { Outlet, useModel, history } from 'umi';
 import { AliveScope } from 'react-activation';
 import { RouteContext } from '@ant-design/pro-layout';
 import { PageContainer } from '@ant-design/pro-components';
-import { MenuTabProps } from '@/models/exitMenus';
+import { MenuTabProps } from '@/models/menuTags';
 
 export default function Layout(props: any) {
-  console.log('属性：' + JSON.stringify(props));
+  const { children, location: tempLocation } = props;
+  console.log('属性children：' + JSON.stringify(children));
+  console.log('属性tempLocation：' + JSON.stringify(tempLocation));
   const { location } = useContext(RouteContext);
   const { pathname } = location;
   const [activeKey, setActiveKey] = useState<string>('');
@@ -14,6 +16,7 @@ export default function Layout(props: any) {
     menuTags: model.menuTags,
     updateMenuTags: model.updateMenuTags,
   }));
+  const { getMenuByPath } = useModel('menuMap');
 
   // 不需要缓存的路由
   const noCacheRoutes = ['/', '/user/login'];
@@ -23,7 +26,7 @@ export default function Layout(props: any) {
     const arr: MenuTabProps[] = menuTags.filter((item: MenuTabProps) => item.key !== pathname);
     if (arr.length === menuTags.length) {
       const activeMenu: MenuTabProps = {
-        tab: '新增',
+        tab: getMenuByPath(pathname).name,
         key: pathname,
         closable: menuTags.length > 0, // 新增时，第一个页面不能删除
       };
