@@ -10,9 +10,9 @@ export default function Layout(props: any) {
   const { location } = useContext(RouteContext);
   const { pathname } = location;
   const [activeKey, setActiveKey] = useState<string>('');
-  const { exitMenus, updateMenus } = useModel('exitMenus', (model) => ({
-    exitMenus: model.exitMenus,
-    updateMenus: model.updateMenus,
+  const { menuTags, updateMenuTags } = useModel('menuTags', (model) => ({
+    menuTags: model.menuTags,
+    updateMenuTags: model.updateMenuTags,
   }));
 
   // 不需要缓存的路由
@@ -20,21 +20,21 @@ export default function Layout(props: any) {
 
   useEffect(() => {
     if (noCacheRoutes.includes(pathname)) return;
-    const arr: MenuTabProps[] = exitMenus.filter((item: MenuTabProps) => item.key !== pathname);
-    if (arr.length === exitMenus.length) {
+    const arr: MenuTabProps[] = menuTags.filter((item: MenuTabProps) => item.key !== pathname);
+    if (arr.length === menuTags.length) {
       const activeMenu: MenuTabProps = {
         tab: '新增',
         key: pathname,
-        closable: exitMenus.length > 0, // 新增时，第一个页面不能删除
+        closable: menuTags.length > 0, // 新增时，第一个页面不能删除
       };
       arr.push(activeMenu);
 
-      updateMenus(arr);
-    } else if (exitMenus.length === 1) {
+      updateMenuTags(arr);
+    } else if (menuTags.length === 1) {
       // 删除时,只剩一个标签去掉删除图标
-      const data = exitMenus;
+      const data = menuTags;
       data[0].closable = false;
-      updateMenus(data);
+      updateMenuTags(data);
     }
     setActiveKey(pathname);
   }, [location]);
@@ -46,7 +46,7 @@ export default function Layout(props: any) {
 
   return (
     <PageContainer
-      tabList={exitMenus}
+      tabList={menuTags}
       onTabChange={onTabChange}
       header={{
         title: null,

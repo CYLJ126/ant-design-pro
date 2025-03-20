@@ -14,15 +14,15 @@ export interface MenuTabProps {
 }
 
 export default () => {
-  const [exitMenus, setExitMenus] = useState<MenuItemProps[]>([]);
+  const [menuTags, setMenuTags] = useState<MenuItemProps[]>([]);
 
   // 改变缓存菜单
-  const updateMenus = useCallback((menus: MenuItemProps[]) => {
-    setExitMenus(menus);
+  const updateMenuTags = useCallback((menus: MenuItemProps[]) => {
+    setMenuTags(menus);
   }, []);
 
   return {
-    exitMenus,
-    updateMenus,
+    menuTags,
+    updateMenuTags,
   };
 };
