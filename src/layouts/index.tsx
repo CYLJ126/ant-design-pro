@@ -101,6 +101,10 @@ export default function Layout(props: any) {
     history.push(toKey);
   };
 
+  if (noCacheRoutes.includes(location.pathname)) {
+    // 不需要缓存的页面，默认为不需要 tab 标签
+    return <Outlet />;
+  }
   return (
     <PageContainer
       tabList={menuTags}

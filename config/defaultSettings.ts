@@ -8,9 +8,9 @@ const Settings: ProLayoutProps & {
   logo?: string;
 } = {
   navTheme: 'light',
-  // 拂晓蓝
-  colorPrimary: '#1890ff',
+  colorPrimary: '#1890ff', // 拂晓蓝
   layout: 'side',
+  suppressSiderWhenMenuEmpty: true, // 在菜单为空时隐藏 Sider，即菜单栏
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,

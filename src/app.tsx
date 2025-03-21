@@ -20,6 +20,7 @@ const loginRoute = {
   layout: false,
   routes: [
     {
+      layout: false,
       name: 'login',
       path: '/user/login',
     },
@@ -94,7 +95,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
       request: async () => {
         if (!initialState?.currentUser?.userid) {
-          // 没登录返回登录的 route，不显示菜单
+          // 没登录返回登录 route，不显示菜单
           return [loginRoute];
         }
         let rawMenus;
@@ -103,9 +104,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         } catch (e) {
           rawMenus = [];
         }
-        let temp = rawMenus.map((rawMenu) => transfer(rawMenu));
-        temp.push(loginRoute);
-        return temp;
+        return rawMenus.map((rawMenu) => transfer(rawMenu));
       },
     },
     avatarProps: {
@@ -116,6 +115,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
     },
     /*waterMarkProps: {
+      // 水印
       content: initialState?.currentUser?.name,
     },*/
     footerRender: () => <Footer />,
