@@ -5,6 +5,7 @@ import { RouteContext } from '@ant-design/pro-layout';
 import { PageContainer } from '@ant-design/pro-components';
 import { MenuTabProps } from '@/models/menuTags';
 import IconMap from '@/icons/IconMap';
+import styles from './index.less';
 
 const menuMap = {
   '/HomePage': '首页',
@@ -113,14 +114,12 @@ export default function Layout(props: any) {
         title: null,
         breadcrumb: {},
       }}
+      className={styles.container}
       tabProps={{
         type: 'editable-card',
         hideAdd: true,
         onEdit: onTabEdit,
         activeKey,
-        tabBarStyle: {
-          paddingBottom: '3px',
-        },
       }}
     >
       <AliveScope>
