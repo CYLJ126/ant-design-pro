@@ -15,6 +15,17 @@ import IconMap from '@/icons/IconMap';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+const loginRoute = {
+  path: '/user',
+  layout: false,
+  routes: [
+    {
+      name: 'login',
+      path: '/user/login',
+    },
+  ],
+};
+
 function transfer(rawMenu) {
   let one = {
     id: rawMenu.id,
@@ -45,7 +56,8 @@ export async function getInitialState(): Promise<{
       let user = msg.data;
       // 权限，前后端字段兼容
       user.access = user.authorities;
-      return msg.data;
+      user.userid = user.id;
+      return user;
     } catch (error) {
       history.push(loginPath);
     }
@@ -81,8 +93,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         userId: initialState?.currentUser?.userid,
       },
       request: async () => {
-        const rawMenus = await listRecursiveMenus({});
-        return rawMenus.map((rawMenu) => transfer(rawMenu));
+        if (!initialState?.currentUser?.userid) {
+          // 没登录返回登录的 route，不显示菜单
+          return [loginRoute];
+        }
+        let rawMenus;
+        try {
+          rawMenus = await listRecursiveMenus({});
+        } catch (e) {
+          rawMenus = [];
+        }
+        let temp = rawMenus.map((rawMenu) => transfer(rawMenu));
+        temp.push(loginRoute);
+        return temp;
       },
     },
     avatarProps: {

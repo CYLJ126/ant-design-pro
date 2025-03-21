@@ -135,7 +135,7 @@ const Login: React.FC = () => {
         // 设置用户信息
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') ?? '/');
+        history.push(urlParams.get('redirect') ?? '/HomePage');
         return;
       }
       console.log(msg);
