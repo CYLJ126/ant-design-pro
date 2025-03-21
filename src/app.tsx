@@ -20,7 +20,6 @@ const loginRoute = {
   layout: false,
   routes: [
     {
-      layout: false,
       name: 'login',
       path: '/user/login',
     },
@@ -51,6 +50,10 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
+      if (!localStorage.getItem('user_token')) {
+        // 还未登录时，刷新页面，此时，不去获取用户信息
+        return undefined;
+      }
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
