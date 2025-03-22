@@ -39,6 +39,7 @@ function DailyWork() {
       startTime: date,
       endTime: date,
       score: 0,
+      cost: 0,
       content: '',
     };
     const list = [];

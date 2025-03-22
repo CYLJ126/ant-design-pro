@@ -83,6 +83,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       endTime: param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
       targetId: param.targetId,
       score: param.score,
+      cost: param.cost,
       proportion: param.proportion,
       content: param.content,
     };
@@ -183,48 +184,67 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
           <Row>
             <Col span={12}>
               <Row>
-                <Col span={14}>
-                  <Select
-                    value={dailyWork.themeId}
-                    className={dynamicStyle.theme}
-                    options={themeOptions}
-                    onSelect={(value) => {
-                      const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
-                      setDailyWork(temp);
-                      save(temp);
-                    }}
-                  />
-                </Col>
-                <Col span={10}>
-                  <Row>
-                    <InputNumber
-                      className={`${dynamicStyle.number} ${dynamicStyle.proportion}`}
-                      step={5}
-                      min={0}
-                      max={100}
-                      size={'small'}
-                      changeOnWheel={true}
-                      addonAfter="%"
-                      value={dailyWork.proportion}
-                      onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
-                      onBlur={() => save(dailyWork)}
+                <Row>
+                  <Col span={12}>
+                    <Select
+                      value={dailyWork.themeId}
+                      className={dynamicStyle.theme}
+                      options={themeOptions}
+                      onSelect={(value) => {
+                        const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
+                        setDailyWork(temp);
+                        save(temp);
+                      }}
                     />
-                  </Row>
-                  <Row>
+                  </Col>
+                  <Col span={12}>
                     <InputNumber
-                      className={`${dynamicStyle.number} ${dynamicStyle.score}`}
+                      className={dynamicStyle.number}
                       step={1}
                       min={0}
                       max={10}
                       size={'small'}
                       changeOnWheel={true}
+                      controls={false}
+                      addonAfter="分"
                       value={dailyWork.score}
-                      handleVisible={true}
                       onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
                       onBlur={() => save(dailyWork)}
                     />
-                  </Row>
-                </Col>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={12}>
+                    <InputNumber
+                      className={dynamicStyle.number}
+                      step={5}
+                      min={0}
+                      max={100}
+                      size={'small'}
+                      changeOnWheel={true}
+                      controls={false}
+                      addonAfter="%"
+                      value={dailyWork.proportion}
+                      onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
+                      onBlur={() => save(dailyWork)}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <InputNumber
+                      className={dynamicStyle.number}
+                      step={0.5}
+                      min={0}
+                      max={10}
+                      size={'small'}
+                      changeOnWheel={true}
+                      controls={false}
+                      addonAfter="h"
+                      value={dailyWork.cost}
+                      onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
+                      onBlur={() => save(dailyWork)}
+                    />
+                  </Col>
+                </Row>
               </Row>
               <Select
                 value={dailyWork.workId}

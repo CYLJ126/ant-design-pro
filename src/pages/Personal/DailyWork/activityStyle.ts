@@ -60,7 +60,7 @@ export default function activityStyle(status) {
     `,
     theme: css`
       width: calc(100% - 5px);
-      height: 55px;
+      height: 24.5px;
       padding: 0;
       margin-left: 5px;
       margin-bottom: 5px;
@@ -68,7 +68,7 @@ export default function activityStyle(status) {
       border: none;
 
       .ant-select-selector {
-        border: none;
+        border: none !important;
         background-color: ${frontColor} !important;
       }
 
@@ -77,7 +77,7 @@ export default function activityStyle(status) {
       }
 
       .ant-select-selection-item {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         text-align: center;
         padding: 0 !important;
@@ -132,75 +132,26 @@ export default function activityStyle(status) {
     number: css`
       margin-left: 5px;
       margin-bottom: 5px;
+      width: calc(100% - 5px);
 
       .ant-input-number-input {
         padding-right: 1px;
         text-align: center;
+        padding-left: 2px;
+        color: ${frontColor};
       }
 
       .ant-input-number-group-addon {
         font-size: 12px;
         padding-left: 1px;
         padding-right: 1px;
-      }
-
-      .ant-input-number-handler {
-        width: 7px;
-        margin-left: 5px;
-        border: none;
-
-        svg {
-          color: #ffffff;
-        }
-      }
-
-      .ant-input-number {
-        border: 1.5px solid ${frontColor};
-      }
-
-      .ant-input-number-input {
-        color: ${frontColor};
-      }
-
-      .ant-input-number-group-addon {
         color: ${backColor};
         background-color: ${frontColor};
         border: 1.5px solid ${frontColor};
       }
 
-      .ant-input-number-handler-wrap {
-        background-color: ${frontColor};
-      }
-    `,
-    score: css`
-      border: 1.5px solid ${frontColor};
-      border-radius: 5px;
-      width: calc(100% - 5px);
-      height: 25px;
-      padding: 0;
-      margin-bottom: 5px;
-      font-weight: bold;
-      text-align: center;
-
-      .ant-input-number-input {
-        padding-left: 0;
-      }
-
-      .ant-input-number-handler-wrap {
-        width: 16px !important;
-        left: 30px !important;
-        border: none;
-      }
-
-      :hover {
+      .ant-input-number {
         border: 1.5px solid ${frontColor};
-      }
-    `,
-    proportion: css`
-      width: calc(100% - 5px);
-
-      .ant-input-number-input {
-        padding-left: 2px;
       }
 
       .ant-input-number-handler-wrap {
