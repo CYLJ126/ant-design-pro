@@ -1,27 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { history, Outlet, useModel } from 'umi';
+import { history, Outlet, useIntl, useModel } from 'umi';
 import { AliveScope } from 'react-activation';
 import { RouteContext } from '@ant-design/pro-layout';
 import { PageContainer } from '@ant-design/pro-components';
 import { MenuTabProps } from '@/models/menuTags';
 import IconMap from '@/icons/IconMap';
 import styles from './index.less';
-
-const menuMap = {
-  '/HomePage': '首页',
-  '/personal': '个人管理',
-  '/personal/traces': '时刻留痕',
-  '/personal/DailyWork': '每日计划',
-  '/personal/WeeklyWork': '每周计划',
-  '/personal/MonthlyWork': '每月计划',
-  '/personal/QuarterlyWork': '季度规划',
-  '/personal/SemiannualWork': '半年规划',
-  '/personal/AnnualWork': '年度规划',
-  '/personal/summary': '个人总结',
-  '/personal/BadHabit': '坏习惯',
-  '/tools': '工具',
-  '/tools/TextFormatter': '文本格式化',
-};
 
 const initialTags = [
   {
@@ -34,10 +18,16 @@ const initialTags = [
   },
 ];
 
+function getMenuIntlInfo(path: string) {
+  let pathArr = path.split('/');
+  return {
+    id: 'menu' + pathArr.join('.'),
+    defaultMessage: pathArr.length > 0 ? pathArr[pathArr.length - 1] : 'tempPage',
+  };
+}
+
 export default function Layout(props: any) {
-  const { children, location: tempLocation } = props;
-  console.log('属性children：' + JSON.stringify(children));
-  console.log('属性tempLocation：' + JSON.stringify(tempLocation));
+  console.log('属性：' + JSON.stringify(props));
   const { location } = useContext(RouteContext);
   const { pathname } = location;
   const [activeKey, setActiveKey] = useState<string>('');
@@ -45,6 +35,7 @@ export default function Layout(props: any) {
     menuTags: model.menuTags,
     updateMenuTags: model.updateMenuTags,
   }));
+  const intl = useIntl();
 
   // 不需要缓存的路由
   const noCacheRoutes = ['/', '/user/login'];
@@ -54,8 +45,10 @@ export default function Layout(props: any) {
     const arr: MenuTabProps[] = menuTags.filter((item: MenuTabProps) => item.key !== pathname);
     // 不是当前打开的标签页，则新增一个
     if (arr.length === menuTags.length) {
+      let menuIntlInfo = getMenuIntlInfo(pathname);
+      let menuName = intl.formatMessage(menuIntlInfo);
       const activeMenu: MenuTabProps = {
-        tab: menuMap[pathname] ?? 'pageTemp',
+        tab: menuName,
         key: pathname,
         closable: true,
       };

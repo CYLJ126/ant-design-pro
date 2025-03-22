@@ -29,7 +29,7 @@ const loginRoute = {
 function transfer(rawMenu) {
   let one = {
     id: rawMenu.id,
-    name: rawMenu.menuName,
+    name: rawMenu.menuCode,
     path: rawMenu.menuUrl,
     icon: IconMap[rawMenu.icon] || '',
   };
