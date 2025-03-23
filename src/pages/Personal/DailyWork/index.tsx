@@ -16,10 +16,16 @@ function DailyWork() {
   const [dailyWorks, setDailyWorks] = useState([]);
   dayjs.extend(utc);
 
-  function toggleDay(type) {
-    let temp = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate());
-    temp.setDate(whichDay.getDate() + (type === 'former' ? -1 : 1));
-    setWhichDay(temp);
+  function toggleDay(type, value) {
+    if (type === 'set') {
+      // 直接切换到指定日期
+      setWhichDay(value.toDate());
+    } else {
+      // 往前推一天或往后推一天
+      let temp = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate());
+      temp.setDate(whichDay.getDate() + (type === 'former' ? -1 : 1));
+      setWhichDay(temp);
+    }
   }
 
   function postUpdate() {

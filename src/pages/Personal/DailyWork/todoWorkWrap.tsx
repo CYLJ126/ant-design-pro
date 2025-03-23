@@ -15,6 +15,7 @@ export default function TodoWorkWrap() {
   const [date, setDate] = useState(dayjs());
   const [todoWorks, setTodoWorks] = useState([]);
   const { styles: dynamicStyle } = todoWorkWrapStyle();
+  dayjs.extend(utc);
 
   function toggleDay(type) {
     let temp = date.add(type === 'former' ? -1 : 1, 'day');
@@ -22,7 +23,6 @@ export default function TodoWorkWrap() {
   }
 
   function listTodos() {
-    dayjs.extend(utc);
     let temp = dayjs(date).utc().local().format(dateFormat);
     listTodoWork({
       startDateTimeFloor: temp + ' 00:00:00',
