@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, InputNumber, message, Row, Select, TimePicker } from 'antd';
+import { Col, Input, InputNumber, message, Row, Select } from 'antd';
 import { FullscreenExitOutlined, SolutionOutlined, UndoOutlined } from '@ant-design/icons';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
@@ -13,11 +13,11 @@ import {
 import { getTags } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
-import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import DeleteIcon from '@/icons/DeleteIcon';
 import ArrowRightIcon from '@/icons/ArrowRightIcon';
 import SuccessIcon from '@/icons/SuccessIcon';
+import Time from './time';
 
 async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'DOING' });
@@ -28,43 +28,7 @@ async function getSubTags(param) {
   );
 }
 
-function Time({ dailyWork, save }) {
-  const { styles: dynamicStyle } = activityStyle(dailyWork.status);
-  const [date, setDate] = useState(dayjs(dailyWork[dailyWork.mark]).utc().local());
-  dayjs.extend(utc);
-  return (
-    <Row>
-      <Col span={8}>
-        <hr className={dynamicStyle.line} />
-      </Col>
-      <Col span={16}>
-        <TimePicker
-          value={date}
-          format="HH:mm"
-          className={dynamicStyle.time}
-          placeholder={dailyWork.placeholder}
-          onChange={(time, timeString) => {
-            let temp = { ...dailyWork };
-            const dateStr = dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD');
-            if (dailyWork.mark === 'startTime') {
-              temp.startTimeStr = dateStr + ' ' + timeString + ':00';
-              temp.endTimeStr =
-                dateStr + ' ' + dayjs(dailyWork.endTime).utc().local().format('HH:mm:ss');
-            } else {
-              temp.endTimeStr = dateStr + ' ' + timeString + ':59';
-              temp.startTimeStr =
-                dateStr + ' ' + dayjs(dailyWork.startTime).utc().local().format('HH:mm:ss');
-            }
-            setDate(time);
-            save(temp);
-          }}
-        />
-      </Col>
-    </Row>
-  );
-}
-
-export default function Activity({ dailyWorkParam, postUpdate }) {
+export default function Activity({ dailyWorkParam, postUpdate, setFoldState }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
@@ -166,21 +130,23 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   return (
     <div className={styles.activity}>
       <Row>
-        <Col span={3}>
+        <Col span={2}>
           <Row style={{ marginBottom: '64px' }}>
             <Time
+              showLine={true}
               dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
               save={save}
             />
           </Row>
           <Row>
             <Time
+              showLine={true}
               dailyWork={{ ...dailyWork, mark: 'endTime', placeholder: '结束时间' }}
               save={save}
             />
           </Row>
         </Col>
-        <Col span={6}>
+        <Col span={7} style={{ paddingLeft: '14px' }}>
           <Row>
             <Col span={12}>
               <Row>
@@ -290,7 +256,10 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   />
                 )}
                 {/* 折叠 */}
-                <FullscreenExitOutlined className={dynamicStyle.foldIcon} />
+                <FullscreenExitOutlined
+                  className={dynamicStyle.foldIcon}
+                  onClick={() => setFoldState(dailyWork.id, 'fold')}
+                />
               </Row>
               <Row>
                 {/* 推到下一天 */}

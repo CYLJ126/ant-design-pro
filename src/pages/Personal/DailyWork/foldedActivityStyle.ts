@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 
-export default function activityStyle(status) {
+export default function foldedActivityStyle(status) {
   let frontColor, backColor;
   if (status === 'DONE') {
     frontColor = '#6294a5';
@@ -10,52 +10,11 @@ export default function activityStyle(status) {
     backColor = '#ffffff';
   }
   return createStyles(({ css }) => ({
-    theme: css`
-      width: calc(100% - 5px);
-      height: 24.5px;
-      padding: 0;
-      margin-left: 5px;
-      margin-bottom: 5px;
-      border-radius: 5px;
-      border: none;
-
-      .ant-select-selector {
-        border: none !important;
-        background-color: ${frontColor} !important;
-      }
-
-      .ant-select-arrow {
-        display: none;
-      }
-
-      .ant-select-selection-item {
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        padding: 0 !important;
-        color: ${backColor};
-      }
-    `,
-    work: css`
-      width: calc(100% - 5px);
-      margin-left: 5px;
-      margin-bottom: 5px;
-      border-radius: 5px;
-
-      .ant-select-selector {
-        border: 1.5px solid ${frontColor} !important;
-        background-color: ${backColor} !important;
-      }
-
-      .ant-select-arrow {
-        display: none;
-      }
-
-      .ant-select-selection-item {
-        text-align: center;
-        font-size: 14px;
-        padding: 0 !important;
-        color: ${frontColor};
+    wrapper: css``,
+    startTime: css``,
+    endTime: css`
+      .ant-picker {
+        margin-left: 28px;
       }
     `,
     target: css`
@@ -114,7 +73,7 @@ export default function activityStyle(status) {
     `,
     content: css`
       width: 100%-5px;
-      height: 114px !important;
+      height: 55px !important;
       color: ${frontColor};
       border: 1.5px solid ${frontColor};
       margin-left: 5px;
@@ -122,49 +81,55 @@ export default function activityStyle(status) {
       overflow: auto;
       scrollbar-width: none;
     `,
-    separator: css`
-      width: 100%;
-      height: 2px;
-      background-color: ${frontColor};
-      border: none;
-    `,
-    foldIcon: css`
-      svg {
-        margin-top: 2px;
-        margin-left: 5px;
-        margin-bottom: 4px;
-        width: 22px;
-        height: 22px;
-        color: ${frontColor};
-      }
+    todoIcon: css`
+      margin-top: -2px;
+      margin-left: 4px;
 
       :hover {
         cursor: pointer;
       }
-    `,
-    todoIcon: css`
-      :hover {
-        cursor: pointer;
-      }
+
       svg {
-        width: 22px;
-        height: 22px;
+        width: 23px;
+        height: 23px;
         color: ${frontColor};
       }
     `,
     summaryIcon: css`
+      margin-left: 5px;
+
       :hover {
         cursor: pointer;
       }
 
       svg {
-        margin-top: 8px;
+        margin-top: 2px;
         margin-left: 2px;
         margin-bottom: 4px;
         width: 22px;
         height: 22px;
         color: ${frontColor};
       }
+    `,
+    unFoldIcon: css`
+      margin-left: 5px;
+
+      svg {
+        margin-bottom: 4px;
+        width: 22px;
+        height: 22px;
+        color: ${frontColor};
+      }
+
+      :hover {
+        cursor: pointer;
+      }
+    `,
+    separator: css`
+      width: 100%;
+      height: 2px;
+      background-color: ${frontColor};
+      border: none;
     `,
   }))();
 }
