@@ -28,8 +28,6 @@ function DailyWork() {
     }
   }
 
-  function postUpdate() {}
-
   function list() {
     let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
     let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
@@ -40,6 +38,12 @@ function DailyWork() {
     });
   }
 
+  function postUpdate(needUpdate) {
+    if (needUpdate) {
+      list();
+    }
+  }
+
   function addBlankDailyWork(date) {
     const blankOne = {
       status: 'DOING',
@@ -48,6 +52,7 @@ function DailyWork() {
       endTime: date,
       score: 0,
       cost: 0,
+      foldFlag: 'YES',
       content: '',
     };
     const list = [];
