@@ -10,12 +10,10 @@ import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
 import KeepAlive from 'react-activation';
-import FoldedActivity from '@/pages/Personal/DailyWork/foldedActivity';
 
 function DailyWork() {
   const [whichDay, setWhichDay] = useState(new Date());
   const [dailyWorks, setDailyWorks] = useState([]);
-  const [foldMap, setFoldMap] = useState({});
   dayjs.extend(utc);
 
   function toggleDay(type, value) {
@@ -60,12 +58,6 @@ function DailyWork() {
     postUpdate();
   }, [whichDay]);
 
-  function setFoldState(id, state) {
-    let temp = { ...foldMap };
-    temp[id] = state;
-    setFoldMap(temp);
-  }
-
   const time = new Date().getTime();
   return (
     <div>
@@ -75,16 +67,7 @@ function DailyWork() {
           <Header whichDay={whichDay} add={addBlankDailyWork} toggleDay={toggleDay} />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
-            return foldMap[item.id] === 'fold' ? (
-              <FoldedActivity key={item.id + time} dailyWork={item} setFoldState={setFoldState} />
-            ) : (
-              <Activity
-                key={item.id + time}
-                dailyWorkParam={item}
-                postUpdate={postUpdate}
-                setFoldState={setFoldState}
-              />
-            );
+            return <Activity key={item.id + time} dailyWorkParam={item} postUpdate={postUpdate} />;
           })}
         </Col>
         <Col span={6}>

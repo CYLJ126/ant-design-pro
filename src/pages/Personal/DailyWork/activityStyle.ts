@@ -1,6 +1,7 @@
 import { createStyles } from 'antd-style';
 
-export default function activityStyle(status) {
+export default function activityStyle(status, foldState) {
+  const textAreaHeight = foldState === 'unfold' ? '114' : '55';
   let frontColor, backColor;
   if (status === 'DONE') {
     frontColor = '#6294a5';
@@ -114,7 +115,7 @@ export default function activityStyle(status) {
     `,
     content: css`
       width: 100%-5px;
-      height: 114px !important;
+      height: ${textAreaHeight} !important;
       color: ${frontColor};
       border: 1.5px solid ${frontColor};
       margin-left: 5px;
@@ -132,6 +133,20 @@ export default function activityStyle(status) {
       svg {
         margin-top: 2px;
         margin-left: 5px;
+        margin-bottom: 4px;
+        width: 22px;
+        height: 22px;
+        color: ${frontColor};
+      }
+
+      :hover {
+        cursor: pointer;
+      }
+    `,
+    unFoldIcon: css`
+      margin-left: 5px;
+
+      svg {
         margin-bottom: 4px;
         width: 22px;
         height: 22px;
