@@ -290,62 +290,97 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
             </Row>
           ) : (
             <Row>
-              <Col span={7} style={{ paddingLeft: '14px' }}>
-                <Row>
-                  <Col span={4}>
-                    <InputNumber
-                      className={dynamicStyle.number}
-                      size={'small'}
-                      controls={false}
-                      addonAfter="%"
-                      value={dailyWork.proportion}
-                    />
-                  </Col>
-                  <Col span={4}>
-                    <InputNumber
-                      className={dynamicStyle.number}
-                      controls={false}
-                      size={'small'}
-                      addonAfter="分"
-                      value={dailyWork.score}
-                    />
-                  </Col>
-                  <Col span={4}>
-                    <InputNumber
-                      className={dynamicStyle.number}
-                      controls={false}
-                      size={'small'}
-                      addonAfter="h"
-                      value={dailyWork.cost}
-                    />
-                  </Col>
-                  <Col span={12}>
-                    {/* 删除 */}
-                    <DeleteIcon width={25} height={25} color={color} margin="0 0 0 5px" />
-                    {dailyWork.status === 'INITIAL' ? (
-                      // 完成
-                      <SuccessIcon width={21} height={21} color={color} margin="2px 0 0 10px" />
-                    ) : (
-                      // 待办
-                      <UndoOutlined className={dynamicStyle.todoIcon} />
-                    )}
-                    {/* 总结 */}
-                    <SolutionOutlined className={dynamicStyle.summaryIcon} />
-                    {/* 推到下一天 */}
-                    <ArrowRightIcon width={23} height={24} color={color} margin="2px 0 0 5px" />
-                    <FullscreenOutlined
-                      className={dynamicStyle.unFoldIcon}
-                      onClick={() => setFoldState('unfold')}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Select
-                    value={dailyWork.targetId}
-                    className={dynamicStyle.target}
-                    options={targetOptions}
+              <Col span={4}>
+                <InputNumber
+                  className={dynamicStyle.number}
+                  step={5}
+                  min={0}
+                  max={100}
+                  size={'small'}
+                  changeOnWheel={true}
+                  controls={false}
+                  addonAfter="%"
+                  value={dailyWork.proportion}
+                  onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
+                  onBlur={() => save(dailyWork)}
+                />
+              </Col>
+              <Col span={4}>
+                <InputNumber
+                  className={dynamicStyle.number}
+                  step={1}
+                  min={0}
+                  max={10}
+                  size={'small'}
+                  changeOnWheel={true}
+                  controls={false}
+                  addonAfter="分"
+                  value={dailyWork.score}
+                  onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
+                  onBlur={() => save(dailyWork)}
+                />
+              </Col>
+              <Col span={4}>
+                <InputNumber
+                  className={dynamicStyle.number}
+                  step={0.5}
+                  min={0}
+                  max={10}
+                  size={'small'}
+                  changeOnWheel={true}
+                  controls={false}
+                  addonAfter="h"
+                  value={dailyWork.cost}
+                  onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
+                  onBlur={() => save(dailyWork)}
+                />
+              </Col>
+              <Col span={12}>
+                {/* 删除 */}
+                <DeleteIcon
+                  width={25}
+                  height={25}
+                  color={color}
+                  onClick={() => {
+                    handleDoneOrDelete(dailyWork.id, 'delete');
+                  }}
+                />
+                {dailyWork.status === 'INITIAL' ? (
+                  // 完成
+                  <SuccessIcon
+                    width={20}
+                    height={20}
+                    color={color}
+                    margin="3px 0 0 4px"
+                    onClick={() => {
+                      handleDoneOrDelete(dailyWork.id, 'DONE');
+                    }}
                   />
-                </Row>
+                ) : (
+                  // 待办
+                  <UndoOutlined
+                    className={dynamicStyle.todoIcon}
+                    onClick={() => {
+                      handleDoneOrDelete(dailyWork.id, 'INITIAL');
+                    }}
+                  />
+                )}
+                {/* 总结 */}
+                <SolutionOutlined className={dynamicStyle.summaryIcon} />
+                {/* 推到下一天 */}
+                <ArrowRightIcon
+                  width={23}
+                  height={24}
+                  color={color}
+                  margin="2px 0 0 2px"
+                  onClick={() => {
+                    handleDoneOrDelete(dailyWork.id, 'push');
+                  }}
+                />
+                <FullscreenOutlined
+                  className={dynamicStyle.unFoldIcon}
+                  onClick={() => setFoldState('unfold')}
+                />
               </Col>
             </Row>
           )}
