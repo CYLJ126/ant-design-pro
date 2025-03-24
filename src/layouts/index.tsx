@@ -18,6 +18,11 @@ const initialTags = [
   },
 ];
 
+/**
+ * 国际化翻译，组国际化的键，然后下一步去拿到国际化信息
+ *
+ * @param path 页面路径
+ */
 function getMenuIntlInfo(path: string) {
   let pathArr = path.split('/');
   return {
@@ -26,8 +31,7 @@ function getMenuIntlInfo(path: string) {
   };
 }
 
-export default function Layout(props: any) {
-  console.log('属性：' + JSON.stringify(props));
+export default function Layout() {
   const { location } = useContext(RouteContext);
   const { pathname } = location;
   const [activeKey, setActiveKey] = useState<string>('');
@@ -61,11 +65,13 @@ export default function Layout(props: any) {
       history.push(initialTags[0].path);
     }
     setActiveKey(pathname);
+    localStorage.setItem('active-key', pathname);
   }, [location]);
 
   const onTabChange = (key: string) => {
     history.push(key);
     setActiveKey(key);
+    localStorage.setItem('active-key', key);
   };
 
   const onTabEdit = (key, action) => {

@@ -275,14 +275,21 @@ function TextFormatter() {
   }
 
   function handleWindowFocus() {
-    const { prop, listProp } = { ...config.current };
-    handleClipboard(prop, listProp, setTextObj).then();
+    // 判断当前激活路由，如果是 /tools/TextFormatter，才处理粘贴板，使用 RouteContext 无法监听到变化，只能使用 localStorage
+    if (localStorage.getItem('active-key') === '/tools/TextFormatter') {
+      const { prop, listProp } = { ...config.current };
+      handleClipboard(prop, listProp, setTextObj).then();
+    }
   }
 
   // 设置窗口激活时的监听事件，从粘贴板复制内容到文本框中
   useEffect(() => {
     // 激活窗口
     window.addEventListener('focus', handleWindowFocus);
+    return () => {
+      // 返回清理函数，在组件卸载时移除事件监听器
+      window.removeEventListener('focus', handleWindowFocus);
+    };
   }, []); // 空依赖数组，确保只在组件挂载和卸载时执行一次
 
   return (
