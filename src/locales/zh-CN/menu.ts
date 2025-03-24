@@ -47,7 +47,7 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
   'menu.Tools': '工具',
-  'menu.tools.TextFormatter': '文本格式化',
+  'menu.Tools.TextFormatter': '文本格式化',
   'menu.personal': '个人管理',
   'menu.personal.Traces': '时刻留痕',
   'menu.personal.DailyWork': '每日计划',
