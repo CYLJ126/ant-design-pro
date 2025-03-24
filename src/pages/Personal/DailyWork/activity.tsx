@@ -148,7 +148,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     <div className={styles.activity}>
       <Row>
         <Col span={2}>
-          <Row style={{ marginBottom: dailyWork.foldFlag === '1' ? '64px' : '5px' }}>
+          <Row style={{ marginBottom: dailyWork.foldFlag === 'YES' ? '64px' : '5px' }}>
             <Time
               showLine={true}
               dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
