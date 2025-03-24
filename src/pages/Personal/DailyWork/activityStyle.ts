@@ -60,7 +60,7 @@ export default function activityStyle(status) {
     `,
     target: css`
       width: calc(100% - 5px);
-      height: 25px;
+      height: 26px;
       margin-left: 5px;
       margin-bottom: 5px;
       border-radius: 5px;
@@ -83,7 +83,7 @@ export default function activityStyle(status) {
     `,
     number: css`
       margin-left: 5px;
-      margin-bottom: 5px;
+      margin-bottom: 4.5px;
       width: calc(100% - 5px);
 
       .ant-input-number-input {
@@ -145,7 +145,6 @@ export default function activityStyle(status) {
       margin-left: 5px;
 
       svg {
-        margin-bottom: 4px;
         width: 22px;
         height: 22px;
         color: ${frontColor};
@@ -156,6 +155,8 @@ export default function activityStyle(status) {
       }
     `,
     todoIcon: css`
+      margin-top: -2px;
+      margin-left: 2px;
       :hover {
         cursor: pointer;
       }
@@ -169,11 +170,25 @@ export default function activityStyle(status) {
       :hover {
         cursor: pointer;
       }
-
       svg {
         margin-top: 8px;
         margin-left: 2px;
         margin-bottom: 4px;
+        width: 22px;
+        height: 22px;
+        color: ${frontColor};
+      }
+    `,
+    deleteFoldIcon: css`
+      margin-left: 10px !important;
+    `,
+    summaryFoldedIcon: css`
+      :hover {
+        cursor: pointer;
+      }
+
+      svg {
+        margin-left: 6px;
         width: 22px;
         height: 22px;
         color: ${frontColor};

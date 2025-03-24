@@ -348,54 +348,67 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                 />
               </Col>
               <Col span={12}>
-                {/* 删除 */}
-                <DeleteIcon
-                  width={25}
-                  height={25}
-                  color={color}
-                  onClick={() => {
-                    handleDoneOrDelete('delete', { id: dailyWork.id });
-                  }}
-                />
-                {dailyWork.status === 'INITIAL' ? (
-                  // 完成
-                  <SuccessIcon
-                    width={20}
-                    height={20}
-                    color={color}
-                    margin="3px 0 0 4px"
-                    onClick={() => {
-                      handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
-                    }}
-                  />
-                ) : (
-                  // 待办
-                  <UndoOutlined
-                    className={dynamicStyle.todoIcon}
-                    onClick={() => {
-                      handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
-                    }}
-                  />
-                )}
-                {/* 总结 */}
-                <SolutionOutlined className={dynamicStyle.summaryIcon} />
-                {/* 推到下一天 */}
-                <ArrowRightIcon
-                  width={23}
-                  height={24}
-                  color={color}
-                  margin="2px 0 0 2px"
-                  onClick={() => {
-                    handleDoneOrDelete('push', { id: dailyWork.id });
-                  }}
-                />
-                <FullscreenOutlined
-                  className={dynamicStyle.unFoldIcon}
-                  onClick={() => {
-                    setDailyWork({ ...dailyWork, foldFlag: 'YES' });
-                    handleDoneOrDelete('fold', { id: dailyWork.id, state: 'unfold' });
-                  }}
-                />
+                <Row>
+                  <Col span={4}>
+                    {/* 删除 */}
+                    <DeleteIcon
+                      margin="0 0 0 10px"
+                      width={25}
+                      height={25}
+                      color={color}
+                      onClick={() => {
+                        handleDoneOrDelete('delete', { id: dailyWork.id });
+                      }}
+                    />
+                  </Col>
+                  <Col span={4} style={{ paddingLeft: '10px', paddingTop: '3px' }}>
+                    {dailyWork.status === 'INITIAL' ? (
+                      // 完成
+                      <SuccessIcon
+                        width={20}
+                        height={20}
+                        color={color}
+                        margin="0 0 0 4px"
+                        onClick={() => {
+                          handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
+                        }}
+                      />
+                    ) : (
+                      // 待办
+                      <UndoOutlined
+                        className={dynamicStyle.todoIcon}
+                        onClick={() => {
+                          handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
+                        }}
+                      />
+                    )}
+                  </Col>
+                  <Col span={4} style={{ paddingLeft: '8px', paddingTop: '2px' }}>
+                    {/* 总结 */}
+                    <SolutionOutlined className={dynamicStyle.summaryFoldedIcon} />
+                  </Col>
+                  <Col span={4} style={{ paddingLeft: '12px', paddingTop: '1px' }}>
+                    {/* 推到下一天 */}
+                    <ArrowRightIcon
+                      width={23}
+                      height={24}
+                      color={color}
+                      margin="0 0 0 2px"
+                      onClick={() => {
+                        handleDoneOrDelete('push', { id: dailyWork.id });
+                      }}
+                    />
+                  </Col>
+                  <Col span={4} style={{ paddingLeft: '12px', paddingTop: '3px' }}>
+                    <FullscreenOutlined
+                      className={dynamicStyle.unFoldIcon}
+                      onClick={() => {
+                        setDailyWork({ ...dailyWork, foldFlag: 'YES' });
+                        handleDoneOrDelete('fold', { id: dailyWork.id, state: 'unfold' });
+                      }}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
           )}
