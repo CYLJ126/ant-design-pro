@@ -97,6 +97,7 @@ export default function HeadInfo({ headParam, postUpdate }) {
                 min={0}
                 max={100}
                 changeOnWheel={true}
+                controls={false}
                 addonAfter="%"
                 value={head.proportion}
                 className={styles.proportion}
