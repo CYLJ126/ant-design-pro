@@ -276,7 +276,7 @@ function TextFormatter() {
 
   function handleWindowFocus() {
     // 判断当前激活路由，如果是 /tools/TextFormatter，才处理粘贴板，使用 RouteContext 无法监听到变化，只能使用 localStorage
-    if (localStorage.getItem('active-key') === '/tools/TextFormatter') {
+    if (localStorage.getItem('active-key') === '/Tools/TextFormatter') {
       const { prop, listProp } = { ...config.current };
       handleClipboard(prop, listProp, setTextObj).then();
     }
