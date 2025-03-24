@@ -10,6 +10,7 @@ import activityStyle from './activityStyle';
 import styles from './activity.less';
 import {
   deleteDailyWork,
+  foldActivity,
   getTargets,
   insertDailyWork,
   markDone,
@@ -38,8 +39,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
-  const [foldState, setFoldState] = useState('unfold');
-  const { styles: dynamicStyle } = activityStyle(dailyWork.status, foldState);
+  const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
 
   function save(param) {
@@ -54,6 +54,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       targetId: param.targetId,
       score: param.score,
       cost: param.cost,
+      foldFlag: param.foldFlag,
       proportion: param.proportion,
       content: param.content,
     };
@@ -74,7 +75,8 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     }
   }
 
-  function handleDoneOrDelete(id, type) {
+  function handleDoneOrDelete(type, data) {
+    const { id, state } = data;
     if (type === 'delete') {
       // 删除
       if (id) {
@@ -90,16 +92,20 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       let newOne = {
         targetId: dailyWork.targetId,
         score: 0,
+        foldFlag: '1',
         proportion: dailyWork.proportion,
         content: dailyWork.content,
         startTimeStr: startTimeStr,
         endTimeStr: endTimeStr,
       };
       save(newOne);
-    } else {
-      markDone(id, type).then(() => {
+    } else if (type === 'mark') {
+      markDone(id, state).then(() => {
         postUpdate();
       });
+    } else if (type === 'fold') {
+      // NO-fold-折叠；YES-unfold-展开；
+      foldActivity(id, state === 'fold' ? 'NO' : 'YES').then();
     }
   }
 
@@ -139,7 +145,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     <div className={styles.activity}>
       <Row>
         <Col span={2}>
-          <Row style={{ marginBottom: foldState === 'unfold' ? '64px' : '5px' }}>
+          <Row style={{ marginBottom: dailyWork.foldFlag === '1' ? '64px' : '5px' }}>
             <Time
               showLine={true}
               dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
@@ -155,7 +161,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
           </Row>
         </Col>
         <Col span={7} style={{ paddingLeft: '14px' }}>
-          {foldState === 'unfold' ? (
+          {dailyWork.foldFlag === 'YES' ? (
             <Row>
               <Col span={12}>
                 <Row>
@@ -241,7 +247,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     height={25}
                     color={color}
                     onClick={() => {
-                      handleDoneOrDelete(dailyWork.id, 'delete');
+                      handleDoneOrDelete('delete', { id: dailyWork.id });
                     }}
                   />
                   {dailyWork.status === 'INITIAL' ? (
@@ -252,7 +258,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       color={color}
                       margin="3px 0 0 4px"
                       onClick={() => {
-                        handleDoneOrDelete(dailyWork.id, 'DONE');
+                        handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
                       }}
                     />
                   ) : (
@@ -260,14 +266,17 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     <UndoOutlined
                       className={dynamicStyle.todoIcon}
                       onClick={() => {
-                        handleDoneOrDelete(dailyWork.id, 'INITIAL');
+                        handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
                       }}
                     />
                   )}
                   {/* 折叠 */}
                   <FullscreenExitOutlined
                     className={dynamicStyle.foldIcon}
-                    onClick={() => setFoldState('fold')}
+                    onClick={() => {
+                      setDailyWork({ ...dailyWork, foldFlag: 'NO' });
+                      handleDoneOrDelete('fold', { id: dailyWork.id, state: 'fold' });
+                    }}
                   />
                 </Row>
                 <Row>
@@ -278,7 +287,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     color={color}
                     margin="2px 0 0 2px"
                     onClick={() => {
-                      handleDoneOrDelete(dailyWork.id, 'push');
+                      handleDoneOrDelete('push', { id: dailyWork.id });
                     }}
                   />
                 </Row>
@@ -342,7 +351,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   height={25}
                   color={color}
                   onClick={() => {
-                    handleDoneOrDelete(dailyWork.id, 'delete');
+                    handleDoneOrDelete('delete', { id: dailyWork.id });
                   }}
                 />
                 {dailyWork.status === 'INITIAL' ? (
@@ -353,7 +362,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     color={color}
                     margin="3px 0 0 4px"
                     onClick={() => {
-                      handleDoneOrDelete(dailyWork.id, 'DONE');
+                      handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
                     }}
                   />
                 ) : (
@@ -361,7 +370,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   <UndoOutlined
                     className={dynamicStyle.todoIcon}
                     onClick={() => {
-                      handleDoneOrDelete(dailyWork.id, 'INITIAL');
+                      handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
                     }}
                   />
                 )}
@@ -374,12 +383,15 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   color={color}
                   margin="2px 0 0 2px"
                   onClick={() => {
-                    handleDoneOrDelete(dailyWork.id, 'push');
+                    handleDoneOrDelete('push', { id: dailyWork.id });
                   }}
                 />
                 <FullscreenOutlined
                   className={dynamicStyle.unFoldIcon}
-                  onClick={() => setFoldState('unfold')}
+                  onClick={() => {
+                    setDailyWork({ ...dailyWork, foldFlag: 'YES' });
+                    handleDoneOrDelete('fold', { id: dailyWork.id, state: 'unfold' });
+                  }}
                 />
               </Col>
             </Row>
@@ -400,6 +412,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
         <Col span={15}>
           <Input.TextArea
             value={dailyWork.content}
+            style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
             className={dynamicStyle.content}
             onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
             onBlur={() => save(dailyWork)}

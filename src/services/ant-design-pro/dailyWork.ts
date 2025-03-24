@@ -159,8 +159,24 @@ export async function deleteDailyWork(id?: number) {
   return jsonPost('/dw/dailyWork/deleteDailyWork', { id: id });
 }
 
+/**
+ * 标记为完成或待办
+ *
+ * @param id 要处理的活动 ID
+ * @param status INITIAL-待办；DONE-完成；
+ */
 export async function markDone(id?: number, status?: string) {
   return jsonPost('/dw/dailyWork/switchDailyWorkStatus', { id: id, status: status });
+}
+
+/**
+ * 展开或折叠活动
+ *
+ * @param id 要处理的活动 ID
+ * @param status 折叠状态 0-折叠；1-展开；
+ */
+export async function foldActivity(id?: number, status?: string) {
+  return jsonPost('/dw/dailyWork/foldActivity', { id: id, foldFlag: status });
 }
 
 /**  ----------------- DailyWorkController end ----------------- */

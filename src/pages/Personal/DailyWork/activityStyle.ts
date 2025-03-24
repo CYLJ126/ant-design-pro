@@ -1,7 +1,6 @@
 import { createStyles } from 'antd-style';
 
-export default function activityStyle(status, foldState) {
-  const textAreaHeight = foldState === 'unfold' ? '114' : '55';
+export default function activityStyle(status) {
   let frontColor, backColor;
   if (status === 'DONE') {
     frontColor = '#6294a5';
@@ -115,7 +114,6 @@ export default function activityStyle(status, foldState) {
     `,
     content: css`
       width: 100%-5px;
-      height: ${textAreaHeight} !important;
       color: ${frontColor};
       border: 1.5px solid ${frontColor};
       margin-left: 5px;

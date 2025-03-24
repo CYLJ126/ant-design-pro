@@ -28,7 +28,9 @@ function DailyWork() {
     }
   }
 
-  function postUpdate() {
+  function postUpdate() {}
+
+  function list() {
     let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
     let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
     start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
@@ -55,7 +57,7 @@ function DailyWork() {
   }
 
   useEffect(() => {
-    postUpdate();
+    list();
   }, [whichDay]);
 
   const time = new Date().getTime();
