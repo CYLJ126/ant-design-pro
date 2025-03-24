@@ -1,11 +1,19 @@
 import { createStyles } from 'antd-style';
 
-export default function headerStyle() {
+export default function headerStyle(headInfo) {
+  let proportionColor;
+  if (headInfo.proportion < 100) {
+    proportionColor = '#81d3f8';
+  } else if (headInfo.proportion > 100) {
+    proportionColor = '#ff0000';
+  } else {
+    proportionColor = '#5bb1c9';
+  }
   const headBackgroundColor = '#81d3f8';
   return createStyles(({ css }) => ({
     date: css`
-      margin-top: 8px;
-      height: 35px;
+      margin-top: 10px;
+      height: 30px;
       width: 130px;
       border: none;
       background-color: ${headBackgroundColor};
@@ -37,6 +45,61 @@ export default function headerStyle() {
 
       .anticon {
         display: none;
+      }
+    `,
+    dailyScore: css`
+      width: 65px;
+      height: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      color: #81d3f8;
+      border-radius: 5px;
+      padding: 5px;
+      margin-right: 8px;
+      border: 1.5px solid #81d3f8;
+      margin-top: 10px;
+    `,
+    proportion: css`
+      width: 58px;
+      height: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px;
+      margin-right: 8px;
+      margin-top: 10px;
+      color: ${proportionColor};
+      border: 1.5px solid ${proportionColor};
+    `,
+    itemCount: css`
+      width: 95px;
+      height: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px;
+      margin-right: 8px;
+      border: 1.5px solid;
+      margin-top: 10px;
+    `,
+    completedItems: css`
+      color: #5bb1c9;
+      border-color: #5bb1c9;
+    `,
+    todoItems: css`
+      color: #81d3f8;
+      border-color: #81d3f8;
+    `,
+    refresh: css`
+      svg {
+        width: 25px;
+        height: 25px;
+        color: #81d3f8;
+        margin-top: 9px;
+        margin-left: 2px;
       }
     `,
     forwardWeek: css`

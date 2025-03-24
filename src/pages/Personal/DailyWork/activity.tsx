@@ -42,7 +42,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
 
-  function save(param, updateFlag = '1') {
+  function save(param) {
     if (!param.targetId) {
       return;
     }
@@ -70,8 +70,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
         if (!result) {
           message.error('新增失败！');
         }
-        // 推入下一天时，也算作新增，但此时不更新页面，所以传 0
-        postUpdate(updateFlag !== '0');
+        postUpdate();
       });
     }
   }
@@ -86,7 +85,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       // 删除
       if (id) {
         deleteDailyWork(id).then(() => {
-          postUpdate(true);
+          postUpdate();
         });
       }
     } else if (type === 'push') {
@@ -103,9 +102,9 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
         startTimeStr: startTimeStr,
         endTimeStr: endTimeStr,
       };
-      save(newOne, '0');
+      save(newOne);
     } else if (type === 'mark') {
-      markDone(id, state).then(() => postUpdate(true));
+      markDone(id, state).then(() => postUpdate());
     } else if (type === 'fold') {
       // NO-fold-折叠；YES-unfold-展开；
       foldActivity(id, state === 'fold' ? 'NO' : 'YES').then(() => postUpdate());

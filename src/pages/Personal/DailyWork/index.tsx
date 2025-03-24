@@ -11,9 +11,18 @@ import 'dayjs/locale/zh-cn';
 import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
 import KeepAlive from 'react-activation';
 
+const initialHeadInfo = {
+  score: 0,
+  cost: 0,
+  proportion: 0,
+  todoWork: 0,
+  completedWork: 0,
+};
+
 function DailyWork() {
   const [whichDay, setWhichDay] = useState(new Date());
   const [dailyWorks, setDailyWorks] = useState([]);
+  const [headInfo, setHeadInfo] = useState(initialHeadInfo);
   dayjs.extend(utc);
 
   function toggleDay(type, value) {
@@ -28,20 +37,38 @@ function DailyWork() {
     }
   }
 
-  function list() {
+  /**
+   * 统计头部信息
+   *
+   * @param param 日课列表
+   */
+  function statisticsHeadInfo(param) {
+    let temp = { ...initialHeadInfo };
+    param.forEach((activity) => {
+      if (activity.status === 'DONE') {
+        temp.completedWork++;
+      } else {
+        temp.todoWork++;
+      }
+      temp.proportion += activity.proportion;
+      temp.cost += activity.cost;
+      temp.score += (activity.proportion / 100) * activity.score;
+    });
+    // 四舍五入两位小数
+    temp.score = parseFloat(temp.score.toFixed(2));
+    setHeadInfo(temp);
+  }
+
+  function postUpdate() {
     let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
     let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
     start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
     end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
     listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end }).then((result) => {
+      // 如果只是局部更改数据，则不需要刷新整个日课列表
       setDailyWorks(result);
+      statisticsHeadInfo(result);
     });
-  }
-
-  function postUpdate(needUpdate) {
-    if (needUpdate) {
-      list();
-    }
   }
 
   function addBlankDailyWork(date) {
@@ -62,7 +89,7 @@ function DailyWork() {
   }
 
   useEffect(() => {
-    list();
+    postUpdate();
   }, [whichDay]);
 
   const time = new Date().getTime();
@@ -71,7 +98,13 @@ function DailyWork() {
       <hr className={styles.vertical} />
       <Row>
         <Col span={18}>
-          <Header whichDay={whichDay} add={addBlankDailyWork} toggleDay={toggleDay} />
+          <Header
+            whichDay={whichDay}
+            add={addBlankDailyWork}
+            headInfo={headInfo}
+            toggleDay={toggleDay}
+            refresh={() => statisticsHeadInfo(dailyWorks)}
+          />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
             return <Activity key={item.id + time} dailyWorkParam={item} postUpdate={postUpdate} />;

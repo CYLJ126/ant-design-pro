@@ -3,6 +3,7 @@ import { DatePicker, Row } from 'antd';
 import {
   ExportOutlined,
   PlusSquareOutlined,
+  ReloadOutlined,
   StepBackwardOutlined,
   StepForwardOutlined,
   VerticalLeftOutlined,
@@ -15,9 +16,9 @@ import utc from 'dayjs-plugin-utc';
 
 const dateFormat = 'YYYY-MM-DD';
 
-export default function Header({ whichDay, add, toggleDay }) {
+export default function Header({ whichDay, headInfo, refresh, add, toggleDay }) {
   dayjs.extend(utc);
-  const { styles: dynamicStyle } = headerStyle();
+  const { styles: dynamicStyle } = headerStyle(headInfo);
   return (
     <div>
       <Row>
@@ -37,6 +38,18 @@ export default function Header({ whichDay, add, toggleDay }) {
           className={dynamicStyle.forwardWeek}
           onClick={() => toggleDay('latter')}
         />
+        <span className={dynamicStyle.dailyScore}>{'' + headInfo.score + '分'}</span>
+        <span className={dynamicStyle.dailyScore}>{'' + headInfo.cost + 'h'}</span>
+        <span key={new Date().getTime()} className={dynamicStyle.proportion}>
+          {'' + headInfo.proportion + '%'}
+        </span>
+        <span className={`${dynamicStyle.itemCount} ${dynamicStyle.completedItems}`}>
+          {'完成项 - ' + headInfo.completedWork}
+        </span>
+        <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
+          {'待办项 - ' + headInfo.todoWork}
+        </span>
+        <ReloadOutlined onClick={refresh} className={dynamicStyle.refresh} />
         <StepBackwardOutlined className={dynamicStyle.fold} />
         <StepForwardOutlined className={dynamicStyle.fold} />
         <PlusSquareOutlined className={dynamicStyle.plusItem} onClick={() => add(whichDay)} />
