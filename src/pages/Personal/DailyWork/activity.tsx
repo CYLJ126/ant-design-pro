@@ -71,9 +71,11 @@ export default function Activity({ dailyWorkParam, postUpdate, setFoldState }) {
   function handleDoneOrDelete(id, type) {
     if (type === 'delete') {
       // 删除
-      deleteDailyWork(id).then(() => {
-        postUpdate();
-      });
+      if (id) {
+        deleteDailyWork(id).then(() => {
+          postUpdate();
+        });
+      }
     } else if (type === 'push') {
       let start = dayjs(dailyWork.startTime).add(1, 'day');
       let end = dayjs(dailyWork.endTime).add(1, 'day');
