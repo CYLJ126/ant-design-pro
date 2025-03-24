@@ -105,7 +105,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       };
       save(newOne, '0');
     } else if (type === 'mark') {
-      markDone(id, state).then(() => postUpdate());
+      markDone(id, state).then(() => postUpdate(true));
     } else if (type === 'fold') {
       // NO-fold-折叠；YES-unfold-展开；
       foldActivity(id, state === 'fold' ? 'NO' : 'YES').then(() => postUpdate());
