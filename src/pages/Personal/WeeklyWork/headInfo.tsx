@@ -45,6 +45,7 @@ export default function HeadInfo({ headParam, postUpdate }) {
       workId: param.workId,
       orderId: param.orderId,
       target: param.target,
+      foldFlag: param.foldFlag,
       proportion: param.proportion,
       startDate: param.startDate,
       endDate: param.endDate,
