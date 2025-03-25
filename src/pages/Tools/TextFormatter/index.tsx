@@ -40,8 +40,8 @@ function handleBreakLine(text: string) {
 
 /**
  * 示例1：
- * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三Node.js国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工  ，  50   % ~ 60   %  , 这是 / 否a / b全 5 / 3的。
- * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工，50%  ~ 60%，这。
+ * |-替换前：中   中  中123+456=789  中dkghsdlsdgll(sdlghsdll)武林$ 257639.82357397&dhg三Node.js国25235,354,32末。sgdg中方`sdkgs`中`gdsjlg ` sss工  ，  50   % ~ 60   %  , 这是 / 否a / b全 5 / 3的。05:05 kg咕 5:15号厅卤顺05：05可下5：5
+ * |-替换后：中中中 123 + 456 = 789 中 dkghsdlsdgll（sdlghsdll）武林 $257639.82357397 & dhg 三 Node.js 国 25235, 354, 32 末。sgdg 中方 `sdkgs` 中 `gdsjlg` sss 工，50%  ~ 60%，这是/否 a/b 全 5 / 3 的。05:05 kg 咕 5:15 号厅卤顺 05:05 可下 5:5
  * @param customProp
  * @param text
  */
@@ -95,6 +95,8 @@ function handleChinese(customProp: CustomProperty, text: string) {
   tempStr = tempStr.replace(/ ?` ?(.*?) ?` ?/g, ' `$1` ');
   // 英文之间的句点，形如 Node.js 还原
   tempStr = tempStr.replace(/(\w) ?[.。] ?(\w)/g, '$1.$2');
+  // 格式化时间
+  tempStr = tempStr.replace(/(\d{1,2})：(\d{1,2})/g, '$1:$2');
   return tempStr.trim();
 }
 
