@@ -81,3 +81,25 @@ export async function login(
 }
 
 /**  ----------------- AuthorizationController end ----------------- */
+
+/**  ----------------- SummaryController start ----------------- */
+/**
+ * 获取总结内容
+ *
+ * @param type 对应类型
+ * @param targetId 对应目标 ID
+ */
+export async function getSummaryById(type: string, targetId: string) {
+  return jsonPost('/base/summary/getSummaryById', { type: type, targetId: targetId });
+}
+
+/**
+ * 插入或更新总结
+ *
+ * @param data 总结对象，无 id 字段说明是插入，有 id 则为更新
+ */
+export async function saveSummary(data) {
+  return jsonPost('/base/summary/saveSummary', data);
+}
+
+/**  ----------------- SummaryController end ----------------- */

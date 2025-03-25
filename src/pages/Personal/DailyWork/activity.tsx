@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, InputNumber, message, Row, Select } from 'antd';
+import { Col, Input, InputNumber, message, Row, Select, Splitter } from 'antd';
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
@@ -16,7 +16,7 @@ import {
   markDone,
   updateDailyWork,
 } from '@/services/ant-design-pro/dailyWork';
-import { getTags } from '@/services/ant-design-pro/base';
+import { getSummaryById, getTags, saveSummary } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
@@ -39,6 +39,12 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
+  const [summary, setSummary] = useState({
+    type: 'daily_work',
+    targetId: dailyWork.id,
+    content: '',
+  });
+  const [splitterProportion, setSplitterProportion] = useState('100%');
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
 
@@ -117,6 +123,14 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
       });
+    });
+    // 获取总结内容
+    getSummaryById('daily_work', dailyWork.id).then((result) => {
+      setSummary(result ?? { type: 'daily_work', targetId: dailyWork.id, content: '' });
+      if (result?.content) {
+        // 如果有总结，则显示总结，占比 30%
+        setSplitterProportion('70%');
+      }
     });
   }, []);
 
@@ -295,7 +309,10 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                 </Row>
                 <Row>
                   {/* 总结 */}
-                  <SolutionOutlined className={dynamicStyle.summaryIcon} />
+                  <SolutionOutlined
+                    className={dynamicStyle.summaryIcon}
+                    onClick={() => setSplitterProportion('70%')}
+                  />
                 </Row>
               </Col>
             </Row>
@@ -425,13 +442,33 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
           </Row>
         </Col>
         <Col span={15}>
-          <Input.TextArea
-            value={dailyWork.content}
-            style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
-            className={dynamicStyle.content}
-            onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
-            onBlur={() => save(dailyWork)}
-          />
+          <Splitter style={{ paddingLeft: '4px' }}>
+            <Splitter.Panel collapsible size={splitterProportion} min="30%" max="70%">
+              <Input.TextArea
+                value={dailyWork.content}
+                style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
+                className={dynamicStyle.content}
+                onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
+                onBlur={() => save(dailyWork)}
+              />
+            </Splitter.Panel>
+            <Splitter.Panel collapsible min="30%" max="70%">
+              <Input.TextArea
+                value={summary.content}
+                style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
+                className={dynamicStyle.content}
+                onChange={(e) =>
+                  setSummary({
+                    ...summary,
+                    type: 'daily_work',
+                    targetId: dailyWork.id,
+                    content: e.target.value,
+                  })
+                }
+                onBlur={() => saveSummary(summary)}
+              />
+            </Splitter.Panel>
+          </Splitter>
         </Col>
       </Row>
       <Row>
