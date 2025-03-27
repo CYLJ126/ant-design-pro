@@ -210,14 +210,14 @@ export default function Steps({ targetId, deleteTarget }) {
         <FastBackwardOutlined
           className={styles.myIconJump}
           onClick={() => {
-            navigateTo('/personal/daily-work');
+            navigateTo('/Personal/DailyWork');
           }}
         />
         <br />
         <FastForwardOutlined
           className={styles.myIconJump}
           onClick={() => {
-            navigateTo('/personal/monthly-work');
+            navigateTo('/Personal/MonthlyWork');
           }}
         />
         <br />
