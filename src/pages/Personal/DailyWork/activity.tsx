@@ -416,6 +416,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     />
                   </Col>
                   <Col span={4} style={{ paddingLeft: '12px', paddingTop: '3px' }}>
+                    {/* 展开 */}
                     <FullscreenOutlined
                       className={dynamicStyle.unFoldIcon}
                       onClick={() => {
