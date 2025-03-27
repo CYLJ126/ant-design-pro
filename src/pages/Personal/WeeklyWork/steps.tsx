@@ -18,7 +18,6 @@ import {
 import styles from './steps.less';
 import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
-import ArrowRightIcon from '@/icons/ArrowRightIcon';
 
 /**
  * 根据传入颜色，设置每条步骤的颜色
@@ -78,6 +77,8 @@ function Step({ step, saveCurrentSteps }) {
               style={{ marginRight: '3px' }}
             />
           )}
+
+          <SolutionOutlined />
         </div>
       }
       value={content}
@@ -205,17 +206,7 @@ export default function Steps({ targetId, deleteTarget }) {
           ))}
         </ul>
       </Col>
-      <Col span={1} style={{ paddingLeft: '10px' }}>
-        {/* 推到下一周 */}
-        <ArrowRightIcon width={23} height={24} color="#81d3f8" margin="3px 0 0 0" />
-        <br />
-        {/* 总结 */}
-        <SolutionOutlined className={styles.summaryFoldedIcon} />
-        <br />
-        <ExportOutlined className={styles.myIconContinue} />
-        <br />
-      </Col>
-      <Col span={1}>
+      <Col span={2} className={styles.myIconCol}>
         <FastBackwardOutlined
           className={styles.myIconJump}
           onClick={() => {
@@ -230,12 +221,13 @@ export default function Steps({ targetId, deleteTarget }) {
           }}
         />
         <br />
+        <ExportOutlined className={styles.myIconContinue} />
+        <br />
         {fold ? (
           <FullscreenOutlined onClick={toggleFold} className={styles.myIconFold} />
         ) : (
           <FullscreenExitOutlined onClick={toggleFold} className={styles.myIconFold} />
         )}
-        <br />
       </Col>
     </Row>
   );
