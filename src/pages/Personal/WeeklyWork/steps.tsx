@@ -197,7 +197,7 @@ export default function Steps({ targetId, deleteTarget }) {
   const time = new Date().getTime();
   return (
     <Row>
-      <Col span={23}>
+      <Col span={22}>
         <ul className={styles.wrapper} style={{ height: height + 'px' }}>
           {steps.map((item) => (
             <li key={item.orderId + '_' + time} className={styles.itemStep}>
@@ -206,7 +206,7 @@ export default function Steps({ targetId, deleteTarget }) {
           ))}
         </ul>
       </Col>
-      <Col span={1} className={styles.myIconCol}>
+      <Col span={2} className={styles.myIconCol}>
         <FastBackwardOutlined
           className={styles.myIconJump}
           onClick={() => {

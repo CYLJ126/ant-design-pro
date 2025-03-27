@@ -78,10 +78,10 @@ function WeeklyWork() {
   return (
     <div>
       <Row>
-        <Col span={17}>
+        <Col span={18}>
           <HeaderButtons whichWeek={whichWeek} addTarget={addNewTarget} toggleWeek={toggleWeek} />
         </Col>
-        <Col span={7}>
+        <Col span={6}>
           <HeaderDate whichWeek={whichWeek} />
         </Col>
       </Row>
@@ -93,10 +93,10 @@ function WeeklyWork() {
               <Col span={5}>
                 <HeadInfo headParam={target} postUpdate={afterPartialUpdate} />
               </Col>
-              <Col span={12} className={styles.stepCol}>
+              <Col span={13} className={styles.stepCol}>
                 <Steps targetId={target.id} deleteTarget={deleteOneTarget} />
               </Col>
-              <Col span={7}>
+              <Col span={6}>
                 <DayRecords target={target} weekId={whichWeek} />
               </Col>
             </Row>
