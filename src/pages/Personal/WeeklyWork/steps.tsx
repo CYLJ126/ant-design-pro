@@ -5,7 +5,6 @@ import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   CheckOutlined,
-  ExportOutlined,
   FastBackwardOutlined,
   FastForwardOutlined,
   FullscreenExitOutlined,
@@ -14,6 +13,8 @@ import {
   PlusSquareOutlined,
   SolutionOutlined,
   UndoOutlined,
+  VerticalAlignBottomOutlined,
+  VerticalAlignTopOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
 import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
@@ -88,7 +89,8 @@ function Step({ step, saveCurrentSteps }) {
   );
 }
 
-export default function Steps({ targetId, deleteTarget }) {
+export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
+  const { id: targetId } = target;
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
 
@@ -101,7 +103,8 @@ export default function Steps({ targetId, deleteTarget }) {
   // true-收起；false-展开
   const [fold, setFold] = useState(true);
   // steps 高度，收起时为 115px，展开时为 步骤数 * 30
-  const [height, setHeight] = useState(fold ? 115 : steps.length * 30);
+  const initialHeight = target.foldFlag === 'NO' ? 58 : fold ? 115 : steps.length * 30;
+  const [height, setHeight] = useState(initialHeight);
   const toggleFold = () => {
     setFold(!fold);
     if (steps.length < 5 || !fold) {
@@ -221,12 +224,22 @@ export default function Steps({ targetId, deleteTarget }) {
           }}
         />
         <br />
-        <ExportOutlined className={styles.myIconContinue} />
+        {target.foldFlag === 'YES' ? (
+          <FullscreenExitOutlined
+            className={styles.myIconFold}
+            onClick={() => foldWeeklyWork(target, 'NO')}
+          />
+        ) : (
+          <FullscreenOutlined
+            className={styles.myIconFold}
+            onClick={() => foldWeeklyWork(target, 'YES')}
+          />
+        )}
         <br />
         {fold ? (
-          <FullscreenOutlined onClick={toggleFold} className={styles.myIconFold} />
+          <VerticalAlignBottomOutlined onClick={toggleFold} className={styles.myIconFold} />
         ) : (
-          <FullscreenExitOutlined onClick={toggleFold} className={styles.myIconFold} />
+          <VerticalAlignTopOutlined onClick={toggleFold} className={styles.myIconFold} />
         )}
       </Col>
     </Row>

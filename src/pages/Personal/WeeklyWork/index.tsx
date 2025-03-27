@@ -12,12 +12,34 @@ import {
   deleteTarget,
   getTargets,
   getWhichWeek,
+  updateWeeklyWork,
 } from '@/services/ant-design-pro/dailyWork';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import KeepAlive from 'react-activation';
+import HeadInfoFold from '@/pages/Personal/WeeklyWork/headInfoFold';
+
+export function saveHead(param, postUpdate) {
+  console.log('保存内容：' + JSON.stringify(param));
+  if (!param.workId || !param.target) {
+    console.log('事项 ID 或目标描述为空');
+    return;
+  }
+  const headInfo = {
+    id: param.id,
+    themeId: param.themeId,
+    workId: param.workId,
+    orderId: param.orderId,
+    target: param.target,
+    foldFlag: param.foldFlag,
+    proportion: param.proportion,
+    startDate: param.startDate,
+    endDate: param.endDate,
+  };
+  updateWeeklyWork(headInfo).then(() => postUpdate());
+}
 
 function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
@@ -72,6 +94,10 @@ function WeeklyWork() {
     }
   }, [whichWeek]);
 
+  function foldWeeklyWork(target, type) {
+    saveHead({ ...target, foldFlag: type }, () => {});
+  }
+
   // 目标列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）
   const targetsHeight = window.innerHeight - 43 - 15 - 70 + 'px';
 
@@ -91,10 +117,26 @@ function WeeklyWork() {
           return (
             <Row key={target.id}>
               <Col span={5}>
-                <HeadInfo headParam={target} postUpdate={afterPartialUpdate} />
+                {target.foldFlag === 'YES' ? (
+                  <HeadInfo
+                    headParam={target}
+                    saveHead={saveHead}
+                    postUpdate={afterPartialUpdate}
+                  />
+                ) : (
+                  <HeadInfoFold
+                    headParam={target}
+                    saveHead={saveHead}
+                    postUpdate={afterPartialUpdate}
+                  />
+                )}
               </Col>
               <Col span={12} className={styles.stepCol}>
-                <Steps targetId={target.id} deleteTarget={deleteOneTarget} />
+                <Steps
+                  target={target}
+                  deleteTarget={deleteOneTarget}
+                  foldWeeklyWork={foldWeeklyWork}
+                />
               </Col>
               <Col span={7}>
                 <DayRecords target={target} weekId={whichWeek} />
