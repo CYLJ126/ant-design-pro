@@ -210,20 +210,24 @@ export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
         </ul>
       </Col>
       <Col span={1} className={styles.myIconCol}>
-        <FastBackwardOutlined
-          className={styles.myIconJump}
-          onClick={() => {
-            navigateTo('/Personal/DailyWork');
-          }}
-        />
-        <br />
-        <FastForwardOutlined
-          className={styles.myIconJump}
-          onClick={() => {
-            navigateTo('/Personal/MonthlyWork');
-          }}
-        />
-        <br />
+        {target.foldFlag === 'YES' && (
+          <>
+            <FastBackwardOutlined
+              className={styles.myIconJump}
+              onClick={() => {
+                navigateTo('/Personal/DailyWork');
+              }}
+            />
+            <br />
+            <FastForwardOutlined
+              className={styles.myIconJump}
+              onClick={() => {
+                navigateTo('/Personal/MonthlyWork');
+              }}
+            />
+            <br />
+          </>
+        )}
         {target.foldFlag === 'YES' ? (
           // 折叠
           <FullscreenExitOutlined

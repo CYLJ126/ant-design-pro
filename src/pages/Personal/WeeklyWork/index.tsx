@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Steps from './steps';
 import DayRecords from './dayRecords';
+import DayRecordsFold from './dayRecordsFold';
 import HeadInfo from './headInfo';
 import HeaderButtons from './headerButtons';
 import HeaderDate from './HeaderDate';
@@ -19,7 +20,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import KeepAlive from 'react-activation';
-import HeadInfoFold from '@/pages/Personal/WeeklyWork/headInfoFold';
+import HeadInfoFold from './headInfoFold';
 
 export function saveHead(param, postUpdate) {
   console.log('保存内容：' + JSON.stringify(param));
@@ -146,7 +147,11 @@ function WeeklyWork() {
                 />
               </Col>
               <Col span={7}>
-                <DayRecords target={target} weekId={whichWeek} />
+                {target.foldFlag === 'YES' ? (
+                  <DayRecords target={target} weekId={whichWeek} />
+                ) : (
+                  <DayRecordsFold target={target} weekId={whichWeek} />
+                )}
               </Col>
             </Row>
           );
