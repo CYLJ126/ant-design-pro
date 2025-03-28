@@ -96,6 +96,13 @@ function WeeklyWork() {
 
   function foldWeeklyWork(target, type) {
     saveHead({ ...target, foldFlag: type }, () => {});
+    const newTargets = targets.map((item) => {
+      if (item.id === target.id) {
+        item.foldFlag = type;
+      }
+      return item;
+    });
+    setTargets(newTargets);
   }
 
   // 目标列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）

@@ -225,20 +225,30 @@ export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
         />
         <br />
         {target.foldFlag === 'YES' ? (
+          // 折叠
           <FullscreenExitOutlined
             className={styles.myIconFold}
-            onClick={() => foldWeeklyWork(target, 'NO')}
+            onClick={() => {
+              foldWeeklyWork(target, 'NO');
+              setHeight(58);
+            }}
           />
         ) : (
+          // 展开
           <FullscreenOutlined
             className={styles.myIconFold}
-            onClick={() => foldWeeklyWork(target, 'YES')}
+            onClick={() => {
+              foldWeeklyWork(target, 'YES');
+              setHeight(115);
+            }}
           />
         )}
         <br />
         {fold ? (
+          // 展开
           <VerticalAlignBottomOutlined onClick={toggleFold} className={styles.myIconFold} />
         ) : (
+          // 折叠
           <VerticalAlignTopOutlined onClick={toggleFold} className={styles.myIconFold} />
         )}
       </Col>
