@@ -7,15 +7,21 @@ import { createStyles } from 'antd-style';
 /**
  * 根据传入颜色，设置每条步骤的颜色
  * @param color 颜色
+ * @param foldFlag 折叠标记
  */
-const useStepStyle = (color) => {
+const useRecordStyle = (color, foldFlag) => {
+  const height = foldFlag === 'YES' ? '32px' : '26px';
+  const scoreHeight = foldFlag === 'YES' ? '32px' : '22.5px';
   return createStyles(({ css }) => ({
     partialStyle: css`
+      //height: ${height};
+
       .ant-input-number {
         border: 1.5px solid ${color};
       }
 
       .ant-input-number-input {
+        //height: ${height};
         color: ${color};
       }
 
@@ -28,18 +34,49 @@ const useStepStyle = (color) => {
         background-color: ${color};
       }
     `,
+    foldStyle: css`
+      height: ${height};
+      margin-bottom: 4px;
+
+      .ant-input-number {
+        border: 1.5px solid ${color};
+      }
+
+      .ant-input-number-input {
+        height: ${height};
+        padding: 0;
+        color: ${color};
+      }
+
+      .ant-input-number-group-addon {
+        background-color: ${color};
+        border: 1.5px solid ${color};
+      }
+
+      .ant-input-number-handler-wrap {
+        background-color: ${color};
+      }
+    `,
+    leftProgress: css`
+      width: 25px;
+      border: 1.5px solid ${color};
+      border-radius: 5px 0 0 5px;
+    `,
+    rightProgress: css`
+      width: 25px;
+      border: 1.5px solid ${color};
+      border-radius: 0 5px 5px 0;
+      border-left: none;
+    `,
+    scoreStyle: css`
+      height: ${scoreHeight};
+
+      .ant-input-number-input {
+        height: ${scoreHeight};
+      }
+    `,
   }))();
 };
-
-export interface DayContent {
-  id: number;
-  targetId: number;
-  dayOfTarget: number;
-  dayOfMonth: number;
-  plannedProgress: number;
-  actualProgress: number;
-  score: number;
-}
 
 function Day({ recordParam, target }) {
   const [record, setRecord] = useState(recordParam);
@@ -55,10 +92,9 @@ function Day({ recordParam, target }) {
     // 默认显示蓝色
     color = '#81d3f8';
   }
-  const { styles: dynamicStyle } = useStepStyle(color);
+  const { styles: dynamicStyle } = useRecordStyle(color, target.foldFlag);
 
   function save(record) {
-    console.log('日期数据：' + JSON.stringify(record));
     if (record.dayOfTarget > 0) {
       updateDayData(record).then(() => {
         // TODO 更新头部数据
@@ -68,30 +104,58 @@ function Day({ recordParam, target }) {
   }
 
   return (
-    <div>
-      <InputNumber
-        step={5}
-        min={0}
-        max={100}
-        changeOnWheel={true}
-        addonAfter="%"
-        className={dynamicStyle.partialStyle}
-        value={record.plannedProgress}
-        onChange={(value) => setRecord({ ...record, plannedProgress: value })}
-        onBlur={() => save(record)}
-      />
-      <br />
-      <InputNumber
-        step={5}
-        min={0}
-        max={100}
-        changeOnWheel={true}
-        addonAfter="%"
-        className={dynamicStyle.partialStyle}
-        value={record.actualProgress}
-        onChange={(value) => setRecord({ ...record, actualProgress: value })}
-        onBlur={() => save(record)}
-      />
+    <div style={{ width: '55px' }}>
+      {target.foldFlag === 'YES' ? (
+        <>
+          <InputNumber
+            step={5}
+            min={0}
+            max={100}
+            changeOnWheel={true}
+            addonAfter="%"
+            className={dynamicStyle.partialStyle}
+            value={record.plannedProgress}
+            onChange={(value) => setRecord({ ...record, plannedProgress: value })}
+            onBlur={() => save(record)}
+          />
+          <br />
+          <InputNumber
+            step={5}
+            min={0}
+            max={100}
+            changeOnWheel={true}
+            addonAfter="%"
+            className={dynamicStyle.partialStyle}
+            value={record.actualProgress}
+            onChange={(value) => setRecord({ ...record, actualProgress: value })}
+            onBlur={() => save(record)}
+          />
+        </>
+      ) : (
+        <>
+          <InputNumber
+            step={5}
+            min={0}
+            max={100}
+            changeOnWheel={true}
+            className={`${dynamicStyle.foldStyle} ${dynamicStyle.leftProgress}`}
+            value={record.plannedProgress}
+            onChange={(value) => setRecord({ ...record, plannedProgress: value })}
+            onBlur={() => save(record)}
+          />
+          <InputNumber
+            step={5}
+            min={0}
+            max={100}
+            changeOnWheel={true}
+            className={`${dynamicStyle.foldStyle} ${dynamicStyle.rightProgress}`}
+            value={record.actualProgress}
+            onChange={(value) => setRecord({ ...record, actualProgress: value })}
+            onBlur={() => save(record)}
+          />
+        </>
+      )}
+
       <br />
       <InputNumber
         step={1}
@@ -99,7 +163,7 @@ function Day({ recordParam, target }) {
         max={10}
         changeOnWheel={true}
         addonAfter="分"
-        className={dynamicStyle.partialStyle}
+        className={`${dynamicStyle.partialStyle} ${dynamicStyle.scoreStyle}`}
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}
@@ -109,7 +173,7 @@ function Day({ recordParam, target }) {
   );
 }
 
-export default function DayRecords({ target, weekId }) {
+export default function DayRecordsFold({ target, weekId }) {
   const [dayRecords, setDayRecords] = useState([]);
 
   useEffect(() => {
@@ -121,7 +185,7 @@ export default function DayRecords({ target, weekId }) {
   // 要每次的 ID 都不一样，才能重新渲染，比如调整了目标的开始、截止日期，想要 <Day> 组件显示不同的颜色，则 key 必须加个时间戳
   const timestamp = new Date().getTime();
   return (
-    <Row className={styles.dayProgress}>
+    <Row className={styles.dayProgress} style={{ flexFlow: 'nowrap' }}>
       {dayRecords.map((day) => (
         <Day key={day.dayOfMonth + timestamp} target={target} recordParam={day} />
       ))}

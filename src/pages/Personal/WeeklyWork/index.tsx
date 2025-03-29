@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Steps from './steps';
 import DayRecords from './dayRecords';
-import DayRecordsFold from './dayRecordsFold';
 import HeadInfo from './headInfo';
 import HeaderButtons from './headerButtons';
 import HeaderDate from './HeaderDate';
@@ -147,11 +146,7 @@ function WeeklyWork() {
                 />
               </Col>
               <Col span={7}>
-                {target.foldFlag === 'YES' ? (
-                  <DayRecords target={target} weekId={whichWeek} />
-                ) : (
-                  <DayRecordsFold target={target} weekId={whichWeek} />
-                )}
+                <DayRecords target={target} weekId={whichWeek} />
               </Col>
             </Row>
           );
