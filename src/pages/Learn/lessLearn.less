@@ -1,0 +1,18 @@
+//预设值
+@height: 40px;
+@width: 170px;
+@color: red;
+@borderRadius: 5px;
+@fontStyle: {
+  font-weight: bold;
+  font-size: 20px;
+};
+
+.input1 {
+  // 动态设置
+  height: var(--height);
+  width: var(--width);
+  color: var(--color);
+  border-radius: @borderRadius;
+  @fontStyle();
+}
