@@ -3,6 +3,7 @@ import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
 import { listWeekDays, updateDayData } from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
+import { useModel } from 'umi';
 
 /**
  * 根据传入颜色，设置每条步骤的颜色
@@ -173,8 +174,10 @@ function Day({ recordParam, target }) {
   );
 }
 
-export default function DayRecordsFold({ target, weekId }) {
+export default function DayRecordsFold({ targetId, weekId }) {
   const [dayRecords, setDayRecords] = useState([]);
+  const { targets } = useModel('targetsModel');
+  const target = targets[targetId];
 
   useEffect(() => {
     listWeekDays(target.id, weekId).then((result) => {

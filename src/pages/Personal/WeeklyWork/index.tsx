@@ -58,30 +58,32 @@ function WeeklyWork() {
       </Row>
       <hr className={styles.headerLine} />
       <div className={styles.weeklyData} style={{ height: targetsHeight }}>
-        {targets.map((target) => {
-          return (
-            <Row key={target.id}>
-              <Col span={5}>
-                <TargetInfo
-                  targetId={target.id}
-                  saveHead={(param) => {
-                    if (!param.workId || !param.target) {
-                      console.log('事项 ID 或目标描述为空');
-                      return;
-                    }
-                    updateTarget(param);
-                  }}
-                />
-              </Col>
-              <Col span={12} className={styles.stepCol}>
-                <Steps target={target} />
-              </Col>
-              <Col span={7}>
-                <DayRecords target={target} weekId={whichWeek} />
-              </Col>
-            </Row>
-          );
-        })}
+        {Object.keys(targets).length !== 0 &&
+          Object.keys(targets).map((field) => {
+            const id = targets[field].id;
+            return (
+              <Row key={id}>
+                <Col span={5}>
+                  <TargetInfo
+                    targetId={id}
+                    saveHead={(param) => {
+                      if (!param.workId || !param.target) {
+                        console.log('事项 ID 或目标描述为空');
+                        return;
+                      }
+                      updateTarget(param);
+                    }}
+                  />
+                </Col>
+                <Col span={12} className={styles.stepCol}>
+                  <Steps targetId={id} />
+                </Col>
+                <Col span={7}>
+                  <DayRecords targetId={id} weekId={whichWeek} />
+                </Col>
+              </Row>
+            );
+          })}
       </div>
     </div>
   );

@@ -17,8 +17,8 @@ export async function getSubTags(param) {
 export default function TargetInfo({ targetId }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
-  const { targets, getTargetById, updateTarget } = useModel('targetsModel');
-  const [current, setCurrent] = useState(getTargetById(targetId));
+  const { targets, updateTarget } = useModel('targetsModel');
+  const [current, setCurrent] = useState(targets[targetId]);
   const [fold, setFold] = useState(current.foldFlag === 'NO');
 
   const saveCurrent = (param) => {
@@ -31,13 +31,8 @@ export default function TargetInfo({ targetId }) {
 
   useEffect(() => {
     // 监听折叠按钮的触发，并进行折叠或展开
-    let tempFold;
-    for (const item of targets) {
-      if (item.id === targetId) {
-        tempFold = item.foldFlag === 'NO';
-        break;
-      }
-    }
+    const item = targets[targetId];
+    let tempFold = item.foldFlag === 'NO';
     if (fold !== tempFold) {
       setFold(tempFold);
     }
@@ -181,9 +176,9 @@ export default function TargetInfo({ targetId }) {
           <Input
             value={current.target}
             className={
-              current.foldFlag === 'YES'
-                ? `${styles.target} ${styles.targetUnfold}`
-                : `${styles.target} ${styles.targetFold}`
+              fold
+                ? `${styles.target} ${styles.targetFold}`
+                : `${styles.target} ${styles.targetUnfold}`
             }
             onChange={(e) => setCurrent({ ...current, target: e.target.value })}
             onBlur={() => saveCurrent(current)}

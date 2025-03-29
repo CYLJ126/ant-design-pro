@@ -8,20 +8,21 @@ import {
 
 export default () => {
   // 每周目标列表
-  const [targets, setTargets] = useState([]);
+  const [targets, setTargets] = useState({});
   // 每周统计信息控制
   const [weeklyStatistics, setWeeklyStatistics] = useState({ update: false });
 
   // 初始化目标列表
   const initialTargets = useCallback(async (whichWeek) => {
     const result = await getTargets(whichWeek);
-    const initialTargets = result.map((item) => {
-      return {
+    let initialTargets = {};
+    result.forEach((item) => {
+      initialTargets[item.id] = {
         id: item.id,
+        foldFlag: item.foldFlag,
         target: item.target, // 目标描述
         themeId: item.themeId,
         workId: item.workId,
-        foldFlag: item.foldFlag,
         progress: item.progress,
         proportion: item.proportion,
         score: item.score,
@@ -40,7 +41,8 @@ export default () => {
 
   // 删除目标
   const deleteTarget = useCallback((targetId) => {
-    const newTargets = targets.filter((item) => item.id !== targetId);
+    const newTargets = { ...targets };
+    newTargets[targetId] = undefined;
     setTargets(newTargets);
     deleteBackTarget(targetId).then();
   }, []);
@@ -59,23 +61,15 @@ export default () => {
       endDate: param.endDate,
     };
     await updateWeeklyWork(newTarget);
+    let newTargets = { ...targets };
+    newTargets[param.id] = param;
+    setTargets(newTargets);
   }, []);
-
-  // 获取对应目标
-  const getTargetById = (targetId) => {
-    for (const element of targets) {
-      if (element.id === targetId) {
-        return element;
-      }
-    }
-    return null;
-  };
 
   return {
     targets,
     initialTargets,
     setTargets,
-    getTargetById,
     addNewTarget,
     updateTarget,
     deleteTarget,
