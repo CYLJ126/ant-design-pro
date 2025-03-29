@@ -65,10 +65,10 @@ export async function updateWeeklyStatistics(weekId?: number) {
 /**
  * 返回指定周的目标列表
  *
- * @param param 请求参数
+ * @param whichWeek 对应周 ID
  */
-export async function getTargets(param) {
-  return jsonPost('/dw/weeklyWork/listTargets', param);
+export async function getTargets(whichWeek) {
+  return jsonPost('/dw/weeklyWork/listTargets', { weekId: whichWeek });
 }
 
 /**
@@ -81,8 +81,8 @@ export async function addTarget(weekId?: number) {
 /**
  * #删除指定目标
  */
-export async function deleteTarget(target) {
-  return jsonPost('/dw/weeklyWork/deleteTarget', target);
+export async function deleteBackTarget(targetId) {
+  return jsonPost('/dw/weeklyWork/deleteTarget', { id: targetId });
 }
 
 /**

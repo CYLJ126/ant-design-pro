@@ -89,7 +89,7 @@ function Step({ step, saveCurrentSteps }) {
   );
 }
 
-export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
+export default function Steps({ target, deleteTarget }) {
   const { id: targetId } = target;
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
@@ -233,7 +233,7 @@ export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              foldWeeklyWork(target, 'NO');
+              // foldWeeklyWork(target, 'NO');
               setHeight(58);
             }}
           />
@@ -242,7 +242,7 @@ export default function Steps({ target, deleteTarget, foldWeeklyWork }) {
           <FullscreenOutlined
             className={styles.myIconFold}
             onClick={() => {
-              foldWeeklyWork(target, 'YES');
+              // foldWeeklyWork(target, 'YES');
               setHeight(115);
             }}
           />

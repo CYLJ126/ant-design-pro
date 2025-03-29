@@ -6,12 +6,14 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 
-export default function ProgressDateBar({ head, onChangeFunc }) {
+export default function ProgressDateBar({ target, onChangeFunc }) {
+  dayjs.extend(utc);
+
   return (
     <Row>
       <div className={styles.dateAndProgress}>
         <Progress
-          percent={head.progress}
+          percent={target.progress}
           showInfo={false}
           strokeColor="#81d3f8"
           trailColor="#c6c6c6"
@@ -21,11 +23,13 @@ export default function ProgressDateBar({ head, onChangeFunc }) {
           className={styles.date}
           placeholder={['开始', '结束']}
           format="MM/DD"
-          defaultValue={[dayjs(head.startDate, 'YYYY/MM/DD'), dayjs(head.endDate, 'YYYY/MM/DD')]}
+          defaultValue={[
+            dayjs(target.startDate, 'YYYY/MM/DD'),
+            dayjs(target.endDate, 'YYYY/MM/DD'),
+          ]}
           onChange={(date) => {
-            dayjs.extend(utc);
             const temp = {
-              ...head,
+              ...target,
               startDate: dayjs(date[0]).utc().local().format('YYYY-MM-DD'),
               endDate: dayjs(date[1]).utc().local().format('YYYY-MM-DD'),
             };
