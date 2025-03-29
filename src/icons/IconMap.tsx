@@ -4,6 +4,7 @@
 import {
   CrownOutlined,
   LoadingOutlined,
+  ReadOutlined,
   SmileOutlined,
   TagOutlined,
   ToolOutlined,
@@ -17,6 +18,7 @@ const IconMap = {
   tool: <ToolOutlined />,
   tag: <TagOutlined />,
   loading: <LoadingOutlined />,
+  book: <ReadOutlined />,
 };
 
 export default IconMap;

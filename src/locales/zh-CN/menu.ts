@@ -58,4 +58,5 @@ export default {
   'menu.Personal.AnnualWork': '年度规划',
   'menu.Personal.Summary': '个人总结',
   'menu.Personal.BadHabit': '坏习惯',
+  'menu.Learn': '学习',
 };

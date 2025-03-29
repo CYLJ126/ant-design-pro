@@ -58,4 +58,5 @@ export default {
   'menu.Personal.AnnualWork': 'Annual Work',
   'menu.Personal.Summary': 'Summary',
   'menu.Personal.BadHabit': 'Bad Habit',
+  'menu.Learn': 'Learn',
 };
