@@ -233,8 +233,8 @@ export default function Steps({ target, deleteTarget }) {
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              // foldWeeklyWork(target, 'NO');
-              setHeight(58);
+              // foldWeeklyWork(target, 'NO'); //58
+              setHeight(115);
             }}
           />
         ) : (

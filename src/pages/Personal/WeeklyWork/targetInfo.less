@@ -1,3 +1,30 @@
+.theme {
+  width: calc(100% - 5px);
+  margin-right: 5px;
+  height: 65px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+
+  :global(.ant-select-selector) {
+    padding: 1px !important;
+    background-color: #81d3f8 !important;
+    border: 0 !important;
+  }
+
+  :global(.ant-select-arrow) {
+    display: none;
+  }
+
+  :global(.ant-select-selection-item) {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    padding: 0 !important;
+  }
+}
+
 :global(.ant-select-item-option-content) {
   color: #81d3f8;
   font-weight: bold;
@@ -5,7 +32,6 @@
 
 .score {
   width: calc(100% - 5px);
-  height: 22px;
   margin-right: 5px;
   color: #81d3f8;
   font-size: 15px;
@@ -17,9 +43,18 @@
   text-align: center;
 }
 
+.scoreFold {
+  // 折叠时的高度
+  height: 25px;
+}
+
+.scoreUnfold {
+  // 非折叠时的高度
+  height: 30px;
+}
+
 .proportion {
   width: calc(100% - 5px);
-  height: 22px;
 
   :global(.ant-input-number) {
     border: 1.5px solid #81d3f8;
@@ -27,7 +62,7 @@
 
   :global(.ant-input-number-input) {
     color: #81d3f8;
-    height: 22px;
+    height: 25px;
     text-align: center;
     padding-left: 2px;
     padding-right: 2px;
@@ -42,10 +77,24 @@
   }
 }
 
+.proportionFold {
+  // 折叠时的高度
+  :global(.ant-input-number-input) {
+    height: 23px;
+  }
+}
+
+.proportionUnfold {
+  // 非折叠时的高度
+  :global(.ant-input-number-input) {
+    height: 27.5px;
+  }
+}
+
 .work {
   width: calc(100% - 5px);
+  margin-top: 5px;
   margin-right: 5px;
-  height: 27px;
   color: #81d3f8;
   font-size: 15px;
   border-width: 0 !important;
@@ -73,6 +122,16 @@
   }
 }
 
+.workFold {
+  // 折叠时的高度
+  height: 25px;
+}
+
+.workUnfold {
+  // 非折叠时的高度
+  height: 44px;
+}
+
 .target {
   width: 100%;
   height: 27px !important;
@@ -81,4 +140,14 @@
   border-color: #81d3f8;
   border-width: 1.5px;
   border-radius: 5px;
+}
+
+.targetFold {
+  // 折叠时的高度
+  height: 32.5px !important;
+}
+
+.targetUnfold {
+  // 非折叠时的高度
+  height: 91.3px !important;
 }
