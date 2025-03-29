@@ -17,8 +17,9 @@ export async function getSubTags(param) {
 export default function TargetInfo({ targetId }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
-  const { getTargetById, updateTarget } = useModel('targetsModel');
+  const { targets, getTargetById, updateTarget } = useModel('targetsModel');
   const [current, setCurrent] = useState(getTargetById(targetId));
+  const [fold, setFold] = useState(current.foldFlag === 'NO');
 
   const saveCurrent = (param) => {
     if (!param.workId || !param.target) {
@@ -27,6 +28,20 @@ export default function TargetInfo({ targetId }) {
     }
     updateTarget(param);
   };
+
+  useEffect(() => {
+    // 监听折叠按钮的触发，并进行折叠或展开
+    let tempFold;
+    for (const item of targets) {
+      if (item.id === targetId) {
+        tempFold = item.foldFlag === 'NO';
+        break;
+      }
+    }
+    if (fold !== tempFold) {
+      setFold(tempFold);
+    }
+  }, [targets]);
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
@@ -50,7 +65,7 @@ export default function TargetInfo({ targetId }) {
     <Row>
       <Col span={11}>
         <Row style={{ marginBottom: '5px' }}>
-          {current.foldFlag === 'YES' ? (
+          {!fold ? (
             // 展开样式
             <>
               <Row>

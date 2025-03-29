@@ -19,6 +19,7 @@ import {
 import styles from './steps.less';
 import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
+import { useModel } from '@@/exports';
 
 /**
  * 根据传入颜色，设置每条步骤的颜色
@@ -93,26 +94,19 @@ export default function Steps({ target, deleteTarget }) {
   const { id: targetId } = target;
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
+  const { updateTarget } = useModel('targetsModel');
+  // 折叠目标时，高度为 56px，展开目标时高度为 115px
+  const [height, setHeight] = useState(target.foldFlag === 'NO' ? 56 : 115);
+  // false-折叠目标，高度为 56px；true-展开目标，高度为 115px
+  const [targetFoldFlag, setTargetFoldFlag] = useState(target.foldFlag === 'YES');
+  // false-折叠步骤，高度取决于目标的折叠标记；true-展开，高度为 Max(115，步骤数 * 30)；
+  const [stepFoldFlag, setStepFoldFlag] = useState(false);
 
   useEffect(() => {
     getSteps(targetId).then((result) => {
       setSteps(result);
     });
   }, [targetId]);
-
-  // true-收起；false-展开
-  const [fold, setFold] = useState(true);
-  // steps 高度，收起时为 115px，展开时为 步骤数 * 30
-  const initialHeight = target.foldFlag === 'NO' ? 58 : fold ? 115 : steps.length * 30;
-  const [height, setHeight] = useState(initialHeight);
-  const toggleFold = () => {
-    setFold(!fold);
-    if (steps.length < 5 || !fold) {
-      setHeight(115);
-    } else {
-      setHeight(steps.length * 30);
-    }
-  };
 
   /**
    * 保存当前步骤列表
@@ -188,13 +182,9 @@ export default function Steps({ target, deleteTarget }) {
         }
       }
     }
-    // setSteps(tempSteps);
     saveSteps(tempSteps).then((result) => {
       setSteps(result);
     });
-    if (!fold) {
-      setHeight(tempSteps.length * 30);
-    }
   }
 
   const time = new Date().getTime();
@@ -210,7 +200,7 @@ export default function Steps({ target, deleteTarget }) {
         </ul>
       </Col>
       <Col span={1} className={styles.myIconCol}>
-        {target.foldFlag === 'YES' && (
+        {targetFoldFlag && (
           <>
             <FastBackwardOutlined
               className={styles.myIconJump}
@@ -228,32 +218,46 @@ export default function Steps({ target, deleteTarget }) {
             <br />
           </>
         )}
-        {target.foldFlag === 'YES' ? (
-          // 折叠
+        {targetFoldFlag ? (
+          // 折叠目标
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              // foldWeeklyWork(target, 'NO'); //58
-              setHeight(115);
+              setHeight(56);
+              setTargetFoldFlag(false);
+              updateTarget({ ...target, foldFlag: 'NO' });
             }}
           />
         ) : (
-          // 展开
+          // 展开目标
           <FullscreenOutlined
             className={styles.myIconFold}
             onClick={() => {
-              // foldWeeklyWork(target, 'YES');
               setHeight(115);
+              setTargetFoldFlag(true);
+              updateTarget({ ...target, foldFlag: 'YES' });
             }}
           />
         )}
         <br />
-        {fold ? (
-          // 展开
-          <VerticalAlignBottomOutlined onClick={toggleFold} className={styles.myIconFold} />
+        {stepFoldFlag ? (
+          // 折叠步骤
+          <VerticalAlignTopOutlined
+            onClick={() => {
+              setHeight(targetFoldFlag ? 115 : 56);
+              setStepFoldFlag(false);
+            }}
+            className={styles.myIconFold}
+          />
         ) : (
-          // 折叠
-          <VerticalAlignTopOutlined onClick={toggleFold} className={styles.myIconFold} />
+          // 展开步骤
+          <VerticalAlignBottomOutlined
+            onClick={() => {
+              setHeight(Math.max(115, steps.length * 30));
+              setStepFoldFlag(true);
+            }}
+            className={styles.myIconFold}
+          />
         )}
       </Col>
     </Row>
