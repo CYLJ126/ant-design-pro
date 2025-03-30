@@ -40,33 +40,39 @@ export default () => {
   }, []);
 
   // 删除目标
-  const deleteTarget = useCallback((targetId) => {
-    // 没有取到 targets TODO
-    const newTargets = { ...targets };
-    delete newTargets[targetId];
-    setTargets(newTargets);
-    deleteBackTarget(targetId).then();
-  }, []);
+  const deleteTarget = useCallback(
+    (targetId) => {
+      // 没有取到 targets TODO
+      const newTargets = { ...targets };
+      delete newTargets[targetId];
+      setTargets(newTargets);
+      deleteBackTarget(targetId).then();
+    },
+    [targets],
+  );
 
   // 向后端更新目标
-  const updateTarget = useCallback(async (param) => {
-    const newTarget = {
-      id: param.id,
-      themeId: param.themeId,
-      workId: param.workId,
-      orderId: param.orderId,
-      target: param.target,
-      foldFlag: param.foldFlag,
-      proportion: param.proportion,
-      startDate: param.startDate,
-      endDate: param.endDate,
-    };
-    // 没有取到 targets TODO
-    let newTargets = { ...targets };
-    newTargets[param.id] = param;
-    setTargets(newTargets);
-    updateWeeklyWork(newTarget).then();
-  }, []);
+  const updateTarget = useCallback(
+    async (param) => {
+      const newTarget = {
+        id: param.id,
+        themeId: param.themeId,
+        workId: param.workId,
+        orderId: param.orderId,
+        target: param.target,
+        foldFlag: param.foldFlag,
+        proportion: param.proportion,
+        startDate: param.startDate,
+        endDate: param.endDate,
+      };
+      // 没有取到 targets TODO
+      let newTargets = { ...targets };
+      newTargets[param.id] = param;
+      setTargets(newTargets);
+      updateWeeklyWork(newTarget).then();
+    },
+    [targets],
+  );
 
   return {
     targets,
