@@ -13,6 +13,7 @@ import { useModel } from 'umi';
 const useRecordStyle = (color, foldFlag) => {
   const height = foldFlag === 'YES' ? '32px' : '26px';
   const scoreHeight = foldFlag === 'YES' ? '32px' : '22.5px';
+  const scorePaddingTop = foldFlag === 'YES' ? '4px' : '0';
   return createStyles(({ css }) => ({
     partialStyle: css`
       .ant-input-number {
@@ -69,8 +70,12 @@ const useRecordStyle = (color, foldFlag) => {
     scoreStyle: css`
       height: ${scoreHeight};
 
+      .ant-input-number-input-wrap {
+        height: ${scoreHeight};
+      }
       .ant-input-number-input {
         height: ${scoreHeight};
+        padding-top: ${scorePaddingTop};
       }
     `,
   }))();
