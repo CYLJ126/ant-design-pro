@@ -9,10 +9,12 @@ import {
 } from '@ant-design/icons';
 import headerButtonsStyle from './headerButtonsStyle';
 import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
+import { useModel } from '@@/exports';
 
-export default function HeaderButtons({ whichWeek, addTarget, toggleWeek }) {
+export default function HeaderButtons({ whichWeek, toggleWeek }) {
   const [weekInfo, setWeekInfo] = useState({ aimId: whichWeek });
   const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
+  const { addNewTarget } = useModel('targetsModel');
 
   /**
    * 显示周统计和周总结
@@ -60,7 +62,10 @@ export default function HeaderButtons({ whichWeek, addTarget, toggleWeek }) {
         {'逾期项 - ' + weekInfo.overdueWork}
       </span>
       {/* 添加新目标 */}
-      <PlusSquareOutlined onClick={addTarget} className={dynamicStyle.plusItem} />
+      <PlusSquareOutlined
+        onClick={() => addNewTarget(whichWeek)}
+        className={dynamicStyle.plusItem}
+      />
       {/* 周统计数据 */}
       <BarChartOutlined
         onClick={() => showWeeklyStatistics(whichWeek)}

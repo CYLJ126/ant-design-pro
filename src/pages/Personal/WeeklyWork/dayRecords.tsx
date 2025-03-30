@@ -15,14 +15,11 @@ const useRecordStyle = (color, foldFlag) => {
   const scoreHeight = foldFlag === 'YES' ? '32px' : '22.5px';
   return createStyles(({ css }) => ({
     partialStyle: css`
-      //height: ${height};
-
       .ant-input-number {
         border: 1.5px solid ${color};
       }
 
       .ant-input-number-input {
-        //height: ${height};
         color: ${color};
       }
 
@@ -79,9 +76,11 @@ const useRecordStyle = (color, foldFlag) => {
   }))();
 };
 
-function Day({ recordParam, target }) {
+function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
+  const { targets } = useModel('targetsModel');
+  const [target, setTarget] = useState(targets[targetId]);
   let color;
   if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
     // 如果当前日期不在该目标的日期范围内，显示灰色
@@ -103,6 +102,11 @@ function Day({ recordParam, target }) {
       });
     }
   }
+
+  useEffect(() => {
+    // 监听折叠按钮的触发，并进行折叠或展开
+    setTarget(targets[targetId]);
+  }, [targets]);
 
   return (
     <div style={{ width: '55px' }}>
@@ -176,21 +180,19 @@ function Day({ recordParam, target }) {
 
 export default function DayRecordsFold({ targetId, weekId }) {
   const [dayRecords, setDayRecords] = useState([]);
-  const { targets } = useModel('targetsModel');
-  const target = targets[targetId];
 
   useEffect(() => {
-    listWeekDays(target.id, weekId).then((result) => {
+    listWeekDays(targetId, weekId).then((result) => {
       setDayRecords(result);
     });
-  }, [target, weekId]);
+  }, [targetId, weekId]);
 
   // 要每次的 ID 都不一样，才能重新渲染，比如调整了目标的开始、截止日期，想要 <Day> 组件显示不同的颜色，则 key 必须加个时间戳
   const timestamp = new Date().getTime();
   return (
     <Row className={styles.dayProgress} style={{ flexFlow: 'nowrap' }}>
       {dayRecords.map((day) => (
-        <Day key={day.dayOfMonth + timestamp} target={target} recordParam={day} />
+        <Day key={day.dayOfMonth + timestamp} targetId={targetId} recordParam={day} />
       ))}
     </Row>
   );

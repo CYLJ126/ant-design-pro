@@ -36,13 +36,14 @@ export default () => {
   // 添加新目标
   const addNewTarget = useCallback(async (whichWeek) => {
     await addTarget(whichWeek);
-    await initialTargets(whichWeek);
+    initialTargets(whichWeek).then();
   }, []);
 
   // 删除目标
   const deleteTarget = useCallback((targetId) => {
+    // 没有取到 targets TODO
     const newTargets = { ...targets };
-    newTargets[targetId] = undefined;
+    delete newTargets[targetId];
     setTargets(newTargets);
     deleteBackTarget(targetId).then();
   }, []);
@@ -60,10 +61,11 @@ export default () => {
       startDate: param.startDate,
       endDate: param.endDate,
     };
-    await updateWeeklyWork(newTarget);
+    // 没有取到 targets TODO
     let newTargets = { ...targets };
     newTargets[param.id] = param;
     setTargets(newTargets);
+    updateWeeklyWork(newTarget).then();
   }, []);
 
   return {
