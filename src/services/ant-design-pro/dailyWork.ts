@@ -72,6 +72,15 @@ export async function getTargets(whichWeek) {
 }
 
 /**
+ * 返回指定周的目标列表，用于日课下拉查询
+ *
+ * @param data 请求参数
+ */
+export async function getTargetsForDaily(data) {
+  return jsonPost('/dw/weeklyWork/listTargets', data);
+}
+
+/**
  * #添加新目标，并返回
  */
 export async function addTarget(weekId?: number) {
