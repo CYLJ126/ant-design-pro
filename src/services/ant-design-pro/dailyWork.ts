@@ -110,6 +110,19 @@ export async function updateWeeklyWork(headInfo) {
   return jsonPost('/dw/weeklyWork/updateWeeklyWork', headInfo);
 }
 
+/**
+ * 更新当前目标信息在本周的占比
+ *
+ * @param param 请求参数
+ */
+export async function updateWeeklyWorkProportion(param) {
+  return jsonPost('/dw/weeklyWork/updateWeeklyWorkProportion', {
+    mainId: param.id,
+    subjectId: param.weekId,
+    proportion: param.proportion,
+  });
+}
+
 /**  ----------------- WeeklyWorkController end ----------------- */
 
 /**  ----------------- StepsController start ----------------- */

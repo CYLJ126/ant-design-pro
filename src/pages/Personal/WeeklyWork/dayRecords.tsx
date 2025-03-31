@@ -197,7 +197,11 @@ export default function DayRecordsFold({ targetId, weekId }) {
   return (
     <Row className={styles.dayProgress} style={{ flexFlow: 'nowrap' }}>
       {dayRecords.map((day) => (
-        <Day key={day.dayOfMonth + timestamp} targetId={targetId} recordParam={day} />
+        <Day
+          key={day.dayOfMonth + timestamp}
+          targetId={targetId}
+          recordParam={{ ...day, weekId: weekId }}
+        />
       ))}
     </Row>
   );

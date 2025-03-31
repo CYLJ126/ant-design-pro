@@ -4,6 +4,7 @@ import styles from './targetInfo.less';
 import ProgressDateBar from './ProgressDateBar';
 import { getTags } from '@/services/ant-design-pro/base';
 import { useModel } from 'umi';
+import { updateWeeklyWorkProportion } from '@/services/ant-design-pro/dailyWork';
 
 export async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'DOING' });
@@ -27,6 +28,12 @@ export default function TargetInfo({ targetId }) {
       return;
     }
     updateTarget(param);
+  };
+
+  const updateProportion = (param) => {
+    updateWeeklyWorkProportion(param).then(() => {
+      // TODO 更新顶部统计信息
+    });
   };
 
   useEffect(() => {
@@ -100,7 +107,7 @@ export default function TargetInfo({ targetId }) {
                         const temp = { ...current, proportion: value };
                         setCurrent(temp);
                       }}
-                      onBlur={() => saveCurrent(current)}
+                      onBlur={() => updateProportion(current)}
                     />
                   </Row>
                 </Col>
@@ -142,7 +149,7 @@ export default function TargetInfo({ targetId }) {
                       const temp = { ...current, proportion: value };
                       setCurrent(temp);
                     }}
-                    onBlur={() => saveCurrent(current)}
+                    onBlur={() => updateProportion(current)}
                   />
                 </Col>
               </Row>

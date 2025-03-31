@@ -19,12 +19,13 @@ export default () => {
     result.forEach((item) => {
       initialTargets[item.id] = {
         id: item.id,
+        weekId: whichWeek,
         foldFlag: item.foldFlag,
         target: item.target, // 目标描述
         themeId: item.themeId,
         workId: item.workId,
         progress: item.progress,
-        proportion: item.proportion,
+        proportion: item.relations[0]?.proportion,
         score: item.score,
         startDate: item.startDate,
         endDate: item.endDate,
@@ -61,11 +62,10 @@ export default () => {
         orderId: param.orderId,
         target: param.target,
         foldFlag: param.foldFlag,
-        proportion: param.proportion,
         startDate: param.startDate,
         endDate: param.endDate,
       };
-      // 没有取到 targets TODO
+      // 没有取到 targets
       let newTargets = { ...targets };
       newTargets[param.id] = param;
       setTargets(newTargets);
