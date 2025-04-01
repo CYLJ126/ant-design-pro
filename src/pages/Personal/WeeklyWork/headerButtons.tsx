@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import styles from './headerButtons.less';
 import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
-import { useModel } from '@@/exports';
+import { useModel } from 'umi';
 
 export default function HeaderButtons({ whichWeek, toggleWeek }) {
   const [weekInfo, setWeekInfo] = useState({
