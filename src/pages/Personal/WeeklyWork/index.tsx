@@ -45,7 +45,7 @@ function WeeklyWork() {
 
   // 目标列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）
   const targetsHeight = window.innerHeight - 43 - 15 - 70 + 'px';
-
+  const time = new Date().getTime();
   return (
     <div>
       <Row>
@@ -62,7 +62,7 @@ function WeeklyWork() {
           Object.keys(targets).map((field) => {
             const id = targets[field].id;
             return (
-              <Row key={id}>
+              <Row key={id + '_' + time}>
                 <Col span={5}>
                   <TargetInfo
                     targetId={id}
