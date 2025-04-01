@@ -52,34 +52,41 @@ function Step({ step, saveCurrentSteps }) {
       className={dynamicStyle.stepStyle}
       addonAfter={
         <div>
+          {/* 上移步骤 */}
           <ArrowUpOutlined
             onClick={() => saveCurrentSteps(index, 'up', '')}
             style={{ marginRight: '2px' }}
           />
+          {/* 下移步骤 */}
           <ArrowDownOutlined
             onClick={() => saveCurrentSteps(index, 'down', '')}
             style={{ marginRight: '2px' }}
           />
+          {/* 增加步骤 */}
           <PlusSquareOutlined
             onClick={() => saveCurrentSteps(index, 'add', '')}
             style={{ marginRight: '3px' }}
           />
+          {/* 删除步骤 */}
           <MinusOutlined
             onClick={() => saveCurrentSteps(index, 'del', '')}
             style={{ marginRight: '3px' }}
           />
           {status === 'INITIAL' ? (
+            // 标记为完成
             <CheckOutlined
               onClick={() => saveCurrentSteps(index, 'done', '')}
               style={{ marginRight: '3px' }}
             />
           ) : (
+            // 恢复为待办
             <UndoOutlined
               onClick={() => saveCurrentSteps(index, 'todo', '')}
               style={{ marginRight: '3px' }}
             />
           )}
 
+          {/* 总结 */}
           <SolutionOutlined />
         </div>
       }
@@ -181,6 +188,10 @@ export default function Steps({ targetId }) {
           newIndex++;
         }
       }
+    }
+    if (stepFoldFlag && (type === 'add' || type === 'delete')) {
+      // 重新计算高度
+      setHeight(Math.max(115, tempSteps.length * 30));
     }
     saveSteps(tempSteps).then((result) => {
       setSteps(result);
