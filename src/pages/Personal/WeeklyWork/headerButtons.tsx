@@ -7,7 +7,7 @@ import {
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
-import headerButtonsStyle from './headerButtonsStyle';
+import styles from './headerButtons.less';
 import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
 import { useModel } from '@@/exports';
 
@@ -20,7 +20,6 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
     todoWork: 0,
     overdueWork: 0,
   });
-  const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
   const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { weeklyStatistics } = useModel('weeklyStatisticsModel');
 
@@ -44,47 +43,48 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
     getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
   }, [whichWeek, weeklyStatistics]);
 
+  useEffect(() => {
+    // 加载表头——周统计信息
+    if (weekInfo.proportion > 100) {
+      document.documentElement.style.setProperty('--proportion-color', '#ff0000');
+    } else if (weekInfo.proportion === 100) {
+      document.documentElement.style.setProperty('--proportion-color', '#5bb1c9');
+    } else {
+      document.documentElement.style.setProperty('--proportion-color', '#81d3f8');
+    }
+  }, [weekInfo.proportion]);
+
   return (
     <Row>
       {/* 向前一周 */}
-      <VerticalRightOutlined
-        className={dynamicStyle.forwardWeek}
-        onClick={() => toggleWeek('former')}
-      />
-      <span className={dynamicStyle.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
+      <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleWeek('former')} />
+      <span className={styles.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
       {/* 向后一周 */}
-      <VerticalLeftOutlined
-        className={dynamicStyle.forwardWeek}
-        onClick={() => toggleWeek('latter')}
-      />
-      <span className={dynamicStyle.weeklyScore}>{'' + weekInfo.score + '分'}</span>
-      <span key={new Date().getTime()} className={dynamicStyle.proportion}>
+      <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleWeek('latter')} />
+      {/* 得分 */}
+      <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
+      {/* 占比 */}
+      <span key={new Date().getTime()} className={styles.proportion}>
         {'' + weekInfo.proportion + '%'}
       </span>
-      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.completedItems}`}>
+      <span className={`${styles.itemCount} ${styles.completedItems}`}>
         {'完成项 - ' + weekInfo.completedWork}
       </span>
-      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
+      <span className={`${styles.itemCount} ${styles.todoItems}`}>
         {'待办项 - ' + weekInfo.todoWork}
       </span>
-      <span className={`${dynamicStyle.itemCount} ${dynamicStyle.overdueItems}`}>
+      <span className={`${styles.itemCount} ${styles.overdueItems}`}>
         {'逾期项 - ' + weekInfo.overdueWork}
       </span>
       {/* 添加新目标 */}
-      <PlusSquareOutlined
-        onClick={() => addNewTarget(whichWeek)}
-        className={dynamicStyle.plusItem}
-      />
+      <PlusSquareOutlined onClick={() => addNewTarget(whichWeek)} className={styles.plusItem} />
       {/* 周统计数据 */}
       <BarChartOutlined
         onClick={() => showWeeklyStatistics(whichWeek)}
-        className={dynamicStyle.statistics}
+        className={styles.statistics}
       />
       {/* 刷新数据 */}
-      <ReloadOutlined
-        onClick={() => refreshStatistics(whichWeek)}
-        className={dynamicStyle.refresh}
-      />
+      <ReloadOutlined onClick={() => refreshStatistics(whichWeek)} className={styles.refresh} />
     </Row>
   );
 }
