@@ -63,6 +63,15 @@ export async function updateWeeklyStatistics(weekId?: number) {
 }
 
 /**
+ * 根据 ID 获取目标
+ *
+ * @param targetId 目标 ID
+ */
+export async function getTarget(targetId) {
+  return jsonPost('/dw/weeklyWork/getTarget', { targetId: targetId });
+}
+
+/**
  * 返回指定周的目标列表
  *
  * @param whichWeek 对应周 ID

@@ -73,7 +73,6 @@ export default () => {
   return {
     targets,
     initialTargets,
-    setTargets,
     addNewTarget,
     updateTarget,
     deleteTarget,
