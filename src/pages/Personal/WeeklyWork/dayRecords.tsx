@@ -85,6 +85,7 @@ function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
   const { targets } = useModel('targetsModel');
+  const { refreshStatistics } = useModel('weeklyStatisticsModel');
   const [target, setTarget] = useState(targets[targetId]);
   let color;
   if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
@@ -102,8 +103,7 @@ function Day({ recordParam, targetId }) {
   function save(record) {
     if (record.dayOfTarget > 0) {
       updateDayData(record).then(() => {
-        // TODO 更新头部数据
-        // postUpdate();
+        refreshStatistics({ time: new Date() });
       });
     }
   }

@@ -9,8 +9,6 @@ import {
 export default () => {
   // 每周目标列表
   const [targets, setTargets] = useState({});
-  // 每周统计信息控制
-  const [weeklyStatistics, setWeeklyStatistics] = useState({ update: false });
 
   // 初始化目标列表
   const initialTargets = useCallback(async (whichWeek) => {
@@ -43,7 +41,6 @@ export default () => {
   // 删除目标
   const deleteTarget = useCallback(
     (targetId) => {
-      // 没有取到 targets TODO
       const newTargets = { ...targets };
       delete newTargets[targetId];
       setTargets(newTargets);
@@ -65,7 +62,6 @@ export default () => {
         startDate: param.startDate,
         endDate: param.endDate,
       };
-      // 没有取到 targets
       let newTargets = { ...targets };
       newTargets[param.id] = param;
       setTargets(newTargets);
@@ -81,7 +77,5 @@ export default () => {
     addNewTarget,
     updateTarget,
     deleteTarget,
-    weeklyStatistics,
-    setWeeklyStatistics,
   };
 };

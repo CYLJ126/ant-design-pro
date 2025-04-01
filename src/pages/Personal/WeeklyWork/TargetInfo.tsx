@@ -19,6 +19,7 @@ export default function TargetInfo({ targetId }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const { targets, updateTarget } = useModel('targetsModel');
+  const { refreshStatistics } = useModel('weeklyStatisticsModel');
   const [current, setCurrent] = useState(targets[targetId]);
   const [fold, setFold] = useState(current.foldFlag === 'NO');
 
@@ -32,7 +33,7 @@ export default function TargetInfo({ targetId }) {
 
   const updateProportion = (param) => {
     updateWeeklyWorkProportion(param).then(() => {
-      // TODO 更新顶部统计信息
+      refreshStatistics({ time: new Date() });
     });
   };
 

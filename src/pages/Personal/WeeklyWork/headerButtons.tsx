@@ -12,9 +12,17 @@ import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design
 import { useModel } from '@@/exports';
 
 export default function HeaderButtons({ whichWeek, toggleWeek }) {
-  const [weekInfo, setWeekInfo] = useState({ aimId: whichWeek });
+  const [weekInfo, setWeekInfo] = useState({
+    aimId: whichWeek,
+    score: 0,
+    proportion: 0,
+    completedWork: 0,
+    todoWork: 0,
+    overdueWork: 0,
+  });
   const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
   const { addNewTarget } = useModel('targetsModel');
+  const { weeklyStatistics } = useModel('weeklyStatisticsModel');
 
   /**
    * 显示周统计和周总结
@@ -33,7 +41,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   useEffect(() => {
     // 加载表头——周统计信息
     getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
-  }, [whichWeek]);
+  }, [whichWeek, weeklyStatistics]);
 
   return (
     <Row>
