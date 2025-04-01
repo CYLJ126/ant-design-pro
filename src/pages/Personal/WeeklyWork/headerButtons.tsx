@@ -21,7 +21,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
     overdueWork: 0,
   });
   const { styles: dynamicStyle } = headerButtonsStyle(weekInfo);
-  const { addNewTarget } = useModel('targetsModel');
+  const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { weeklyStatistics } = useModel('weeklyStatisticsModel');
 
   /**
@@ -36,6 +36,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
    */
   function refreshStatistics(whichWeek) {
     updateWeeklyStatistics(whichWeek).then((result) => setWeekInfo(result));
+    initialTargets(whichWeek).then();
   }
 
   useEffect(() => {
@@ -79,6 +80,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
         onClick={() => showWeeklyStatistics(whichWeek)}
         className={dynamicStyle.statistics}
       />
+      {/* 刷新数据 */}
       <ReloadOutlined
         onClick={() => refreshStatistics(whichWeek)}
         className={dynamicStyle.refresh}
