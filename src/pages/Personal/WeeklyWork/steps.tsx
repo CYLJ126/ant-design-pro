@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Col, Input, Row } from 'antd';
+import { Col, Input, message, Row } from 'antd';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -128,6 +128,11 @@ export default function Steps({ targetId }) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
       deleteTarget(targetId);
       return;
+    } else if (type === 'add') {
+      if (steps.length >= 50) {
+        message.warning('步骤数不得超过50条');
+        return;
+      }
     } else if (type === 'up' || type === 'down') {
       if (index === 1 && type === 'up') {
         // 第一个不能再往上调顺序
