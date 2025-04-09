@@ -240,10 +240,12 @@ export default function Steps({ targetId }) {
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              setHeight(56);
-              setTargetFoldFlag(false);
               updateTarget({ ...target, foldFlag: 'NO' });
               setUpdateInfo({ targetId: targetId, time: new Date(), fold: true });
+              setTimeout(() => {
+                setHeight(56);
+              }, 100);
+              setTargetFoldFlag(false);
             }}
           />
         ) : (
@@ -251,10 +253,12 @@ export default function Steps({ targetId }) {
           <FullscreenOutlined
             className={styles.myIconFold}
             onClick={() => {
-              setHeight(115);
-              setTargetFoldFlag(true);
               setUpdateInfo({ targetId: targetId, time: new Date(), fold: false });
               updateTarget({ ...target, foldFlag: 'YES' });
+              setTimeout(() => {
+                setHeight(115);
+              }, 100);
+              setTargetFoldFlag(true);
             }}
           />
         )}
