@@ -8,10 +8,8 @@ import { useModel } from 'umi';
 /**
  * 根据传入颜色，设置每条步骤的颜色
  * @param color 颜色
- * @param foldFlag 折叠标记
  */
-const useRecordStyle = (color, foldFlag) => {
-  const height = foldFlag ? '26px' : '32px';
+const useRecordStyle = (color) => {
   return createStyles(({ css }) => ({
     partialStyle: css`
       .ant-input-number {
@@ -32,7 +30,6 @@ const useRecordStyle = (color, foldFlag) => {
       }
     `,
     foldStyle: css`
-      height: ${height};
       margin-bottom: 4px;
 
       .ant-input-number {
@@ -40,7 +37,6 @@ const useRecordStyle = (color, foldFlag) => {
       }
 
       .ant-input-number-input {
-        height: ${height};
         padding: 0;
         color: ${color};
       }
@@ -86,7 +82,7 @@ function Day({ recordParam, targetId }) {
     // 默认显示蓝色
     color = '#81d3f8';
   }
-  const { styles: dynamicStyle } = useRecordStyle(color, fold);
+  const { styles: dynamicStyle } = useRecordStyle(color);
 
   function save(record) {
     if (record.dayOfTarget > 0) {
@@ -139,7 +135,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.leftProgress}`}
+            className={`${dynamicStyle.foldStyle} ${dynamicStyle.leftProgress} ${fold ? styles.foldProgress : styles.unFoldProgress}`}
             value={record.plannedProgress}
             onChange={(value) => setRecord({ ...record, plannedProgress: value })}
             onBlur={() => save(record)}
@@ -149,7 +145,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.rightProgress}`}
+            className={`${dynamicStyle.foldStyle} ${dynamicStyle.rightProgress} ${fold ? styles.foldProgress : styles.unFoldProgress}`}
             value={record.actualProgress}
             onChange={(value) => setRecord({ ...record, actualProgress: value })}
             onBlur={() => save(record)}
