@@ -11,9 +11,7 @@ import { useModel } from 'umi';
  * @param foldFlag 折叠标记
  */
 const useRecordStyle = (color, foldFlag) => {
-  const height = foldFlag === 'YES' ? '32px' : '26px';
-  const scoreHeight = foldFlag === 'YES' ? '32px' : '22.5px';
-  const scorePaddingTop = foldFlag === 'YES' ? '4px' : '0';
+  const height = foldFlag ? '26px' : '32px';
   return createStyles(({ css }) => ({
     partialStyle: css`
       .ant-input-number {
@@ -67,18 +65,6 @@ const useRecordStyle = (color, foldFlag) => {
       border-radius: 0 5px 5px 0;
       border-left: none;
     `,
-    scoreStyle: css`
-      height: ${scoreHeight};
-
-      .ant-input-number-input-wrap {
-        height: ${scoreHeight};
-      }
-
-      .ant-input-number-input {
-        height: ${scoreHeight};
-        padding-top: ${scorePaddingTop};
-      }
-    `,
   }))();
 };
 
@@ -100,7 +86,7 @@ function Day({ recordParam, targetId }) {
     // 默认显示蓝色
     color = '#81d3f8';
   }
-  const { styles: dynamicStyle } = useRecordStyle(color, target.foldFlag);
+  const { styles: dynamicStyle } = useRecordStyle(color, fold);
 
   function save(record) {
     if (record.dayOfTarget > 0) {
@@ -178,7 +164,7 @@ function Day({ recordParam, targetId }) {
         max={10}
         changeOnWheel={true}
         addonAfter="分"
-        className={`${dynamicStyle.partialStyle} ${dynamicStyle.scoreStyle}`}
+        className={`${dynamicStyle.partialStyle} ${fold ? styles.foldScore : styles.unFoldScore}`}
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}
