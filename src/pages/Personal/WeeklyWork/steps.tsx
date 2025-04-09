@@ -101,6 +101,7 @@ export default function Steps({ targetId }) {
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
   const { targets, updateTarget, deleteTarget } = useModel('targetsModel');
+  const { setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
   // 折叠目标时，高度为 56px，展开目标时高度为 115px
   const [height, setHeight] = useState(target.foldFlag === 'NO' ? 56 : 115);
@@ -242,6 +243,7 @@ export default function Steps({ targetId }) {
               setHeight(56);
               setTargetFoldFlag(false);
               updateTarget({ ...target, foldFlag: 'NO' });
+              setUpdateInfo({ targetId: targetId, time: new Date(), fold: true });
             }}
           />
         ) : (
@@ -251,6 +253,7 @@ export default function Steps({ targetId }) {
             onClick={() => {
               setHeight(115);
               setTargetFoldFlag(true);
+              setUpdateInfo({ targetId: targetId, time: new Date(), fold: false });
               updateTarget({ ...target, foldFlag: 'YES' });
             }}
           />

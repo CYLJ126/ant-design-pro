@@ -33,18 +33,17 @@ export default function TargetInfo({ targetId }) {
 
   const updateProportion = (param) => {
     updateWeeklyWorkProportion(param).then(() => {
-      setUpdateInfo({ targetId: targetId, time: new Date() });
+      setUpdateInfo({ targetId: targetId, time: new Date(), fold: fold });
     });
   };
 
   useEffect(() => {
     // 监听折叠按钮的触发，并进行折叠或展开
-    const item = targets[targetId];
-    let tempFold = item.foldFlag === 'NO';
-    if (fold !== tempFold) {
-      setFold(tempFold);
+    const { targetId: currentTargetId, fold: currentFoldFlag } = updateInfo;
+    if (currentTargetId === targetId) {
+      setFold(currentFoldFlag);
     }
-  }, [targets]);
+  }, [updateInfo]);
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签

@@ -73,6 +73,7 @@ const useRecordStyle = (color, foldFlag) => {
       .ant-input-number-input-wrap {
         height: ${scoreHeight};
       }
+
       .ant-input-number-input {
         height: ${scoreHeight};
         padding-top: ${scorePaddingTop};
@@ -85,8 +86,9 @@ function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
   const { targets } = useModel('targetsModel');
-  const { setUpdateInfo } = useModel('targetUpdateModel');
-  const [target, setTarget] = useState(targets[targetId]);
+  const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
+  const target = targets[targetId];
+  const [fold, setFold] = useState(target.foldFlag === 'NO');
   let color;
   if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
     // 如果当前日期不在该目标的日期范围内，显示灰色
@@ -103,19 +105,22 @@ function Day({ recordParam, targetId }) {
   function save(record) {
     if (record.dayOfTarget > 0) {
       updateDayData(record).then(() => {
-        setUpdateInfo({ targetId: targetId, time: new Date() });
+        setUpdateInfo({ targetId: targetId, time: new Date(), fold: fold });
       });
     }
   }
 
   useEffect(() => {
     // 监听折叠按钮的触发，并进行折叠或展开
-    setTarget(targets[targetId]);
-  }, [targets]);
+    const { targetId: currentTargetId, fold: currentFoldFlag } = updateInfo;
+    if (currentTargetId === targetId) {
+      setFold(currentFoldFlag);
+    }
+  }, [updateInfo]);
 
   return (
     <div style={{ width: '55px' }}>
-      {target.foldFlag === 'YES' ? (
+      {!fold ? (
         <>
           <InputNumber
             step={5}

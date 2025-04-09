@@ -50,25 +50,19 @@ export default () => {
   );
 
   // 向后端更新目标
-  const updateTarget = useCallback(
-    async (param) => {
-      const newTarget = {
-        id: param.id,
-        themeId: param.themeId,
-        workId: param.workId,
-        orderId: param.orderId,
-        target: param.target,
-        foldFlag: param.foldFlag,
-        startDate: param.startDate,
-        endDate: param.endDate,
-      };
-      let newTargets = { ...targets };
-      newTargets[param.id] = param;
-      setTargets(newTargets);
-      updateWeeklyWork(newTarget).then();
-    },
-    [targets],
-  );
+  const updateTarget = useCallback(async (param) => {
+    const newTarget = {
+      id: param.id,
+      themeId: param.themeId,
+      workId: param.workId,
+      orderId: param.orderId,
+      target: param.target,
+      foldFlag: param.foldFlag,
+      startDate: param.startDate,
+      endDate: param.endDate,
+    };
+    updateWeeklyWork(newTarget).then();
+  }, []);
 
   return {
     targets,
