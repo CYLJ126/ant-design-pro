@@ -134,7 +134,8 @@ export default function Steps({ targetId }) {
         message.warning('步骤数不得超过50条');
         return;
       }
-    } else if (type === 'up' || type === 'down') {
+    }
+    if (type === 'up' || type === 'down') {
       if (index === 1 && type === 'up') {
         // 第一个不能再往上调顺序
         return;
