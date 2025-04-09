@@ -85,7 +85,7 @@ function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
   const { targets } = useModel('targetsModel');
-  const { refreshStatistics } = useModel('weeklyStatisticsModel');
+  const { setUpdateInfo } = useModel('targetUpdateModel');
   const [target, setTarget] = useState(targets[targetId]);
   let color;
   if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
@@ -103,7 +103,7 @@ function Day({ recordParam, targetId }) {
   function save(record) {
     if (record.dayOfTarget > 0) {
       updateDayData(record).then(() => {
-        refreshStatistics({ time: new Date() });
+        setUpdateInfo({ targetId: targetId, time: new Date() });
       });
     }
   }
