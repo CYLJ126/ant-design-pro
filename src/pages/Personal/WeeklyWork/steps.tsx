@@ -101,7 +101,7 @@ export default function Steps({ targetId }) {
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
   const { targets, updateTarget, deleteTarget } = useModel('targetsModel');
-  const { setUpdateInfo } = useModel('targetUpdateModel');
+  const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
   // 折叠目标时，高度为 56px，展开目标时高度为 115px
   const [height, setHeight] = useState(target.foldFlag === 'NO' ? 56 : 115);
@@ -115,6 +115,13 @@ export default function Steps({ targetId }) {
       setSteps(result);
     });
   }, [targetId]);
+
+  useEffect(() => {
+    if (targetId === updateInfo.targetId && updateInfo.fold !== undefined) {
+      setTargetFoldFlag(!updateInfo.fold);
+      setHeight(updateInfo.fold ? 56 : 115);
+    }
+  }, []);
 
   /**
    * 保存当前步骤列表
