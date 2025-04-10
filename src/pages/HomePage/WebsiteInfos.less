@@ -1,17 +1,29 @@
 .carousel {
-  width: 350px;
-  height: 200px;
+  width: 330px;
+  height: 94px;
 }
 
 .card {
-  //width: 300px;
-  //height: 200px;
-
   :hover {
     cursor: pointer;
   }
 
   :global(.ant-card-body) {
     height: 55px;
+  }
+}
+
+.popoverContent {
+  width: calc(80vh);
+  height: calc(70vh);
+  overflow: auto;
+  scrollbar-width: none;
+
+  :global(.ant-card-head) {
+    width: calc(80vh);
+  }
+
+  :global(.ant-card-body) {
+    width: calc(80vh);
   }
 }
