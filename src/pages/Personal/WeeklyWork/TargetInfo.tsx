@@ -4,7 +4,7 @@ import styles from './targetInfo.less';
 import ProgressDateBar from './ProgressDateBar';
 import { getTags } from '@/services/ant-design-pro/base';
 import { useModel } from 'umi';
-import { updateWeeklyWorkProportion } from '@/services/ant-design-pro/dailyWork';
+import { getTarget, updateWeeklyWorkProportion } from '@/services/ant-design-pro/dailyWork';
 
 export async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'DOING' });
@@ -18,8 +18,8 @@ export async function getSubTags(param) {
 export default function TargetInfo({ targetId }) {
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
+  const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const { targets, updateTarget } = useModel('targetsModel');
-  const { refreshStatistics } = useModel('weeklyStatisticsModel');
   const [current, setCurrent] = useState(targets[targetId]);
   const [fold, setFold] = useState(current.foldFlag === 'NO');
 
@@ -33,18 +33,17 @@ export default function TargetInfo({ targetId }) {
 
   const updateProportion = (param) => {
     updateWeeklyWorkProportion(param).then(() => {
-      refreshStatistics({ time: new Date() });
+      setUpdateInfo({ targetId: targetId, time: new Date(), fold: fold });
     });
   };
 
   useEffect(() => {
     // 监听折叠按钮的触发，并进行折叠或展开
-    const item = targets[targetId];
-    let tempFold = item.foldFlag === 'NO';
-    if (fold !== tempFold) {
-      setFold(tempFold);
+    const { targetId: currentTargetId, fold: currentFoldFlag } = updateInfo;
+    if (currentTargetId === targetId) {
+      setFold(currentFoldFlag);
     }
-  }, [targets]);
+  }, [updateInfo]);
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
@@ -63,6 +62,14 @@ export default function TargetInfo({ targetId }) {
       });
     }
   }, [current.themeId]);
+
+  useEffect(() => {
+    if (updateInfo.targetId === targetId) {
+      getTarget(targetId).then((result) => {
+        setCurrent({ ...current, score: result.score });
+      });
+    }
+  }, [updateInfo]);
 
   return (
     <Row>
@@ -177,6 +184,13 @@ export default function TargetInfo({ targetId }) {
           onChangeFunc={(param) => {
             setCurrent(param);
             saveCurrent(param);
+            setUpdateInfo({
+              targetId: targetId,
+              fold: fold,
+              startDate: param.startDate,
+              endDate: param.endDate,
+              time: new Date(),
+            });
           }}
         />
         <Row>

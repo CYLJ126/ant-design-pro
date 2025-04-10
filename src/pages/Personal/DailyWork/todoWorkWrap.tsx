@@ -48,7 +48,7 @@ export default function TodoWorkWrap() {
   }
 
   useEffect(() => {
-    listTodos(null);
+    listTodos();
   }, [date]);
 
   const time = new Date().getTime();

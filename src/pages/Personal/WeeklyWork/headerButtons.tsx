@@ -21,7 +21,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
     overdueWork: 0,
   });
   const { addNewTarget, initialTargets } = useModel('targetsModel');
-  const { weeklyStatistics } = useModel('weeklyStatisticsModel');
+  const { updateInfo: targetChangeTip } = useModel('targetUpdateModel');
 
   /**
    * 显示周统计和周总结
@@ -41,7 +41,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   useEffect(() => {
     // 加载表头——周统计信息
     getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
-  }, [whichWeek, weeklyStatistics]);
+  }, [whichWeek, targetChangeTip]);
 
   useEffect(() => {
     // 加载表头——周统计信息

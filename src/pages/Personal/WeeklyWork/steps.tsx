@@ -101,6 +101,7 @@ export default function Steps({ targetId }) {
   const [steps, setSteps] = useState([]);
   const navigateTo = useNavigate();
   const { targets, updateTarget, deleteTarget } = useModel('targetsModel');
+  const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
   // 折叠目标时，高度为 56px，展开目标时高度为 115px
   const [height, setHeight] = useState(target.foldFlag === 'NO' ? 56 : 115);
@@ -115,6 +116,13 @@ export default function Steps({ targetId }) {
     });
   }, [targetId]);
 
+  useEffect(() => {
+    if (targetId === updateInfo.targetId && updateInfo.fold !== undefined) {
+      setTargetFoldFlag(!updateInfo.fold);
+      setHeight(updateInfo.fold ? 56 : 115);
+    }
+  }, []);
+
   /**
    * 保存当前步骤列表
    * 如果是在删除步骤，且当前只有一个步骤，则删除当前事项
@@ -128,10 +136,11 @@ export default function Steps({ targetId }) {
       // 如果只有一个步骤，且还是删除，则说明删完了步骤，则当前事项直接删除
       deleteTarget(targetId);
       return;
-    }
-    if (type === 'add' && steps.length >= 50) {
-      message.warning('步骤数不得超过50条');
-      return;
+    } else if (type === 'add') {
+      if (steps.length >= 50) {
+        message.warning('步骤数不得超过50条');
+        return;
+      }
     }
     if (type === 'up' || type === 'down') {
       if (index === 1 && type === 'up') {
@@ -239,9 +248,12 @@ export default function Steps({ targetId }) {
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              setHeight(56);
-              setTargetFoldFlag(false);
               updateTarget({ ...target, foldFlag: 'NO' });
+              setUpdateInfo({ targetId: targetId, time: new Date(), fold: true });
+              setTimeout(() => {
+                setHeight(56);
+              }, 100);
+              setTargetFoldFlag(false);
             }}
           />
         ) : (
@@ -249,9 +261,12 @@ export default function Steps({ targetId }) {
           <FullscreenOutlined
             className={styles.myIconFold}
             onClick={() => {
-              setHeight(115);
-              setTargetFoldFlag(true);
+              setUpdateInfo({ targetId: targetId, time: new Date(), fold: false });
               updateTarget({ ...target, foldFlag: 'YES' });
+              setTimeout(() => {
+                setHeight(115);
+              }, 100);
+              setTargetFoldFlag(true);
             }}
           />
         )}

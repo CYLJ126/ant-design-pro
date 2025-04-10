@@ -2,120 +2,56 @@ import React, { useEffect, useState } from 'react';
 import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
 import { listWeekDays, updateDayData } from '@/services/ant-design-pro/dailyWork';
-import { createStyles } from 'antd-style';
 import { useModel } from 'umi';
 
-/**
- * 根据传入颜色，设置每条步骤的颜色
- * @param color 颜色
- * @param foldFlag 折叠标记
- */
-const useRecordStyle = (color, foldFlag) => {
-  const height = foldFlag === 'YES' ? '32px' : '26px';
-  const scoreHeight = foldFlag === 'YES' ? '32px' : '22.5px';
-  const scorePaddingTop = foldFlag === 'YES' ? '4px' : '0';
-  return createStyles(({ css }) => ({
-    partialStyle: css`
-      .ant-input-number {
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-input {
-        color: ${color};
-      }
-
-      .ant-input-number-group-addon {
-        background-color: ${color};
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-handler-wrap {
-        background-color: ${color};
-      }
-    `,
-    foldStyle: css`
-      height: ${height};
-      margin-bottom: 4px;
-
-      .ant-input-number {
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-input {
-        height: ${height};
-        padding: 0;
-        color: ${color};
-      }
-
-      .ant-input-number-group-addon {
-        background-color: ${color};
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-handler-wrap {
-        background-color: ${color};
-      }
-    `,
-    leftProgress: css`
-      width: 25px;
-      border: 1.5px solid ${color};
-      border-radius: 5px 0 0 5px;
-    `,
-    rightProgress: css`
-      width: 25px;
-      border: 1.5px solid ${color};
-      border-radius: 0 5px 5px 0;
-      border-left: none;
-    `,
-    scoreStyle: css`
-      height: ${scoreHeight};
-
-      .ant-input-number-input-wrap {
-        height: ${scoreHeight};
-      }
-      .ant-input-number-input {
-        height: ${scoreHeight};
-        padding-top: ${scorePaddingTop};
-      }
-    `,
-  }))();
-};
+function getColorStyle(curDate, startDate, endDate) {
+  if (curDate < new Date(startDate) || curDate > new Date(endDate)) {
+    // 如果当前日期不在该目标的日期范围内，显示灰色
+    return styles.excludeColor;
+  } else if (curDate < new Date()) {
+    // 如果当前日期小于今天，显示深蓝色
+    return styles.formerColor;
+  } else {
+    // 默认显示蓝色
+    return styles.latterColor;
+  }
+}
 
 function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
   const curDate = new Date(record.dayOfMonth);
   const { targets } = useModel('targetsModel');
-  const { refreshStatistics } = useModel('weeklyStatisticsModel');
-  const [target, setTarget] = useState(targets[targetId]);
-  let color;
-  if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
-    // 如果当前日期不在该目标的日期范围内，显示灰色
-    color = '#c6c6c6';
-  } else if (curDate < new Date()) {
-    // 如果当前日期小于今天，显示绿色
-    color = '#5bb1c9';
-  } else {
-    // 默认显示蓝色
-    color = '#81d3f8';
-  }
-  const { styles: dynamicStyle } = useRecordStyle(color, target.foldFlag);
+  const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
+  const target = targets[targetId];
+  const [fold, setFold] = useState(target.foldFlag === 'NO');
+  const [colorStyle, setColorStyle] = useState(
+    getColorStyle(curDate, target.startDate, target.endDate),
+  );
 
   function save(record) {
     if (record.dayOfTarget > 0) {
       updateDayData(record).then(() => {
-        refreshStatistics({ time: new Date() });
+        setUpdateInfo({ targetId: targetId, time: new Date(), fold: fold });
       });
     }
   }
 
   useEffect(() => {
     // 监听折叠按钮的触发，并进行折叠或展开
-    setTarget(targets[targetId]);
-  }, [targets]);
+    const { targetId: currentTargetId, fold: currentFoldFlag } = updateInfo;
+    if (currentTargetId === targetId) {
+      if (currentFoldFlag !== fold) {
+        setFold(currentFoldFlag);
+      }
+      if (updateInfo.startDate) {
+        setColorStyle(getColorStyle(curDate, updateInfo.startDate, updateInfo.endDate));
+      }
+    }
+  }, [updateInfo]);
 
   return (
     <div style={{ width: '55px' }}>
-      {target.foldFlag === 'YES' ? (
+      {!fold ? (
         <>
           <InputNumber
             step={5}
@@ -123,7 +59,7 @@ function Day({ recordParam, targetId }) {
             max={100}
             changeOnWheel={true}
             addonAfter="%"
-            className={dynamicStyle.partialStyle}
+            className={`${colorStyle}`}
             value={record.plannedProgress}
             onChange={(value) => setRecord({ ...record, plannedProgress: value })}
             onBlur={() => save(record)}
@@ -135,7 +71,7 @@ function Day({ recordParam, targetId }) {
             max={100}
             changeOnWheel={true}
             addonAfter="%"
-            className={dynamicStyle.partialStyle}
+            className={`${colorStyle}`}
             value={record.actualProgress}
             onChange={(value) => setRecord({ ...record, actualProgress: value })}
             onBlur={() => save(record)}
@@ -148,7 +84,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.leftProgress}`}
+            className={`${colorStyle} ${styles.leftProgress} ${styles.foldProgress}`}
             value={record.plannedProgress}
             onChange={(value) => setRecord({ ...record, plannedProgress: value })}
             onBlur={() => save(record)}
@@ -158,7 +94,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.rightProgress}`}
+            className={`${colorStyle} ${styles.rightProgress} ${styles.foldProgress}`}
             value={record.actualProgress}
             onChange={(value) => setRecord({ ...record, actualProgress: value })}
             onBlur={() => save(record)}
@@ -173,7 +109,7 @@ function Day({ recordParam, targetId }) {
         max={10}
         changeOnWheel={true}
         addonAfter="分"
-        className={`${dynamicStyle.partialStyle} ${dynamicStyle.scoreStyle}`}
+        className={`${colorStyle} ${fold ? styles.foldScore : styles.unFoldScore}`}
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}

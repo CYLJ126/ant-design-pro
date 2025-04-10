@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Card, Space, Carousel, Popover, Button } from 'antd';
-import CSDN from '@/assets/website/CSDN.png';
+import CSDN from '@/assets/learn/CSDN.png';
 
 function PopoverList({ websiteInfo }) {
   let list = [];
