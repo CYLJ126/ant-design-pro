@@ -2,67 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { InputNumber, Row } from 'antd';
 import styles from './dayRecords.less';
 import { listWeekDays, updateDayData } from '@/services/ant-design-pro/dailyWork';
-import { createStyles } from 'antd-style';
 import { useModel } from 'umi';
 
-/**
- * 根据传入颜色，设置每条步骤的颜色
- * @param color 颜色
- */
-const useRecordStyle = (color) => {
-  return createStyles(({ css }) => ({
-    partialStyle: css`
-      .ant-input-number {
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-input {
-        color: ${color};
-      }
-
-      .ant-input-number-group-addon {
-        background-color: ${color};
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-handler-wrap {
-        background-color: ${color};
-      }
-    `,
-    foldStyle: css`
-      margin-bottom: 4px;
-
-      .ant-input-number {
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-input {
-        padding: 0;
-        color: ${color};
-      }
-
-      .ant-input-number-group-addon {
-        background-color: ${color};
-        border: 1.5px solid ${color};
-      }
-
-      .ant-input-number-handler-wrap {
-        background-color: ${color};
-      }
-    `,
-    leftProgress: css`
-      width: 25px;
-      border: 1.5px solid ${color};
-      border-radius: 5px 0 0 5px;
-    `,
-    rightProgress: css`
-      width: 25px;
-      border: 1.5px solid ${color};
-      border-radius: 0 5px 5px 0;
-      border-left: none;
-    `,
-  }))();
-};
+function getColorStyle(curDate, startDate, endDate) {
+  if (curDate < new Date(startDate) || curDate > new Date(endDate)) {
+    // 如果当前日期不在该目标的日期范围内，显示灰色
+    return styles.excludeColor;
+  } else if (curDate < new Date()) {
+    // 如果当前日期小于今天，显示深蓝色
+    return styles.formerColor;
+  } else {
+    // 默认显示蓝色
+    return styles.latterColor;
+  }
+}
 
 function Day({ recordParam, targetId }) {
   const [record, setRecord] = useState(recordParam);
@@ -71,18 +24,9 @@ function Day({ recordParam, targetId }) {
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
   const [fold, setFold] = useState(target.foldFlag === 'NO');
-  let color;
-  if (curDate < new Date(target.startDate) || curDate > new Date(target.endDate)) {
-    // 如果当前日期不在该目标的日期范围内，显示灰色
-    color = '#c6c6c6';
-  } else if (curDate < new Date()) {
-    // 如果当前日期小于今天，显示绿色
-    color = '#5bb1c9';
-  } else {
-    // 默认显示蓝色
-    color = '#81d3f8';
-  }
-  const { styles: dynamicStyle } = useRecordStyle(color);
+  const [colorStyle, setColorStyle] = useState(
+    getColorStyle(curDate, target.startDate, target.endDate),
+  );
 
   function save(record) {
     if (record.dayOfTarget > 0) {
@@ -96,7 +40,12 @@ function Day({ recordParam, targetId }) {
     // 监听折叠按钮的触发，并进行折叠或展开
     const { targetId: currentTargetId, fold: currentFoldFlag } = updateInfo;
     if (currentTargetId === targetId) {
-      setFold(currentFoldFlag);
+      if (currentFoldFlag !== fold) {
+        setFold(currentFoldFlag);
+      }
+      if (updateInfo.startDate) {
+        setColorStyle(getColorStyle(curDate, updateInfo.startDate, updateInfo.endDate));
+      }
     }
   }, [updateInfo]);
 
@@ -110,7 +59,7 @@ function Day({ recordParam, targetId }) {
             max={100}
             changeOnWheel={true}
             addonAfter="%"
-            className={dynamicStyle.partialStyle}
+            className={`${colorStyle}`}
             value={record.plannedProgress}
             onChange={(value) => setRecord({ ...record, plannedProgress: value })}
             onBlur={() => save(record)}
@@ -122,7 +71,7 @@ function Day({ recordParam, targetId }) {
             max={100}
             changeOnWheel={true}
             addonAfter="%"
-            className={dynamicStyle.partialStyle}
+            className={`${colorStyle}`}
             value={record.actualProgress}
             onChange={(value) => setRecord({ ...record, actualProgress: value })}
             onBlur={() => save(record)}
@@ -135,7 +84,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.leftProgress} ${fold ? styles.foldProgress : styles.unFoldProgress}`}
+            className={`${colorStyle} ${styles.leftProgress} ${styles.foldProgress}`}
             value={record.plannedProgress}
             onChange={(value) => setRecord({ ...record, plannedProgress: value })}
             onBlur={() => save(record)}
@@ -145,7 +94,7 @@ function Day({ recordParam, targetId }) {
             min={0}
             max={100}
             changeOnWheel={true}
-            className={`${dynamicStyle.foldStyle} ${dynamicStyle.rightProgress} ${fold ? styles.foldProgress : styles.unFoldProgress}`}
+            className={`${colorStyle} ${styles.rightProgress} ${styles.foldProgress}`}
             value={record.actualProgress}
             onChange={(value) => setRecord({ ...record, actualProgress: value })}
             onBlur={() => save(record)}
@@ -160,7 +109,7 @@ function Day({ recordParam, targetId }) {
         max={10}
         changeOnWheel={true}
         addonAfter="分"
-        className={`${dynamicStyle.partialStyle} ${fold ? styles.foldScore : styles.unFoldScore}`}
+        className={`${colorStyle} ${fold ? styles.foldScore : styles.unFoldScore}`}
         value={record.score}
         onChange={(value) => setRecord({ ...record, score: value })}
         onBlur={() => save(record)}

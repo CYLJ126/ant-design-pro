@@ -184,6 +184,13 @@ export default function TargetInfo({ targetId }) {
           onChangeFunc={(param) => {
             setCurrent(param);
             saveCurrent(param);
+            setUpdateInfo({
+              targetId: targetId,
+              fold: fold,
+              startDate: param.startDate,
+              endDate: param.endDate,
+              time: new Date(),
+            });
           }}
         />
         <Row>

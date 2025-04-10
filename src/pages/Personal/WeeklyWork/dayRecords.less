@@ -38,6 +38,7 @@
 
 .foldProgress {
   height: 26px;
+  margin-bottom: 4px;
 
   .ant-input-number-input {
     height: 26px;
@@ -75,5 +76,76 @@
   :global(.ant-input-number-input) {
     height: 32px;
     padding-top: 4px;
+  }
+}
+
+.leftProgress {
+  width: 25px;
+  border-radius: 5px 0 0 5px;
+}
+
+.rightProgress {
+  width: 25px;
+  border-radius: 0 5px 5px 0;
+  border-left: none;
+}
+
+// 已过去的日期
+.formerColor {
+  :global(.ant-input-number) {
+    border: 1.5px solid #5bb1c9;
+  }
+
+  :global(.ant-input-number-input) {
+    color: #5bb1c9;
+  }
+
+  :global(.ant-input-number-group-addon) {
+    background-color: #5bb1c9;
+    border: 1.5px solid #5bb1c9;
+  }
+
+  :global(.ant-input-number-handler-wrap) {
+    background-color: #5bb1c9;
+  }
+}
+
+// 不在目标日期范围内的日期
+.excludeColor {
+  :global(.ant-input-number) {
+    border: 1.5px solid #c6c6c6;
+  }
+
+  :global(.ant-input-number-input) {
+    color: #c6c6c6;
+  }
+
+  :global(.ant-input-number-group-addon) {
+    background-color: #c6c6c6;
+    border: 1.5px solid #c6c6c6;
+  }
+
+  :global(.ant-input-number-handler-wrap) {
+    background-color: #c6c6c6;
+  }
+}
+
+// 在目标日期范围内的日期但大于当前日期
+.latterColor {
+  :global(.ant-input-number) {
+    border: 1.5px solid #81d3f8;
+  }
+
+  :global(.ant-input-number-input) {
+    color: #81d3f8;
+  }
+
+  :global(.ant-input-number-group-addon) {
+    background-color: #81d3f8;
+    border: 1.5px solid #81d3f8;
+  }
+
+  :global(.ant-input-number-handler-wrap) {
+    background-color: #81d3f8;
   }
 }
