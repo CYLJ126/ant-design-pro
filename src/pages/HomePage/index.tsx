@@ -1,10 +1,10 @@
 import React from 'react';
-import WebsiteInfo from './WebsiteInfo';
+import WebsiteInfos from './WebsiteInfos';
 
 export default function HomePage() {
   return (
     <div>
-      <WebsiteInfo />
+      <WebsiteInfos />
     </div>
   );
 }
