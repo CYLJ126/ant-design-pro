@@ -1,8 +1,9 @@
-import { Card, Carousel, Image, Popover, Space } from 'antd';
+import { Card, Carousel, Image, Popover, Space, Tabs } from 'antd';
 import CSDN from '@/assets/learn/CSDN.png';
 import React, { useEffect, useState } from 'react';
 import styles from './WebsiteInfos.less';
 import { listWebsiteNews } from '@/services/ant-design-pro/homePage';
+import { getTags } from '@/services/ant-design-pro/base';
 
 const openWebsite = (url) => {
   // 打开新标签页
@@ -45,6 +46,12 @@ function PopoverList({ newsList }) {
   );
 }
 
+/**
+ * 每个网站
+ *
+ * @param websiteParam
+ * @constructor
+ */
 function WebsiteInfo({ websiteParam }) {
   const { name, newsList } = websiteParam;
   const time = new Date().getTime();
@@ -62,13 +69,17 @@ function WebsiteInfo({ websiteParam }) {
   );
 }
 
-export default function WebsiteInfos() {
+/**
+ * 每个新闻 Tab 页内容
+ *
+ * @param id 标签，即 Tab 类型
+ * @constructor
+ */
+function NewsTabContent({ id }) {
   const [websiteList, setWebsiteList] = useState([]);
-
   useEffect(() => {
-    listWebsiteNews({}).then((result) => setWebsiteList(result));
+    listWebsiteNews({ type: id }).then((result) => setWebsiteList(result));
   }, []);
-
   const time = new Date().getTime();
   return (
     <div
@@ -84,4 +95,22 @@ export default function WebsiteInfos() {
       ))}
     </div>
   );
+}
+
+export default function WebsiteInfos() {
+  const [newsTab, setNewsTab] = useState([]);
+
+  useEffect(() => {
+    getTags({ name: '新闻资讯' }).then((rootTag) => {
+      getTags({ fatherId: rootTag[0].id }).then((result) => {
+        setNewsTab(
+          result.map((tag) => {
+            return { label: tag.name, key: tag.id, children: <NewsTabContent id={tag.id} /> };
+          }),
+        );
+      });
+    });
+  }, []);
+
+  return <Tabs animated items={newsTab} />;
 }
