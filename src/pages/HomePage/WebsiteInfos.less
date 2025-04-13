@@ -15,7 +15,7 @@
 
 .popoverContent {
   width: calc(80vh);
-  height: calc(70vh);
+  height: calc(65vh);
   overflow: auto;
   scrollbar-width: none;
 
@@ -25,5 +25,20 @@
 
   :global(.ant-card-body) {
     width: calc(80vh);
+  }
+}
+
+.newsTabs {
+  :global(.ant-tabs-tab) {
+    width: 200px;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    // 设置父容器为 flex 容器
+    display: flex;
+    // 让子元素水平居中
+    justify-content: center;
+    // 让子元素垂直居中
+    align-items: center;
   }
 }

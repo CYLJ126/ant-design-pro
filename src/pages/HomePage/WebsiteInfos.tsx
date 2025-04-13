@@ -113,5 +113,5 @@ export default function WebsiteInfos() {
     });
   }, []);
 
-  return <Tabs animated items={newsTab} />;
+  return <Tabs animated items={newsTab} className={styles.newsTabs} />;
 }
