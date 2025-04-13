@@ -101,6 +101,7 @@ export default function WebsiteInfos() {
   const [newsTab, setNewsTab] = useState([]);
 
   useEffect(() => {
+    // 获取 新闻资讯 的 ID 去查询子标签
     getTags({ name: '新闻资讯' }).then((rootTag) => {
       getTags({ fatherId: rootTag[0].id }).then((result) => {
         setNewsTab(
