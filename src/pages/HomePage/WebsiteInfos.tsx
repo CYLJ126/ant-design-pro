@@ -1,8 +1,7 @@
 import { Card, Carousel, Image, Popover, Space, Tabs } from 'antd';
-import CSDN from '@/assets/learn/CSDN.png';
 import React, { useEffect, useState } from 'react';
 import styles from './WebsiteInfos.less';
-import { listWebsiteNews } from '@/services/ant-design-pro/homePage';
+import { getWebsiteLogo, listWebsiteNews } from '@/services/ant-design-pro/homePage';
 import { getTags } from '@/services/ant-design-pro/base';
 
 const openWebsite = (url) => {
@@ -53,11 +52,30 @@ function PopoverList({ newsList }) {
  * @constructor
  */
 function WebsiteInfo({ websiteParam }) {
-  const { name, newsList } = websiteParam;
+  const { name, newsList, logoUrl } = websiteParam;
+  const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await getWebsiteLogo(logoUrl);
+        const url = URL.createObjectURL(response);
+        setImageUrl(url);
+      } catch (error) {
+        console.error('获取图片失败:', error);
+      }
+    };
+    fetchImage().then();
+    return () => {
+      // 组件卸载时释放 Blob URL
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
+    };
+  }, []);
+
   const time = new Date().getTime();
   return (
     <Popover autoAdjustOverflow content={<PopoverList newsList={newsList} />}>
-      <Image width={100} preview={false} alt="CSDN" src={CSDN} />
+      <Image width={100} preview={false} alt="CSDN" src={imageUrl} className={styles.logoImg} />
       <span>{name}</span>
       {/* 走马灯 */}
       <Carousel arrows autoplay dotPosition={'top'} className={styles.carousel}>

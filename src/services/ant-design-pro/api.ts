@@ -30,6 +30,31 @@ export function jsonPost(path, data, options?: { [key: string]: any }) {
   });
 }
 
+/**
+ * 请求 Blob 数据
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求配置项
+ */
+export function jsonBlob(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>('/nip' + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+    responseType: 'blob',
+  }).then((resp) => {
+    if (resp) {
+      return resp;
+    } else {
+      message.error(`Blob 请求出错`).then((r) => {});
+    }
+  });
+}
+
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/login/outLogin', {
