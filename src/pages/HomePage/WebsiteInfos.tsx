@@ -1,4 +1,4 @@
-import { Card, Carousel, Image, Popover, Space, Tabs } from 'antd';
+import { Card, Carousel, Col, Image, Popover, Row, Space, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './WebsiteInfos.less';
 import { getWebsiteLogo, listWebsiteNews } from '@/services/ant-design-pro/homePage';
@@ -15,7 +15,7 @@ function NewsCard({ news, width }) {
       title={news.title}
       hoverable
       className={styles.card}
-      style={{ width: width + 'px' }}
+      style={{ width: width }}
       size={'small'}
       onClick={() => openWebsite(news.url)}
     >
@@ -37,7 +37,7 @@ function PopoverList({ newsList }) {
       <div>
         {newsList.map((news) => (
           <div style={{ marginBottom: '10px' }} key={news.title + '_' + time}>
-            <NewsCard news={news} width={800} />
+            <NewsCard news={news} width="800px" />
           </div>
         ))}
       </div>
@@ -75,12 +75,18 @@ function WebsiteInfo({ websiteParam }) {
   const time = new Date().getTime();
   return (
     <Popover autoAdjustOverflow content={<PopoverList newsList={newsList} />}>
-      <Image width={100} preview={false} alt="CSDN" src={imageUrl} className={styles.logoImg} />
-      <span>{name}</span>
+      <Row align="middle">
+        <Col span={12} style={{ height: '40px' }}>
+          <Image width={100} preview={false} src={imageUrl} className={styles.logoImg} />
+        </Col>
+        <Col span={12} align={'end'}>
+          <span className={styles.websiteModule}>{name}</span>
+        </Col>
+      </Row>
       {/* 走马灯 */}
       <Carousel arrows autoplay dotPosition={'top'} className={styles.carousel}>
         {newsList.map((news) => (
-          <NewsCard news={news} width={330} key={news.title + '_' + time} />
+          <NewsCard news={news} width="42vh" key={news.title + '_' + time} />
         ))}
       </Carousel>
     </Popover>
@@ -104,7 +110,7 @@ function NewsTabContent({ id }) {
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)', // 四列等宽
-        gap: '16px', // 元素间距
+        gap: '10px', // 元素间距
         alignItems: 'stretch', // 元素高度对齐方式
       }}
     >
