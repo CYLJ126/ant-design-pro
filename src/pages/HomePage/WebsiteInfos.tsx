@@ -52,7 +52,7 @@ function PopoverList({ newsList }) {
  * @constructor
  */
 function WebsiteInfo({ websiteParam }) {
-  const { name, newsList, logoUrl } = websiteParam;
+  const { module, newsList, logoUrl } = websiteParam;
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
@@ -80,7 +80,7 @@ function WebsiteInfo({ websiteParam }) {
           <Image width={100} preview={false} src={imageUrl} className={styles.logoImg} />
         </Col>
         <Col span={12} align={'end'}>
-          <span className={styles.websiteModule}>{name}</span>
+          <span className={styles.websiteModule}>{module}</span>
         </Col>
       </Row>
       {/* 走马灯 */}
