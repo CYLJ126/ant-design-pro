@@ -61,7 +61,12 @@ export default () => {
       startDate: param.startDate,
       endDate: param.endDate,
     };
-    updateWeeklyWork(newTarget).then();
+    updateWeeklyWork(newTarget).then(() => {
+      // 更新日期区间时，刷新列表，因为日期变化，有可能目标已不在当前周
+      if (param.refreshFlag) {
+        initialTargets(param.weekId);
+      }
+    });
   }, []);
 
   return {
