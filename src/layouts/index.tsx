@@ -4,19 +4,14 @@ import { AliveScope } from 'react-activation';
 import { RouteContext } from '@ant-design/pro-layout';
 import { PageContainer } from '@ant-design/pro-components';
 import { MenuTabProps } from '@/models/menuTags';
-import IconMap from '@/icons/IconMap';
 import styles from './index.less';
 
-const initialTags = [
-  {
-    id: 1,
-    name: '首页',
-    path: '/HomePage',
-    icon: IconMap['smile'],
-    tab: '首页',
-    key: '/HomePage',
-  },
-];
+const initialTag = {
+  tab: '首页',
+  pathname: '/HomePage',
+  key: '/HomePage',
+  closable: true,
+};
 
 /**
  * 国际化翻译，组国际化的键，然后下一步去拿到国际化信息
@@ -63,12 +58,16 @@ export default function Layout() {
       arr.push(activeMenu);
 
       // 让首页始终在第一个
-
-      updateMenuTags(arr);
+      let homePageTab = arr.filter((item) => item.tab === '首页');
+      const otherTabs = arr.filter((item) => item.tab !== '首页');
+      if (homePageTab.length === 0) {
+        homePageTab.push(initialTag);
+      }
+      updateMenuTags([...homePageTab, ...otherTabs]);
     } else if (menuTags.length === 1) {
       // 删除时，只剩一个标签，跳转到首页
-      updateMenuTags([...initialTags]);
-      history.push(initialTags[0].path);
+      updateMenuTags([initialTag]);
+      history.push(initialTag.pathname);
     }
     setActiveKey(pathname);
     localStorage.setItem('active-key', pathname);
