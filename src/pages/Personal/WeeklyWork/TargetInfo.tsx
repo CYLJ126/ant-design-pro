@@ -66,7 +66,7 @@ export default function TargetInfo({ targetId }) {
   useEffect(() => {
     if (updateInfo.targetId === targetId) {
       getTarget(targetId).then((result) => {
-        setCurrent({ ...current, score: result.score });
+        setCurrent({ ...current, score: result.score, progress: result.progress });
       });
     }
   }, [updateInfo]);
