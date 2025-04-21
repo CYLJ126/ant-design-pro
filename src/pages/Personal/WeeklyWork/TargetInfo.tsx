@@ -50,6 +50,7 @@ export default function TargetInfo({ targetId }) {
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
+        setCurrent({ ...current, themId: result[0].value });
       });
     });
   }, []);
@@ -59,6 +60,7 @@ export default function TargetInfo({ targetId }) {
     if (current?.themeId) {
       getSubTags({ fatherId: current.themeId }).then((result) => {
         setWorkOptions(result);
+        setCurrent({ ...current, workId: result[0].value });
       });
     }
   }, [current.themeId]);
