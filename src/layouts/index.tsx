@@ -45,6 +45,10 @@ export default function Layout() {
   const noCacheRoutes = ['/', '/user/login'];
 
   useEffect(() => {
+    if (pathname === '/') {
+      history.push('/HomePage');
+      return;
+    }
     if (noCacheRoutes.includes(pathname)) return;
     const arr: MenuTabProps[] = menuTags.filter((item: MenuTabProps) => item.key !== pathname);
     // 不是当前打开的标签页，则新增一个
@@ -57,6 +61,8 @@ export default function Layout() {
         closable: true,
       };
       arr.push(activeMenu);
+
+      // 让首页始终在第一个
 
       updateMenuTags(arr);
     } else if (menuTags.length === 1) {
