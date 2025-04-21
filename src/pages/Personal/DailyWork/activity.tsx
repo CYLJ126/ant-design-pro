@@ -122,6 +122,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
+        setDailyWork({ ...dailyWork, themeId: result[0]?.value });
       });
     });
     // 获取总结内容
@@ -135,14 +136,17 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   }, []);
 
   useEffect(() => {
+    // 日课主题下拉变化时，获取事项下拉
     if (dailyWork?.themeId) {
       getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
         setWorkOptions(result);
+        setDailyWork({ ...dailyWork, workId: result[0]?.value });
       });
     }
   }, [dailyWork.themeId]);
 
   useEffect(() => {
+    // 日课事项下拉变化时，获取目标下拉
     if (dailyWork?.workId) {
       getTargetsForDaily({
         workId: dailyWork.workId,
