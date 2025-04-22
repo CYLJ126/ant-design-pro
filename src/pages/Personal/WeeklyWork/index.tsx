@@ -26,22 +26,20 @@ function WeeklyWork() {
    */
   function toggleWeek(type) {
     const delta = type === 'former' ? -1 : 1;
-    setWhichWeek(whichWeek + delta);
+    let newVar = whichWeek + delta;
+    setWhichWeek(newVar);
+    // 加载本周目标列表
+    initialTargets(newVar);
   }
 
   useEffect(() => {
     let date = dayjs().utc().local().format('YYYY-MM-DD');
     getWhichWeek(date).then((result) => {
       setWhichWeek(result);
+      // 加载本周目标列表
+      initialTargets(result);
     });
   }, []);
-
-  useEffect(() => {
-    if (whichWeek !== 0) {
-      // 加载本周目标列表
-      initialTargets(whichWeek);
-    }
-  }, [whichWeek]);
 
   // 目标列表高度 = 窗口高度 - 表头高度（43） - 分隔线（15）
   const targetsHeight = window.innerHeight - 43 - 15 - 70 + 'px';
