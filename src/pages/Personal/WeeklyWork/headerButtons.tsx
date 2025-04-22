@@ -33,7 +33,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   });
   const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { updateInfo: targetChangeTip } = useModel('targetUpdateModel');
-  const [weekOptions, setWeekOptions] = useState(getWeekOptions(whichWeek));
+  const [weekOptions, setWeekOptions] = useState([]);
 
   /**
    * 显示周统计和周总结
@@ -53,6 +53,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   useEffect(() => {
     // 加载表头——周统计信息
     getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
+    setWeekOptions(getWeekOptions(whichWeek));
   }, [whichWeek, targetChangeTip]);
 
   useEffect(() => {
