@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row } from 'antd';
+import { Row, Select } from 'antd';
 import {
   BarChartOutlined,
   PlusSquareOutlined,
@@ -10,6 +10,17 @@ import {
 import styles from './headerButtons.less';
 import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
 import { useModel } from 'umi';
+
+function getWeekOptions(currentWeek) {
+  if (currentWeek === 0) {
+    return [];
+  }
+  let options = [];
+  for (let i = currentWeek - 3; i <= currentWeek + 3; i++) {
+    options.push({ value: i, label: '第 ' + i + ' 周' });
+  }
+  return options;
+}
 
 export default function HeaderButtons({ whichWeek, toggleWeek }) {
   const [weekInfo, setWeekInfo] = useState({
@@ -22,6 +33,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   });
   const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { updateInfo: targetChangeTip } = useModel('targetUpdateModel');
+  const [weekOptions, setWeekOptions] = useState(getWeekOptions(whichWeek));
 
   /**
    * 显示周统计和周总结
@@ -57,10 +69,30 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   return (
     <Row>
       {/* 向前一周 */}
-      <VerticalRightOutlined className={styles.forwardWeek} onClick={() => toggleWeek('former')} />
-      <span className={styles.whichWeek}>{'第' + weekInfo.aimId + '周'}</span>
+      <VerticalRightOutlined
+        className={styles.forwardWeek}
+        onClick={() => {
+          toggleWeek('former');
+          setWeekOptions(getWeekOptions(whichWeek - 1));
+        }}
+      />
+      <Select
+        className={styles.whichWeek}
+        options={weekOptions}
+        value={'第 ' + whichWeek + ' 周'}
+        onSelect={(value) => {
+          toggleWeek('former');
+          setWeekOptions(getWeekOptions(value));
+        }}
+      />
       {/* 向后一周 */}
-      <VerticalLeftOutlined className={styles.forwardWeek} onClick={() => toggleWeek('latter')} />
+      <VerticalLeftOutlined
+        className={styles.forwardWeek}
+        onClick={() => {
+          toggleWeek('latter');
+          setWeekOptions(getWeekOptions(whichWeek + 1));
+        }}
+      />
       {/* 得分 */}
       <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
       {/* 占比 */}
