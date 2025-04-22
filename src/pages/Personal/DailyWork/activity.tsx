@@ -122,7 +122,9 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
-        setDailyWork({ ...dailyWork, themeId: result[0]?.value });
+        if (!dailyWork.themeId) {
+          setDailyWork({ ...dailyWork, themeId: result[0]?.value });
+        }
       });
     });
     // 获取总结内容
@@ -140,7 +142,9 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     if (dailyWork?.themeId) {
       getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
         setWorkOptions(result);
-        setDailyWork({ ...dailyWork, workId: result[0]?.value });
+        if (!dailyWork.workId) {
+          setDailyWork({ ...dailyWork, workId: result[0]?.value });
+        }
       });
     }
   }, [dailyWork.themeId]);
