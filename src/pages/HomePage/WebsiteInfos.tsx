@@ -52,7 +52,7 @@ function PopoverList({ newsList }) {
  * @constructor
  */
 function WebsiteInfo({ websiteParam }) {
-  const { module, newsList, logoUrl } = websiteParam;
+  const { module, newsList, logoUrl, moduleUrl } = websiteParam;
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
@@ -75,16 +75,18 @@ function WebsiteInfo({ websiteParam }) {
   const time = new Date().getTime();
   return (
     <Popover autoAdjustOverflow content={<PopoverList newsList={newsList} />}>
-      <Row align="middle">
-        <Col span={12} style={{ height: '40px' }}>
-          <Image width={100} preview={false} src={imageUrl} className={styles.logoImg} />
-        </Col>
-        <Col span={12} align={'end'}>
-          <span className={styles.websiteModule}>{module}</span>
-        </Col>
-      </Row>
+      <a href={moduleUrl} target="_blank" rel="noreferrer">
+        <Row align="middle" style={{ width: '42vh' }}>
+          <Col span={12} style={{ height: '40px' }}>
+            <Image width={100} preview={false} src={imageUrl} className={styles.logoImg} />
+          </Col>
+          <Col span={12} align={'end'}>
+            <span className={styles.websiteModule}>{module}</span>
+          </Col>
+        </Row>
+      </a>
       {/* 走马灯 */}
-      <Carousel arrows autoplay dotPosition={'top'} className={styles.carousel}>
+      <Carousel arrows autoplay={false} dotPosition={'top'} className={styles.carousel}>
         {newsList.map((news) => (
           <NewsCard news={news} width="42vh" key={news.title + '_' + time} />
         ))}
