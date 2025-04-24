@@ -115,7 +115,7 @@ function NewsTabContent({ id }) {
       }}
     >
       {websiteList.map((item) => (
-        <WebsiteInfo key={item.name + '_' + time} websiteParam={item} />
+        <WebsiteInfo key={item.id + '_' + time} websiteParam={item} />
       ))}
     </div>
   );
