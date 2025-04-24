@@ -44,7 +44,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
     targetId: dailyWork.id,
     content: '',
   });
-  const [splitterProportion, setSplitterProportion] = useState('100%');
+  const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
 
@@ -132,7 +132,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
       setSummary(result ?? { type: 'daily_work', targetId: dailyWork.id, content: '' });
       if (result?.content) {
         // 如果有总结，则显示总结，占比 30%
-        setSplitterProportion('70%');
+        setSizes(['70%', '30%']);
       }
     });
   }, []);
@@ -450,8 +450,8 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
           </Row>
         </Col>
         <Col span={15}>
-          <Splitter style={{ paddingLeft: '4px' }}>
-            <Splitter.Panel collapsible size={splitterProportion} min="30%" max="70%">
+          <Splitter style={{ paddingLeft: '4px' }} onResize={setSizes}>
+            <Splitter.Panel collapsible size={sizes[0]} min="30%" max="70%">
               <Input.TextArea
                 value={dailyWork.content}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
@@ -460,7 +460,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                 onBlur={() => save(dailyWork)}
               />
             </Splitter.Panel>
-            <Splitter.Panel collapsible min="30%" max="70%">
+            <Splitter.Panel collapsible size={sizes[1]} min="30%" max="70%">
               <Input.TextArea
                 value={summary.content}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
