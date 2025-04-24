@@ -110,6 +110,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return rawMenus.map((rawMenu) => transfer(rawMenu));
       },
     },
+    defaultCollapsed: true,
+    breakpoint: false, // 用于控制在屏幕小于指定尺寸时，自动收起菜单栏，若需要 defaultCollapsed 配置为 true 使页面默认收起菜单栏的话，必须要设置该值为 false
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
