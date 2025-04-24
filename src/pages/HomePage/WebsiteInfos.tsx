@@ -86,7 +86,7 @@ function WebsiteInfo({ websiteParam }) {
         </Row>
       </a>
       {/* 走马灯 */}
-      <Carousel arrows autoplay={false} dotPosition={'top'} className={styles.carousel}>
+      <Carousel arrows autoplay dotPosition={'top'} className={styles.carousel}>
         {newsList.map((news) => (
           <NewsCard news={news} width="42vh" key={news.title + '_' + time} />
         ))}
