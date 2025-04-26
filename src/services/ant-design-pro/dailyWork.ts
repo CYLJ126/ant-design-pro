@@ -178,8 +178,8 @@ export async function updateDailyWork(dailyWork) {
  * 插入日课
  * @param dailyWork 日课内容
  */
-export async function insertDailyWork(dailyWork) {
-  return jsonPost('/dw/dailyWork/insertDailyWork', dailyWork);
+export async function addDailyWorkBack(dailyWork) {
+  return jsonPost('/dw/dailyWork/addDailyWork', dailyWork);
 }
 
 /**
@@ -196,7 +196,7 @@ export async function deleteDailyWork(id?: number) {
  * @param id 要处理的活动 ID
  * @param status INITIAL-待办；DONE-完成；
  */
-export async function markDone(id?: number, status?: string) {
+export async function markDoneBack(id?: number, status?: string) {
   return jsonPost('/dw/dailyWork/switchDailyWorkStatus', { id: id, status: status });
 }
 
@@ -225,8 +225,8 @@ export async function listTodoWork(param) {
  * 插入待办任务
  * @param param 请求参数
  */
-export async function insertTodoWork(param) {
-  return jsonPost('/dw/todoWork/insertTodoWork', param);
+export async function addTodoWork(param) {
+  return jsonPost('/dw/todoWork/addTodoWork', param);
 }
 
 /**

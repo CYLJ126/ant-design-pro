@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Input, InputNumber, message, Row, Select, Splitter } from 'antd';
+import { Col, Input, InputNumber, Row, Select, Splitter } from 'antd';
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
@@ -8,14 +8,7 @@ import {
 } from '@ant-design/icons';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
-import {
-  deleteDailyWork,
-  foldActivity,
-  getTargetsForDaily,
-  insertDailyWork,
-  markDone,
-  updateDailyWork,
-} from '@/services/ant-design-pro/dailyWork';
+import { foldActivity, getTargetsForDaily } from '@/services/ant-design-pro/dailyWork';
 import { getSummaryById, getTags, saveSummary } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
@@ -24,6 +17,7 @@ import DeleteIcon from '@/icons/DeleteIcon';
 import ArrowRightIcon from '@/icons/ArrowRightIcon';
 import SuccessIcon from '@/icons/SuccessIcon';
 import Time from './time';
+import { useModel } from '@@/exports';
 
 async function getSubTags(param) {
   const result = await getTags({ ...param, status: 'DOING' });
@@ -34,8 +28,9 @@ async function getSubTags(param) {
   );
 }
 
-export default function Activity({ dailyWorkParam, postUpdate }) {
+export default function Activity({ dailyWorkParam }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
+  const { updateActivity, pushNextDay, markDone, deleteActivity } = useModel('activitiesModel');
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
@@ -47,75 +42,6 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
   const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
-
-  function save(param) {
-    if (!param.targetId) {
-      return;
-    }
-    let data = {
-      id: param.id,
-      startTime:
-        param.startTimeStr || dayjs(param.startTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
-      endTime: param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
-      targetId: param.targetId,
-      score: param.score,
-      cost: param.cost,
-      foldFlag: param.foldFlag,
-      proportion: param.proportion,
-      content: param.content,
-    };
-    if (data.id) {
-      updateDailyWork(data).then((result) => {
-        if (!result) {
-          message.error('更新失败！');
-        }
-        postUpdate();
-      });
-    } else {
-      insertDailyWork(data).then((result) => {
-        if (!result) {
-          message.error('新增失败！');
-        }
-        postUpdate();
-      });
-    }
-  }
-
-  function handleDoneOrDelete(type, data) {
-    const { id, state } = data;
-    if (!id && type !== 'push') {
-      // 如果操作时，没有 id，且不是推入后一天，则不做操作
-      return;
-    }
-    if (type === 'delete') {
-      // 删除
-      if (id) {
-        deleteDailyWork(id).then(() => {
-          postUpdate();
-        });
-      }
-    } else if (type === 'push') {
-      let start = dayjs(dailyWork.startTime).add(1, 'day');
-      let end = dayjs(dailyWork.endTime).add(1, 'day');
-      let startTimeStr = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
-      let endTimeStr = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
-      let newOne = {
-        targetId: dailyWork.targetId,
-        score: 0,
-        foldFlag: 'YES',
-        proportion: dailyWork.proportion,
-        content: dailyWork.content,
-        startTimeStr: startTimeStr,
-        endTimeStr: endTimeStr,
-      };
-      save(newOne);
-    } else if (type === 'mark') {
-      markDone(id, state).then(() => postUpdate());
-    } else if (type === 'fold') {
-      // NO-fold-折叠；YES-unfold-展开；
-      foldActivity(id, state === 'fold' ? 'NO' : 'YES').then(() => postUpdate());
-    }
-  }
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
@@ -173,14 +99,14 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
             <Time
               showLine={true}
               dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
-              save={save}
+              save={updateActivity}
             />
           </Row>
           <Row>
             <Time
               showLine={true}
               dailyWork={{ ...dailyWork, mark: 'endTime', placeholder: '结束时间' }}
-              save={save}
+              save={updateActivity}
             />
           </Row>
         </Col>
@@ -198,7 +124,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                         onSelect={(value) => {
                           const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
                           setDailyWork(temp);
-                          save(temp);
+                          updateActivity(temp);
                         }}
                       />
                     </Col>
@@ -214,7 +140,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                         addonAfter="分"
                         value={dailyWork.score}
                         onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
-                        onBlur={() => save(dailyWork)}
+                        onBlur={() => updateActivity(dailyWork)}
                       />
                     </Col>
                   </Row>
@@ -231,7 +157,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                         addonAfter="%"
                         value={dailyWork.proportion}
                         onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
-                        onBlur={() => save(dailyWork)}
+                        onBlur={() => updateActivity(dailyWork)}
                       />
                     </Col>
                     <Col span={12}>
@@ -246,7 +172,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                         addonAfter="h"
                         value={dailyWork.cost}
                         onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
-                        onBlur={() => save(dailyWork)}
+                        onBlur={() => updateActivity(dailyWork)}
                       />
                     </Col>
                   </Row>
@@ -259,7 +185,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   onSelect={(value) => {
                     const temp = { ...dailyWork, workId: value, targetId: '' };
                     setDailyWork(temp);
-                    save(temp);
+                    updateActivity(temp);
                   }}
                 />
               </Col>
@@ -271,7 +197,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     height={25}
                     color={color}
                     onClick={() => {
-                      handleDoneOrDelete('delete', { id: dailyWork.id });
+                      deleteActivity(dailyWork.id);
                     }}
                   />
                   {dailyWork.status === 'INITIAL' ? (
@@ -282,7 +208,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       color={color}
                       margin="3px 0 0 4px"
                       onClick={() => {
-                        handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
+                        markDone(dailyWork.id, 'DONE');
                       }}
                     />
                   ) : (
@@ -290,7 +216,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     <UndoOutlined
                       className={dynamicStyle.todoIcon}
                       onClick={() => {
-                        handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
+                        markDone(dailyWork.id, 'INITIAL');
                       }}
                     />
                   )}
@@ -299,7 +225,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     className={dynamicStyle.foldIcon}
                     onClick={() => {
                       setDailyWork({ ...dailyWork, foldFlag: 'NO' });
-                      handleDoneOrDelete('fold', { id: dailyWork.id, state: 'fold' });
+                      foldActivity(dailyWork.id, 'NO').then();
                     }}
                   />
                 </Row>
@@ -311,7 +237,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                     color={color}
                     margin="2px 0 0 2px"
                     onClick={() => {
-                      handleDoneOrDelete('push', { id: dailyWork.id });
+                      pushNextDay(dailyWork);
                     }}
                   />
                 </Row>
@@ -319,7 +245,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   {/* 总结 */}
                   <SolutionOutlined
                     className={dynamicStyle.summaryIcon}
-                    onClick={() => setSplitterProportion('70%')}
+                    onClick={() => setSizes(['50%', '50%'])}
                   />
                 </Row>
               </Col>
@@ -338,7 +264,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   addonAfter="%"
                   value={dailyWork.proportion}
                   onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
-                  onBlur={() => save(dailyWork)}
+                  onBlur={() => updateActivity(dailyWork)}
                 />
               </Col>
               <Col span={4}>
@@ -353,7 +279,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   addonAfter="分"
                   value={dailyWork.score}
                   onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
-                  onBlur={() => save(dailyWork)}
+                  onBlur={() => updateActivity(dailyWork)}
                 />
               </Col>
               <Col span={4}>
@@ -368,7 +294,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                   addonAfter="h"
                   value={dailyWork.cost}
                   onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
-                  onBlur={() => save(dailyWork)}
+                  onBlur={() => updateActivity(dailyWork)}
                 />
               </Col>
               <Col span={12}>
@@ -381,7 +307,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       height={25}
                       color={color}
                       onClick={() => {
-                        handleDoneOrDelete('delete', { id: dailyWork.id });
+                        deleteActivity(dailyWork.id);
                       }}
                     />
                   </Col>
@@ -394,7 +320,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                         color={color}
                         margin="0 0 0 4px"
                         onClick={() => {
-                          handleDoneOrDelete('mark', { id: dailyWork.id, state: 'DONE' });
+                          markDone(dailyWork.id, 'DONE');
                         }}
                       />
                     ) : (
@@ -402,7 +328,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       <UndoOutlined
                         className={dynamicStyle.todoIcon}
                         onClick={() => {
-                          handleDoneOrDelete('mark', { id: dailyWork.id, state: 'INITIAL' });
+                          markDone(dailyWork.id, 'INITIAL');
                         }}
                       />
                     )}
@@ -419,7 +345,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       color={color}
                       margin="0 0 0 2px"
                       onClick={() => {
-                        handleDoneOrDelete('push', { id: dailyWork.id });
+                        pushNextDay(dailyWork);
                       }}
                     />
                   </Col>
@@ -428,7 +354,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                       className={dynamicStyle.unFoldIcon}
                       onClick={() => {
                         setDailyWork({ ...dailyWork, foldFlag: 'YES' });
-                        handleDoneOrDelete('fold', { id: dailyWork.id, state: 'unfold' });
+                        foldActivity(dailyWork.id, 'YES').then();
                       }}
                     />
                   </Col>
@@ -444,7 +370,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
               onSelect={(value) => {
                 const temp = { ...dailyWork, targetId: value };
                 setDailyWork(temp);
-                save(temp);
+                updateActivity(temp);
               }}
             />
           </Row>
@@ -457,7 +383,7 @@ export default function Activity({ dailyWorkParam, postUpdate }) {
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
                 className={dynamicStyle.content}
                 onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
-                onBlur={() => save(dailyWork)}
+                onBlur={() => updateActivity(dailyWork)}
               />
             </Splitter.Panel>
             <Splitter.Panel collapsible size={sizes[1]} min="30%" max="70%">

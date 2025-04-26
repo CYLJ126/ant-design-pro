@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DatePicker, Row } from 'antd';
 import {
   ExportOutlined,
@@ -13,18 +13,76 @@ import headerStyle from './headerStyle';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
+import { useModel } from 'umi';
 
 const dateFormat = 'YYYY-MM-DD';
 
-export default function Header({ whichDay, headInfo, refresh, add, toggleDay }) {
+const initialHeadInfo = {
+  score: 0,
+  cost: 0,
+  proportion: 0,
+  todoWork: 0,
+  completedWork: 0,
+};
+
+export default function Header() {
   dayjs.extend(utc);
+  const [whichDay, setWhichDay] = useState(new Date());
+  const [headInfo, setHeadInfo] = useState(initialHeadInfo);
   const { styles: dynamicStyle } = headerStyle(headInfo);
+  const { initialActivities, addNewActivity } = useModel('activitiesModel');
+
+  /**
+   * 统计头部信息
+   */
+  function statisticsHeadInfo() {
+    let temp = { ...initialHeadInfo };
+    Object.values(initialActivities).forEach((activity) => {
+      if (activity.status === 'DONE') {
+        temp.completedWork++;
+      } else {
+        temp.todoWork++;
+      }
+      temp.proportion += activity.proportion;
+      temp.cost += activity.cost;
+      temp.score += (activity.proportion / 100) * activity.score;
+    });
+    // 四舍五入两位小数
+    temp.score = parseFloat(temp.score.toFixed(2));
+    setHeadInfo(temp);
+  }
+
+  // 日期切换
+  function toggleDay(type, value) {
+    let newDay;
+    if (type === 'set') {
+      // 直接切换到指定日期
+      newDay = value.toDate();
+    } else {
+      // 往前推一天或往后推一天
+      let temp = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate());
+      temp.setDate(whichDay.getDate() + (type === 'former' ? -1 : 1));
+      newDay = temp;
+    }
+    setWhichDay(newDay);
+    initialActivities(newDay);
+    statisticsHeadInfo();
+  }
+
+  useEffect(() => {
+    initialActivities(whichDay);
+  }, []);
+
+  useEffect(() => {
+    statisticsHeadInfo();
+  }, [initialActivities]);
+
   return (
     <div>
       <Row>
         <VerticalRightOutlined
           className={dynamicStyle.forwardWeek}
-          onClick={() => toggleDay('former')}
+          onClick={() => toggleDay('former', null)}
         />
         <DatePicker
           className={dynamicStyle.date}
@@ -36,7 +94,7 @@ export default function Header({ whichDay, headInfo, refresh, add, toggleDay }) 
         />
         <VerticalLeftOutlined
           className={dynamicStyle.forwardWeek}
-          onClick={() => toggleDay('latter')}
+          onClick={() => toggleDay('latter', null)}
         />
         <span className={dynamicStyle.dailyScore}>{'' + headInfo.score + '分'}</span>
         <span className={dynamicStyle.dailyScore}>{'' + headInfo.cost + 'h'}</span>
@@ -49,10 +107,13 @@ export default function Header({ whichDay, headInfo, refresh, add, toggleDay }) 
         <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
           {'待办项 - ' + headInfo.todoWork}
         </span>
-        <ReloadOutlined onClick={refresh} className={dynamicStyle.refresh} />
+        <ReloadOutlined onClick={statisticsHeadInfo} className={dynamicStyle.refresh} />
         <StepBackwardOutlined className={dynamicStyle.fold} />
         <StepForwardOutlined className={dynamicStyle.fold} />
-        <PlusSquareOutlined className={dynamicStyle.plusItem} onClick={() => add(whichDay)} />
+        <PlusSquareOutlined
+          className={dynamicStyle.plusItem}
+          onClick={() => addNewActivity(whichDay)}
+        />
         <ExportOutlined className={dynamicStyle.toWeekly} />
       </Row>
     </div>

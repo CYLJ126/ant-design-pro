@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputNumber, message, Row, DatePicker } from 'antd';
+import { DatePicker, Input, InputNumber, message, Row } from 'antd';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -14,11 +14,7 @@ import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
-import {
-  deleteTodoWork,
-  insertTodoWork,
-  updateTodoWork,
-} from '@/services/ant-design-pro/dailyWork';
+import { addTodoWork, deleteTodoWork, updateTodoWork } from '@/services/ant-design-pro/dailyWork';
 
 export default function TodoWork({ todoParam, postUpdate }) {
   const [todo, setTodo] = useState(todoParam);
@@ -40,7 +36,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
       priority: param.priority,
     };
     if (!param.id) {
-      insertTodoWork(temp).then(() => postUpdate());
+      addTodoWork(temp).then(() => postUpdate());
     } else {
       temp.id = param.id;
       updateTodoWork(temp).then(() => postUpdate());
