@@ -25,8 +25,8 @@ export default () => {
     let activitiesTemp = {};
     result.forEach((item) => {
       activitiesTemp[item.id] = item;
-      setActivities(activitiesTemp);
     });
+    setActivities(activitiesTemp);
   }, []);
 
   // 添加新活动
@@ -114,10 +114,10 @@ export default () => {
       foldFlag: 'YES',
       proportion: dailyWork.proportion,
       content: dailyWork.content,
-      startTimeStr: startTimeStr,
-      endTimeStr: endTimeStr,
+      startTime: startTimeStr,
+      endTime: endTimeStr,
     };
-    addNewActivity(newOne).then();
+    addDailyWorkBack(newOne).then();
   }, []);
 
   return {
