@@ -31,12 +31,14 @@ export default () => {
 
   // 添加新活动
   const addNewActivity = useCallback(
-    async (date) => {
+    async (whichDay) => {
+      let date = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
+      const dateStr = dayjs(date).utc().local().format('YYYY-MM-DD HH:mm:ss');
       const blankOne = {
         status: 'DOING',
         proportion: 0,
-        startTime: date,
-        endTime: date,
+        startTime: dateStr,
+        endTime: dateStr,
         score: 0,
         cost: 0,
         foldFlag: 'YES',
