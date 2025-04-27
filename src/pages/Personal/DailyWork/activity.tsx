@@ -31,6 +31,7 @@ async function getSubTags(param) {
 export default function Activity({ dailyWorkParam }) {
   const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
   const { updateActivity, pushNextDay, markDone, deleteActivity } = useModel('activitiesModel');
+  const { setUpdateInfo } = useModel('activityUpdateModel');
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
@@ -140,7 +141,11 @@ export default function Activity({ dailyWorkParam }) {
                         addonAfter="分"
                         value={dailyWork.score}
                         onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
-                        onBlur={() => updateActivity(dailyWork)}
+                        onBlur={() => {
+                          updateActivity(dailyWork).then(() => {
+                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                          });
+                        }}
                       />
                     </Col>
                   </Row>
@@ -157,7 +162,11 @@ export default function Activity({ dailyWorkParam }) {
                         addonAfter="%"
                         value={dailyWork.proportion}
                         onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
-                        onBlur={() => updateActivity(dailyWork)}
+                        onBlur={() => {
+                          updateActivity(dailyWork).then(() => {
+                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                          });
+                        }}
                       />
                     </Col>
                     <Col span={12}>
@@ -172,7 +181,11 @@ export default function Activity({ dailyWorkParam }) {
                         addonAfter="h"
                         value={dailyWork.cost}
                         onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
-                        onBlur={() => updateActivity(dailyWork)}
+                        onBlur={() => {
+                          updateActivity(dailyWork).then(() => {
+                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                          });
+                        }}
                       />
                     </Col>
                   </Row>
@@ -197,7 +210,9 @@ export default function Activity({ dailyWorkParam }) {
                     height={25}
                     color={color}
                     onClick={() => {
-                      deleteActivity(dailyWork.id);
+                      deleteActivity(dailyWork.id).then(() => {
+                        setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                      });
                     }}
                   />
                   {dailyWork.status === 'INITIAL' ? (
@@ -208,7 +223,9 @@ export default function Activity({ dailyWorkParam }) {
                       color={color}
                       margin="3px 0 0 4px"
                       onClick={() => {
-                        markDone(dailyWork.id, 'DONE');
+                        markDone(dailyWork.id, 'DONE').then(() => {
+                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                        });
                       }}
                     />
                   ) : (
@@ -216,7 +233,9 @@ export default function Activity({ dailyWorkParam }) {
                     <UndoOutlined
                       className={dynamicStyle.todoIcon}
                       onClick={() => {
-                        markDone(dailyWork.id, 'INITIAL');
+                        markDone(dailyWork.id, 'INITIAL').then(() => {
+                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                        });
                       }}
                     />
                   )}
@@ -264,7 +283,11 @@ export default function Activity({ dailyWorkParam }) {
                   addonAfter="%"
                   value={dailyWork.proportion}
                   onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
-                  onBlur={() => updateActivity(dailyWork)}
+                  onBlur={() => {
+                    updateActivity(dailyWork).then(() => {
+                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                    });
+                  }}
                 />
               </Col>
               <Col span={4}>
@@ -279,7 +302,11 @@ export default function Activity({ dailyWorkParam }) {
                   addonAfter="分"
                   value={dailyWork.score}
                   onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
-                  onBlur={() => updateActivity(dailyWork)}
+                  onBlur={() => {
+                    updateActivity(dailyWork).then(() => {
+                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                    });
+                  }}
                 />
               </Col>
               <Col span={4}>
@@ -294,7 +321,11 @@ export default function Activity({ dailyWorkParam }) {
                   addonAfter="h"
                   value={dailyWork.cost}
                   onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
-                  onBlur={() => updateActivity(dailyWork)}
+                  onBlur={() => {
+                    updateActivity(dailyWork).then(() => {
+                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                    });
+                  }}
                 />
               </Col>
               <Col span={12}>

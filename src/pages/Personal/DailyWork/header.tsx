@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import { useModel } from 'umi';
+import { listActivities } from '@/models/activitiesModel';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -31,13 +32,15 @@ export default function Header() {
   const [headInfo, setHeadInfo] = useState(initialHeadInfo);
   const { styles: dynamicStyle } = headerStyle(headInfo);
   const { initialActivities, addNewActivity } = useModel('activitiesModel');
+  const { updateInfo } = useModel('activityUpdateModel');
 
   /**
    * 统计头部信息
    */
-  function statisticsHeadInfo() {
+  async function statisticsHeadInfo() {
+    const result = await listActivities(whichDay);
     let temp = { ...initialHeadInfo };
-    Object.values(initialActivities).forEach((activity) => {
+    result.forEach((activity) => {
       if (activity.status === 'DONE') {
         temp.completedWork++;
       } else {
@@ -66,7 +69,7 @@ export default function Header() {
     }
     setWhichDay(newDay);
     initialActivities(newDay);
-    statisticsHeadInfo();
+    statisticsHeadInfo().then();
   }
 
   useEffect(() => {
@@ -74,8 +77,8 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    statisticsHeadInfo();
-  }, [initialActivities]);
+    statisticsHeadInfo().then();
+  }, [initialActivities, updateInfo]);
 
   return (
     <div>

@@ -11,17 +11,21 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import { message } from 'antd';
 
+export async function listActivities(whichDay) {
+  let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
+  let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
+  start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
+  end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
+  return await listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end });
+}
+
 export default () => {
   // 每日活动列表
   const [activities, setActivities] = useState({});
 
   // 初始化活动列表
   const initialActivities = useCallback(async (whichDay) => {
-    let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
-    let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
-    start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
-    end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
-    const result = await listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end });
+    const result = await listActivities(whichDay);
     let activitiesTemp = {};
     result.forEach((item) => {
       activitiesTemp[item.id] = item;
