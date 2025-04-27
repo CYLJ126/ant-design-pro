@@ -211,7 +211,9 @@ export default function Activity({ dailyWorkParam }) {
                     color={color}
                     onClick={() => {
                       deleteActivity(dailyWork.id).then(() => {
-                        setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                        setUpdateInfo({ id: dailyWork.id, date: new Date() }).then(() => {
+                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                        });
                       });
                     }}
                   />
@@ -225,6 +227,7 @@ export default function Activity({ dailyWorkParam }) {
                       onClick={() => {
                         markDone(dailyWork.id, 'DONE').then(() => {
                           setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                          setDailyWork({ ...dailyWork, status: 'DONE' });
                         });
                       }}
                     />
@@ -235,6 +238,7 @@ export default function Activity({ dailyWorkParam }) {
                       onClick={() => {
                         markDone(dailyWork.id, 'INITIAL').then(() => {
                           setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                          setDailyWork({ ...dailyWork, status: 'INITIAL' });
                         });
                       }}
                     />
@@ -351,7 +355,10 @@ export default function Activity({ dailyWorkParam }) {
                         color={color}
                         margin="0 0 0 4px"
                         onClick={() => {
-                          markDone(dailyWork.id, 'DONE');
+                          markDone(dailyWork.id, 'DONE').then(() => {
+                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                            setDailyWork({ ...dailyWork, status: 'DONE' });
+                          });
                         }}
                       />
                     ) : (
@@ -359,7 +366,10 @@ export default function Activity({ dailyWorkParam }) {
                       <UndoOutlined
                         className={dynamicStyle.todoIcon}
                         onClick={() => {
-                          markDone(dailyWork.id, 'INITIAL');
+                          markDone(dailyWork.id, 'INITIAL').then(() => {
+                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
+                            setDailyWork({ ...dailyWork, status: 'INITIAL' });
+                          });
                         }}
                       />
                     )}
