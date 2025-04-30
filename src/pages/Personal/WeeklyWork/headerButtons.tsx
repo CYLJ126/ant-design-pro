@@ -4,12 +4,14 @@ import {
   BarChartOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
+  SendOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
 import styles from './headerButtons.less';
 import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
 import { useModel } from 'umi';
+import { useNavigate } from 'react-router-dom';
 
 function getWeekOptions(currentWeek) {
   if (currentWeek === 0) {
@@ -34,6 +36,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { updateInfo: targetChangeTip } = useModel('targetUpdateModel');
   const [weekOptions, setWeekOptions] = useState([]);
+  const navigateTo = useNavigate();
 
   /**
    * 显示周统计和周总结
@@ -109,6 +112,13 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
       <span className={`${styles.itemCount} ${styles.overdueItems}`}>
         {'逾期项 - ' + weekInfo.overdueWork}
       </span>
+      {/* 跳转到日计划 */}
+      <SendOutlined
+        className={`${styles.myIconJump} ${styles.reverse}`}
+        onClick={() => {
+          navigateTo('/Personal/DailyWork');
+        }}
+      />
       {/* 添加新目标 */}
       <PlusSquareOutlined onClick={() => addNewTarget(whichWeek)} className={styles.plusItem} />
       {/* 周统计数据 */}
@@ -118,6 +128,13 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
       />
       {/* 刷新数据 */}
       <ReloadOutlined onClick={() => refreshStatistics(whichWeek)} className={styles.refresh} />
+      {/* 跳转到月计划 */}
+      <SendOutlined
+        className={styles.myIconJump}
+        onClick={() => {
+          navigateTo('/Personal/MonthlyWork');
+        }}
+      />
     </Row>
   );
 }

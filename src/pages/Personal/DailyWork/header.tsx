@@ -4,8 +4,7 @@ import {
   ExportOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
-  StepBackwardOutlined,
-  StepForwardOutlined,
+  SendOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
@@ -15,6 +14,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import { useModel } from 'umi';
 import { listActivities } from '@/models/activitiesModel';
+import { useNavigate } from 'react-router-dom';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -33,6 +33,7 @@ export default function Header() {
   const { styles: dynamicStyle } = headerStyle(headInfo);
   const { initialActivities, addNewActivity } = useModel('activitiesModel');
   const { updateInfo } = useModel('activityUpdateModel');
+  const navigateTo = useNavigate();
 
   /**
    * 统计头部信息
@@ -83,10 +84,12 @@ export default function Header() {
   return (
     <div>
       <Row>
+        {/* 向前一天 */}
         <VerticalRightOutlined
           className={dynamicStyle.forwardWeek}
           onClick={() => toggleDay('former', null)}
         />
+        {/* 当前日期 */}
         <DatePicker
           className={dynamicStyle.date}
           value={dayjs(whichDay)}
@@ -95,29 +98,43 @@ export default function Header() {
             toggleDay('set', date);
           }}
         />
+        {/* 向后一天 */}
         <VerticalLeftOutlined
           className={dynamicStyle.forwardWeek}
           onClick={() => toggleDay('latter', null)}
         />
+        {/* 得分 */}
         <span className={dynamicStyle.dailyScore}>{'' + headInfo.score + '分'}</span>
+        {/* 小时数 */}
         <span className={dynamicStyle.dailyScore}>{'' + headInfo.cost + 'h'}</span>
+        {/* 占比 */}
         <span key={new Date().getTime()} className={dynamicStyle.proportion}>
           {'' + headInfo.proportion + '%'}
         </span>
+        {/* 完成项 */}
         <span className={`${dynamicStyle.itemCount} ${dynamicStyle.completedItems}`}>
           {'完成项 - ' + headInfo.completedWork}
         </span>
+        {/* 待办项 */}
         <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
           {'待办项 - ' + headInfo.todoWork}
         </span>
+        {/* 刷新 */}
         <ReloadOutlined onClick={statisticsHeadInfo} className={dynamicStyle.refresh} />
-        <StepBackwardOutlined className={dynamicStyle.fold} />
-        <StepForwardOutlined className={dynamicStyle.fold} />
+        {/* 新增 */}
         <PlusSquareOutlined
           className={dynamicStyle.plusItem}
           onClick={() => addNewActivity(whichDay)}
         />
-        <ExportOutlined className={dynamicStyle.toWeekly} />
+        {/* 总结 */}
+        <ExportOutlined className={dynamicStyle.showSummary} />
+        {/* 跳转到周计划 */}
+        <SendOutlined
+          className={dynamicStyle.myIconJump}
+          onClick={() => {
+            navigateTo('/Personal/WeeklyWork');
+          }}
+        />
       </Row>
     </div>
   );

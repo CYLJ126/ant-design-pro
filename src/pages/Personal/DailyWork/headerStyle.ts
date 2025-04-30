@@ -110,16 +110,6 @@ export default function headerStyle(headInfo) {
         color: #81d3f8;
       }
     `,
-    fold: css`
-      svg {
-        width: 35px;
-        height: 35px;
-        transform: rotate(90deg);
-        margin-top: 8px;
-        color: #81d3f8;
-        margin-left: 3px;
-      }
-    `,
     plusItem: css`
       svg {
         width: 30px;
@@ -130,14 +120,22 @@ export default function headerStyle(headInfo) {
         margin-top: 7px;
       }
     `,
-    toWeekly: css`
+    showSummary: css`
       svg {
         width: 30px;
         height: 30px;
         color: #81d3f8;
-        margin-left: 5px;
         margin-right: 5px;
         margin-top: 7px;
+      }
+    `,
+    myIconJump: css`
+      color: #81d3f8;
+
+      svg {
+        width: 30px;
+        height: 28px;
+        margin-top: 6px;
       }
     `,
   }))();
