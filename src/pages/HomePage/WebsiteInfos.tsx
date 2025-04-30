@@ -1,5 +1,5 @@
 import { Card, Carousel, Col, Image, Popover, Row, Space, Tabs } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './WebsiteInfos.less';
 import { getWebsiteLogo, listWebsiteNews } from '@/services/ant-design-pro/homePage';
 import { getTags } from '@/services/ant-design-pro/base';
@@ -48,10 +48,11 @@ function PopoverList({ newsList }) {
 /**
  * 每个网站
  *
- * @param websiteParam
+ * @param websiteParam 网站信息参数
+ * @param cardWidth 样式宽度
  * @constructor
  */
-function WebsiteInfo({ websiteParam }) {
+function WebsiteInfo({ websiteParam, cardWidth }) {
   const { module, newsList, logoUrl, moduleUrl } = websiteParam;
   const [imageUrl, setImageUrl] = useState('');
 
@@ -74,9 +75,9 @@ function WebsiteInfo({ websiteParam }) {
 
   const time = new Date().getTime();
   return (
-    <Popover autoAdjustOverflow content={<PopoverList newsList={newsList} />}>
+    <Popover autoAdjustOverflow placement="topLeft" content={<PopoverList newsList={newsList} />}>
       <a href={moduleUrl} target="_blank" rel="noreferrer">
-        <Row align="middle" style={{ width: '42vh' }}>
+        <Row align="middle" style={{ width: cardWidth }}>
           <Col span={12} style={{ height: '40px' }}>
             <Image width={100} preview={false} src={imageUrl} className={styles.logoImg} />
           </Col>
@@ -86,9 +87,9 @@ function WebsiteInfo({ websiteParam }) {
         </Row>
       </a>
       {/* 走马灯 */}
-      <Carousel arrows autoplay dotPosition={'top'} className={styles.carousel}>
+      <Carousel arrows autoplay dotPosition={'top'} dots={false} className={styles.carousel}>
         {newsList.map((news) => (
-          <NewsCard news={news} width="42vh" key={news.title + '_' + time} />
+          <NewsCard news={news} width={cardWidth} key={news.title + '_' + time} />
         ))}
       </Carousel>
     </Popover>
@@ -103,12 +104,50 @@ function WebsiteInfo({ websiteParam }) {
  */
 function NewsTabContent({ id }) {
   const [websiteList, setWebsiteList] = useState([]);
+  const [cardWidth, setCardWidth] = useState('42vh');
+  const gridRef = useRef<HTMLDivElement>(null); // 步骤1：创建ref引用
   useEffect(() => {
     listWebsiteNews({ type: id }).then((result) => setWebsiteList(result));
   }, []);
+
+  // 监听容器尺寸变化
+  useEffect(() => {
+    const gridElement = gridRef.current;
+    if (!gridElement) return;
+
+    // 在ResizeObserver内添加防抖逻辑
+    let resizeTimeout;
+    // 步骤2：创建 IntersectionObserver，只在可见时监听
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+      resizeTimeout = setTimeout(() => {
+        // 激活ResizeObserver
+        for (const entry of entries) {
+          // 步骤3：计算有效宽度（包含padding和border）
+          const totalWidth = entry.target.clientWidth;
+
+          // 步骤4：计算目标宽度并设置CSS变量
+          const tabWidth = (totalWidth - 40) / 4;
+          entry.target.style.setProperty('--news-tab-width', `${tabWidth}px`);
+          setCardWidth(tabWidth + 'px');
+        }
+      }, 10); // 150ms延迟可自行调整
+    });
+
+    resizeObserver.observe(gridElement);
+
+    return () => {
+      resizeObserver.disconnect(); // 清理观察器
+    };
+  }, []);
+
   const time = new Date().getTime();
   return (
     <div
+      id="website-content-grid"
+      ref={gridRef}
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)', // 四列等宽
@@ -117,7 +156,7 @@ function NewsTabContent({ id }) {
       }}
     >
       {websiteList.map((item) => (
-        <WebsiteInfo key={item.id + '_' + time} websiteParam={item} />
+        <WebsiteInfo key={item.id + '_' + time} websiteParam={item} cardWidth={cardWidth} />
       ))}
     </div>
   );
