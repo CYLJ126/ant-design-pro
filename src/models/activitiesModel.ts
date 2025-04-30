@@ -39,7 +39,7 @@ export default () => {
       let date = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
       const dateStr = dayjs(date).utc().local().format('YYYY-MM-DD HH:mm:ss');
       const blankOne = {
-        status: 'DOING',
+        status: 'INITIAL',
         proportion: 0,
         startTime: dateStr,
         endTime: dateStr,
