@@ -85,13 +85,6 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        console.log('viewportWidth: ', viewportWidth);
-        console.log('viewportHeight: ', viewportHeight);
-        console.log('rect.top: ' + rect.top);
-        console.log('rect.right: ' + rect.right);
-        console.log('rect.bottom: ' + rect.bottom);
-        console.log('rect.left: ' + rect.left);
-
         if (
           rect.left >= 20 &&
           rect.right <= viewportWidth - 20 &&
