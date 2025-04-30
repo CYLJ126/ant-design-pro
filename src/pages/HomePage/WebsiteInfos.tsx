@@ -85,16 +85,6 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        if (
-          rect.left >= 20 &&
-          rect.right <= viewportWidth - 20 &&
-          rect.top >= 20 &&
-          rect.bottom <= viewportHeight - 20
-        ) {
-          // 不需调整
-          return;
-        }
-
         if (rect.left < 20) {
           // 左侧溢出
           popover.style.left = `${20 - rect.left}px`;
@@ -119,7 +109,6 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
           if (delta < 20) {
             delta = 20 - delta;
           }
-          console.log('delta: ', delta);
           popover.style.top = delta + 'px';
         }
       }}
