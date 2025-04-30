@@ -86,13 +86,17 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
         const viewportHeight = window.innerHeight;
 
         // 横向溢出处理
-        if (rect.right > viewportWidth - 20) {
+        if (rect.left < 20) {
+          popover.style.left = `${20 - rect.left}px`;
+        } else if (rect.right > viewportWidth - 20) {
           const overflow = rect.right - viewportWidth;
           popover.style.left = `${parseFloat(popover.style.left) - overflow - 20}px`;
         }
 
         // 纵向溢出处理
-        if (rect.bottom > viewportHeight - 20) {
+        if (rect.top < 20) {
+          popover.style.top = `${20 - rect.top}px`;
+        } else if (rect.bottom > viewportHeight - 20) {
           const overflow = rect.bottom - viewportHeight;
           popover.style.top = `${parseFloat(popover.style.top) - overflow - 20}px`;
         }
