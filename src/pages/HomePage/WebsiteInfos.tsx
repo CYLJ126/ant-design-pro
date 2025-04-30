@@ -98,27 +98,24 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
           rect.top >= 20 &&
           rect.bottom <= viewportHeight - 20
         ) {
-          console.log('不需调整');
+          // 不需调整
           return;
         }
 
-        // 横向溢出处理
         if (rect.left < 20) {
-          console.log('左侧溢出');
+          // 左侧溢出
           popover.style.left = `${20 - rect.left}px`;
         } else if (rect.right > viewportWidth - 20) {
-          console.log('右侧溢出');
+          // 右侧溢出
           const overflow = rect.right - viewportWidth;
-          console.log('popover.style.left: ', popover.style.left);
           popover.style.left = `${parseFloat(popover.style.left) - overflow - 20}px`;
         }
 
-        // 纵向溢出处理
         if (rect.top < 20) {
-          console.log('顶部溢出');
+          // 顶部溢出
           popover.style.top = `${20 - rect.top}px`;
         } else if (rect.bottom > viewportHeight - 20) {
-          console.log('底部溢出');
+          // 底部溢出
           let delta;
           if (popover.style.top === 'auto') {
             delta = viewportHeight - 600;
@@ -132,12 +129,6 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
           console.log('delta: ', delta);
           popover.style.top = delta + 'px';
         }
-        console.log('调整后……');
-        console.log('popover.style.top: ' + popover.style.top);
-        console.log('popover.style.right: ' + popover.style.right);
-        console.log('popover.style.bottom: ' + popover.style.bottom);
-        console.log('popover.style.left: ' + popover.style.left);
-        console.log('--------------------------------------');
       }}
     >
       <a href={moduleUrl} target="_blank" rel="noreferrer">
