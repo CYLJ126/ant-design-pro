@@ -77,7 +77,7 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
       autoAdjustOverflow
       placement="topLeft"
       content={<PopoverList newsList={newsList} />}
-      overlayClassName={styles.newsPopover}
+      classNames={{ root: styles.newsPopover }}
       getPopupContainer={(triggerNode) => triggerNode.parentElement!}
       onPopupAlign={(domNode) => {
         const popover = domNode as HTMLElement;
