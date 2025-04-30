@@ -56,3 +56,74 @@
     align-items: center;
   }
 }
+
+// 新增气泡卡片样式
+.newsPopover {
+  // 限制最大尺寸
+  max-width: 80vw !important;
+  max-height: 70vh !important;
+
+  // 定位修正
+  .ant-popover-inner {
+    overflow: hidden !important;
+    border-radius: 8px;
+  }
+
+  .ant-popover-arrow {
+    display: none; // 隐藏默认箭头
+  }
+}
+
+.popoverContentWrapper {
+  // 尺寸限制
+  max-width: 800px;
+  max-height: 60vh;
+  width: auto !important;
+
+  // 滚动支持
+  overflow-y: auto;
+  padding-right: 12px;
+  scrollbar-width: thin;
+
+  // 滚动条美化
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  // 卡片样式调整
+  .card {
+    width: 100% !important;
+    max-width: none;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    :global {
+      .ant-card-head {
+        min-width: 280px;
+      }
+
+      .ant-card-body {
+        padding: 12px !important;
+      }
+    }
+  }
+}
+
+// 父容器防止尺寸变化
+#website-content-grid {
+  overflow: visible !important;
+  contain: strict;
+
+  > div {
+    overflow: visible !important;
+  }
+}

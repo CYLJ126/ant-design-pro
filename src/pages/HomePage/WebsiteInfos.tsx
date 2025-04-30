@@ -33,15 +33,13 @@ function NewsCard({ news, width }) {
 function PopoverList({ newsList }) {
   const time = new Date().getTime();
   return (
-    <Space direction={'vertical'} size={'small'} wrap={true} className={styles.popoverContent}>
-      <div>
+    <div className={styles.popoverContentWrapper}>
+      <Space direction="vertical" size="small">
         {newsList.map((news) => (
-          <div style={{ marginBottom: '10px' }} key={news.title + '_' + time}>
-            <NewsCard news={news} width="800px" />
-          </div>
+          <NewsCard key={news.title + '_' + time} news={news} width="100%" />
         ))}
-      </div>
-    </Space>
+      </Space>
+    </div>
   );
 }
 
@@ -75,7 +73,31 @@ function WebsiteInfo({ websiteParam, cardWidth }) {
 
   const time = new Date().getTime();
   return (
-    <Popover autoAdjustOverflow placement="topLeft" content={<PopoverList newsList={newsList} />}>
+    <Popover
+      autoAdjustOverflow
+      placement="topLeft"
+      content={<PopoverList newsList={newsList} />}
+      overlayClassName={styles.newsPopover}
+      getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+      onPopupAlign={(domNode) => {
+        const popover = domNode as HTMLElement;
+        const rect = popover.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // 横向溢出处理
+        if (rect.right > viewportWidth - 20) {
+          const overflow = rect.right - viewportWidth;
+          popover.style.left = `${parseFloat(popover.style.left) - overflow - 20}px`;
+        }
+
+        // 纵向溢出处理
+        if (rect.bottom > viewportHeight - 20) {
+          const overflow = rect.bottom - viewportHeight;
+          popover.style.top = `${parseFloat(popover.style.top) - overflow - 20}px`;
+        }
+      }}
+    >
       <a href={moduleUrl} target="_blank" rel="noreferrer">
         <Row align="middle" style={{ width: cardWidth }}>
           <Col span={12} style={{ height: '40px' }}>
@@ -133,7 +155,7 @@ function NewsTabContent({ id }) {
           entry.target.style.setProperty('--news-tab-width', `${tabWidth}px`);
           setCardWidth(tabWidth + 'px');
         }
-      }, 10); // 150ms延迟可自行调整
+      }, 1000); // 150ms延迟可自行调整
     });
 
     resizeObserver.observe(gridElement);
