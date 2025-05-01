@@ -49,7 +49,7 @@ export default {
   'menu.Tools': 'Tool',
   'menu.Tools.TextFormatter': 'Text Formatter',
   'menu.Personal': 'Personal',
-  'menu.Personal.Traces': 'Traces',
+  'menu.Personal.TimeTrace': 'TimeTrace',
   'menu.Personal.DailyWork': 'Daily Work',
   'menu.Personal.WeeklyWork': 'Weekly Work',
   'menu.Personal.MonthlyWork': 'Monthly Work',

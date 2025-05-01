@@ -49,7 +49,7 @@ export default {
   'menu.Tools': '工具',
   'menu.Tools.TextFormatter': '文本格式化',
   'menu.Personal': '个人管理',
-  'menu.Personal.Traces': '时刻留痕',
+  'menu.Personal.TimeTrace': '时刻留痕',
   'menu.Personal.DailyWork': '每日计划',
   'menu.Personal.WeeklyWork': '每周计划',
   'menu.Personal.MonthlyWork': '每月计划',

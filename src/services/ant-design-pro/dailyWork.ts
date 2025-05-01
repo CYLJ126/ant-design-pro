@@ -246,3 +246,47 @@ export async function deleteTodoWork(id?: number) {
 }
 
 /**  ----------------- TodoWorkController end ----------------- */
+
+/**  ----------------- TimeTraceController start ----------------- */
+
+/**
+ * 查询时刻留痕数据
+ * @param param 请求参数
+ */
+export async function listTraces(param) {
+  return jsonPost('/dw/timeTrace/listTraces', param);
+}
+
+/**
+ * 新增时刻留痕记录
+ * @param param 请求参数
+ */
+export async function addTrace(param) {
+  return jsonPost('/dw/timeTrace/addTrace', param);
+}
+
+/**
+ * 更新时刻留痕记录
+ * @param param 请求参数
+ */
+export async function updateTrace(param) {
+  return jsonPost('/dw/timeTrace/updateTrace', param);
+}
+
+/**
+ * 删除时刻留痕记录
+ * @param param 请求参数
+ */
+export async function deleteTrace(param) {
+  return jsonPost('/dw/timeTrace/deleteTrace', param);
+}
+
+/**
+ * 更新留痕数据指定日期的记录
+ * @param param 请求参数
+ */
+export async function markDay(param) {
+  return jsonPost('/dw/timeTrace/markDay', param);
+}
+
+/**  ----------------- TimeTraceController end ----------------- */

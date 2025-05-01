@@ -47,7 +47,7 @@ export default function TargetInfo({ targetId }) {
 
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
-    getSubTags({ name: '日课' }).then((rootTag) => {
+    getTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
         setCurrent({ ...current, themId: result[0].value });
