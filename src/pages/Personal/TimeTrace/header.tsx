@@ -95,10 +95,12 @@ export default function Header({ listFunc }) {
       <Select
         allowClear={true}
         className={styles.selectItem}
+        style={{ width: '120px' }}
+        placeholder="请选择主题"
         value={requestParam.themeId}
         options={themeOptions}
         onSelect={async (value) => {
-          let newVar = { ...requestParam, themeId: value };
+          let newVar = { ...requestParam, themeId: value, workId: null, targetId: null };
           setRequestParam(newVar);
           setWorkOptions(await getSubTags(value));
           refresh(newVar);
@@ -107,10 +109,12 @@ export default function Header({ listFunc }) {
       <Select
         allowClear={true}
         className={styles.selectItem}
+        style={{ width: '120px' }}
+        placeholder="请选择事项"
         value={requestParam.workId}
         options={workOptions}
         onSelect={async (value) => {
-          let newVar = { ...requestParam, workId: value };
+          let newVar = { ...requestParam, workId: value, targetId: null };
           setRequestParam(newVar);
           setTargetOptions(await getSubTags(value));
           refresh(newVar);
@@ -119,6 +123,8 @@ export default function Header({ listFunc }) {
       <Select
         allowClear={true}
         className={styles.selectItem}
+        style={{ width: '150px' }}
+        placeholder="请选择目标"
         value={requestParam.targetId}
         options={targetOptions}
         onSelect={async (value) => {
