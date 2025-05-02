@@ -74,7 +74,7 @@ export default function TimeTrace({ data }) {
               />
             </Col>
             <Col flex={'450px'}>
-              <Input className={styles.spanLabel} value="开始" style={{ width: '40px' }} />
+              <Input value="开始" className={styles.spanLabel} style={{ width: '40px' }} />
               <DatePicker
                 className={styles.datePicker}
                 style={{ width: '90px' }}
@@ -85,34 +85,46 @@ export default function TimeTrace({ data }) {
                   updateTrace({ ...timeTrace, startDate: date.format(dateFormat) }).then();
                 }}
               />
-              <Input className={styles.spanLabel} value="累积" style={{ width: '40px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="累积"
+                style={{ width: '40px', borderColor: '#65be8a', backgroundColor: '#65be8a' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.accumulateCount}
-                style={{ width: '40px' }}
+                style={{ width: '40px', borderColor: '#65be8a', color: '#65be8a' }}
               />
-              <Input className={styles.spanLabel} value="缺失" style={{ width: '40px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="缺失"
+                style={{ width: '40px', borderColor: '#f88a22', backgroundColor: '#f88a22' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.missCount}
-                style={{ width: '40px' }}
+                style={{ width: '40px', borderColor: '#f88a22', color: '#f88a22' }}
               />
-              <Input className={styles.spanLabel} value="比率" style={{ width: '40px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="比率"
+                style={{ width: '40px', borderColor: '#f7c115', backgroundColor: '#f7c115' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.completionRate}
-                style={{ width: '68px' }}
+                style={{ width: '68px', borderColor: '#f7c115', color: '#f7c115' }}
               />
             </Col>
           </Row>
         </Col>
         <Col span={8}>
-          <Input className={styles.spanLabel} value="今日数据" style={{ width: '82px' }} />
+          <Input className={styles.spanLabel} value="今日数据" style={{ width: '86px' }} />
           <Input className={styles.spanLabel} value="设值" style={{ width: '40px' }} />
           <Input
             className={styles.inputItem}
             value={dayRecord.recordValue}
-            style={{ width: 'calc(100% - 142px)' }}
+            style={{ width: 'calc(100% - 146px)' }}
           />
         </Col>
       </Row>
@@ -145,30 +157,48 @@ export default function TimeTrace({ data }) {
                   updateTrace({ ...timeTrace, endDate: date.format(dateFormat) }).then();
                 }}
               />
-              <Input className={styles.spanLabel} value="消耗" style={{ width: '40px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="消耗"
+                style={{ width: '40px', borderColor: '#5bb1c9', backgroundColor: '#5bb1c9' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.consumeCount}
-                style={{ width: '40px' }}
+                style={{ width: '40px', borderColor: '#5bb1c9', color: '#5bb1c9' }}
               />
-              <Input className={styles.spanLabel} value="连续" style={{ width: '40px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="连续"
+                style={{ width: '40px', borderColor: '#2585b7', backgroundColor: '#2585b7' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.continuousCount}
-                style={{ width: '40px' }}
+                style={{ width: '40px', borderColor: '#2585b7', color: '#2585b7' }}
               />
-              <Input className={styles.spanLabel} value="最大连续" style={{ width: '68px' }} />
+              <Input
+                className={styles.spanLabel}
+                value="最大连续"
+                style={{ width: '68px', borderColor: '#7e3b82', backgroundColor: '#7e3b82' }}
+              />
               <Input
                 className={styles.inputItem}
                 value={timeTrace.maxContinuous}
-                style={{ width: '40px' }}
+                style={{ width: '40px', borderColor: '#7e3b82', color: '#7e3b82' }}
               />
             </Col>
           </Row>
         </Col>
         <Col span={8}>
-          <ThumbsUp isUp={true} width={22} height={22} margin={'2px 5px 0 0'} color={'#81d3f8'} />
-          <ThumbsUp isUp={false} width={22} height={22} margin={'2px 5px 0 0'} color={'#81d3f8'} />
+          <ThumbsUp isUp={true} width={22} height={22} margin={'2px 5px 0 2px'} color={'#81d3f8'} />
+          <ThumbsUp
+            isUp={false}
+            width={22}
+            height={22}
+            margin={'2px 5px 0 2px'}
+            color={'#81d3f8'}
+          />
           <InputNumber
             style={{ width: '30px', top: '-5px' }}
             className={styles.inputNumberItem}
@@ -184,7 +214,7 @@ export default function TimeTrace({ data }) {
           <Input
             value={dayRecord.summary}
             className={styles.inputItem}
-            style={{ width: 'calc(100% - 142px)', top: '-5px' }}
+            style={{ width: 'calc(100% - 146px)', top: '-5px' }}
           />
         </Col>
       </Row>
