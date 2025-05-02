@@ -4,7 +4,7 @@ import { getTags } from '@/services/ant-design-pro/base';
 
 const TimeTraceContext = createContext({});
 
-export function DateProvider({ children }) {
+export function TimeTraceProvider({ children }) {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
 

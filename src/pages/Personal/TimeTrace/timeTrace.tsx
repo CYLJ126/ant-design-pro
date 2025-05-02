@@ -41,8 +41,6 @@ export default function TimeTrace({ data }) {
   const [dayRecord, setDayRecord] = useState(tempDayRecord);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
-  const [upColor, setUpColor] = useState(thumbsColor(true, dayRecord.completionStatus));
-  const [downColor, setDownColor] = useState(thumbsColor(false, dayRecord.completionStatus));
 
   useEffect(() => {
     if (timeTrace.themeId) {
@@ -68,7 +66,7 @@ export default function TimeTrace({ data }) {
                 onSelect={(value) => {
                   let newVar = { ...timeTrace, themeId: value, workId: null, targetId: null };
                   setTimeTrace(newVar);
-                  setWorkOptions(getSubTags(timeTrace.themeId));
+                  getSubTags(value).then((result) => setWorkOptions(result));
                   updateTrace(newVar).then();
                 }}
               />
@@ -81,7 +79,7 @@ export default function TimeTrace({ data }) {
                 onSelect={(value) => {
                   let newVar = { ...timeTrace, workId: value, targetId: null };
                   setTimeTrace(newVar);
-                  setTargetOptions(getSubTags(value));
+                  getSubTags(value).then((result) => setTargetOptions(result));
                   updateTrace(newVar).then();
                 }}
               />
@@ -138,6 +136,8 @@ export default function TimeTrace({ data }) {
             className={styles.inputItem}
             value={dayRecord.recordValue}
             style={{ width: 'calc(100% - 146px)' }}
+            onChange={(e) => setDayRecord({ ...dayRecord, recordValue: e.target.value })}
+            onBlur={() => markDay(dayRecord)}
           />
         </Col>
       </Row>
@@ -209,14 +209,12 @@ export default function TimeTrace({ data }) {
             width={22}
             height={22}
             margin={'2px 5px 0 2px'}
-            color={upColor}
+            color={thumbsColor(true, dayRecord.completionStatus)}
             onClick={() => {
               if (dayRecord.completionStatus !== 'DONE') {
-                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
-                  setDayRecord(result);
-                  setUpColor('#65be8a');
-                  setDownColor('#c6c6c6');
-                });
+                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) =>
+                  setDayRecord(result),
+                );
               }
             }}
           />
@@ -225,11 +223,9 @@ export default function TimeTrace({ data }) {
             width={22}
             height={22}
             margin={'2px 5px 0 2px'}
-            color={downColor}
+            color={thumbsColor(false, dayRecord.completionStatus)}
             onClick={() => {
               if (dayRecord.completionStatus !== 'CLOSED') {
-                setDownColor('#f88a22');
-                setUpColor('#c6c6c6');
                 markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) =>
                   setDayRecord(result),
                 );
@@ -243,7 +239,7 @@ export default function TimeTrace({ data }) {
             min={0}
             max={10}
             changeOnWheel={true}
-            value={'10'}
+            value={dayRecord.score}
             onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
             onBlur={() => markDay(dayRecord)}
           />
@@ -252,6 +248,8 @@ export default function TimeTrace({ data }) {
             value={dayRecord.summary}
             className={styles.inputItem}
             style={{ width: 'calc(100% - 146px)', top: '-5px' }}
+            onChange={(e) => setDayRecord({ ...dayRecord, summary: e.target.value })}
+            onBlur={() => markDay(dayRecord)}
           />
         </Col>
       </Row>

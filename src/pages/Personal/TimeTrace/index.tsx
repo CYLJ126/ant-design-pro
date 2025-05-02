@@ -5,7 +5,7 @@ import Header from './header';
 import TimeTrace from './timeTrace';
 import styles from './index.less';
 import { listTraces } from '@/services/ant-design-pro/dailyWork';
-import { DateProvider } from './TimeTraceContext';
+import { TimeTraceProvider } from './TimeTraceContext';
 
 function TimeTraces() {
   const [timeTraces, setTimeTraces] = useState([]);
@@ -18,7 +18,7 @@ function TimeTraces() {
 
   const time = new Date().getTime();
   return (
-    <DateProvider>
+    <TimeTraceProvider>
       <Header listFunc={fetch} />
       <hr className={styles.horizontal} />
       <Row>
@@ -29,7 +29,7 @@ function TimeTraces() {
         </Col>
         <Col span={6}></Col>
       </Row>
-    </DateProvider>
+    </TimeTraceProvider>
   );
 }
 
