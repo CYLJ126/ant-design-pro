@@ -9,6 +9,17 @@ import ThumbsUp from '@/icons/ThumbsUp';
 
 const dateFormat = 'YYYY-MM-DD';
 
+const thumbsColor = (isUp, status) => {
+  if (status === 'INITIAL') {
+    return '#81d3f8';
+  }
+  if (isUp) {
+    return status === 'DONE' ? '#65be8a' : '#c6c6c6';
+  } else {
+    return status === 'CLOSED' ? '#f88a22' : '#c6c6c6';
+  }
+};
+
 export default function TimeTrace({ data }) {
   const { getSubTags, themeOptions, currentDate } = useTimeTraceData();
   let tempTimeTrace = { ...data, startDate: dayjs(data.startDate), endDate: dayjs(data.endDate) };
@@ -21,7 +32,7 @@ export default function TimeTrace({ data }) {
     tempDayRecord = {
       traceId: data.id,
       recordDate: currentDate.format(dateFormat),
-      completionStatus: 'INITIAL', // 0-INITIAL-初始；2-DONE-完成；
+      completionStatus: 'INITIAL', // 0-INITIAL-初始；2-DONE-完成；3-CLOSED-没做；
       score: 0,
       recordValue: '',
       summary: '',
@@ -30,17 +41,8 @@ export default function TimeTrace({ data }) {
   const [dayRecord, setDayRecord] = useState(tempDayRecord);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
-
-  const thumbsColor = (isUp, status) => {
-    if (dayRecord.completionStatus === 'INITIAL') {
-      return '#81d3f8';
-    }
-    if (isUp) {
-      return status === 'DONE' ? '#65be8a' : '#c6c6c6';
-    } else {
-      return status === 'CLOSED' ? '#f88a22' : '#c6c6c6';
-    }
-  };
+  const [upColor, setUpColor] = useState(thumbsColor(true, dayRecord.completionStatus));
+  const [downColor, setDownColor] = useState(thumbsColor(false, dayRecord.completionStatus));
 
   useEffect(() => {
     if (timeTrace.themeId) {
@@ -207,14 +209,32 @@ export default function TimeTrace({ data }) {
             width={22}
             height={22}
             margin={'2px 5px 0 2px'}
-            color={thumbsColor(true, dayRecord.completionStatus)}
+            color={upColor}
+            onClick={() => {
+              if (dayRecord.completionStatus !== 'DONE') {
+                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
+                  setDayRecord(result);
+                  setUpColor('#65be8a');
+                  setDownColor('#c6c6c6');
+                });
+              }
+            }}
           />
           <ThumbsUp
             isUp={false}
             width={22}
             height={22}
             margin={'2px 5px 0 2px'}
-            color={thumbsColor(false, dayRecord.completionStatus)}
+            color={downColor}
+            onClick={() => {
+              if (dayRecord.completionStatus !== 'CLOSED') {
+                setDownColor('#f88a22');
+                setUpColor('#c6c6c6');
+                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) =>
+                  setDayRecord(result),
+                );
+              }
+            }}
           />
           <InputNumber
             style={{ width: '30px', top: '-5px' }}
