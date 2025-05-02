@@ -44,61 +44,67 @@ export default function TimeTrace({ data }) {
     <div>
       <Row>
         <Col span={16}>
-          {/* 主题 */}
-          <Select
-            value={timeTrace.themeId}
-            className={styles.selectItem}
-            style={{ width: '120px' }}
-            options={themeOptions}
-            onSelect={(value) => {
-              let newVar = { ...timeTrace, themeId: value, workId: null, targetId: null };
-              setTimeTrace(newVar);
-              setWorkOptions(getSubTags(timeTrace.themeId));
-              updateTrace(newVar).then();
-            }}
-          />
-          {/* 事项 */}
-          <Select
-            value={timeTrace.workId}
-            className={styles.selectItem}
-            style={{ width: '120px' }}
-            options={workOptions}
-            onSelect={(value) => {
-              let newVar = { ...timeTrace, workId: value, targetId: null };
-              setTimeTrace(newVar);
-              setTargetOptions(getSubTags(value));
-              updateTrace(newVar).then();
-            }}
-          />
-          <Input className={styles.spanLabel} value="开始" style={{ width: '40px' }} />
-          <DatePicker
-            className={styles.datePicker}
-            style={{ width: '90px' }}
-            value={timeTrace.startDate}
-            format={dateFormat}
-            onChange={(date) => {
-              setTimeTrace({ ...timeTrace, startDate: date });
-              updateTrace({ ...timeTrace, startDate: date.format(dateFormat) }).then();
-            }}
-          />
-          <Input className={styles.spanLabel} value="累积" style={{ width: '40px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.accumulateCount}
-            style={{ width: '40px' }}
-          />
-          <Input className={styles.spanLabel} value="缺失" style={{ width: '40px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.missCount}
-            style={{ width: '40px' }}
-          />
-          <Input className={styles.spanLabel} value="比率" style={{ width: '40px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.completionRate}
-            style={{ width: '68px' }}
-          />
+          <Row wrap={false}>
+            <Col flex={'auto'}>
+              {/* 主题 */}
+              <Select
+                value={timeTrace.themeId}
+                className={styles.selectItem}
+                style={{ width: 'calc(50% - 5px)' }}
+                options={themeOptions}
+                onSelect={(value) => {
+                  let newVar = { ...timeTrace, themeId: value, workId: null, targetId: null };
+                  setTimeTrace(newVar);
+                  setWorkOptions(getSubTags(timeTrace.themeId));
+                  updateTrace(newVar).then();
+                }}
+              />
+              {/* 事项 */}
+              <Select
+                value={timeTrace.workId}
+                className={styles.selectItem}
+                style={{ width: 'calc(50% - 5px)' }}
+                options={workOptions}
+                onSelect={(value) => {
+                  let newVar = { ...timeTrace, workId: value, targetId: null };
+                  setTimeTrace(newVar);
+                  setTargetOptions(getSubTags(value));
+                  updateTrace(newVar).then();
+                }}
+              />
+            </Col>
+            <Col flex={'450px'}>
+              <Input className={styles.spanLabel} value="开始" style={{ width: '40px' }} />
+              <DatePicker
+                className={styles.datePicker}
+                style={{ width: '90px' }}
+                value={timeTrace.startDate}
+                format={dateFormat}
+                onChange={(date) => {
+                  setTimeTrace({ ...timeTrace, startDate: date });
+                  updateTrace({ ...timeTrace, startDate: date.format(dateFormat) }).then();
+                }}
+              />
+              <Input className={styles.spanLabel} value="累积" style={{ width: '40px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.accumulateCount}
+                style={{ width: '40px' }}
+              />
+              <Input className={styles.spanLabel} value="缺失" style={{ width: '40px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.missCount}
+                style={{ width: '40px' }}
+              />
+              <Input className={styles.spanLabel} value="比率" style={{ width: '40px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.completionRate}
+                style={{ width: '68px' }}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col span={8}>
           <Input className={styles.spanLabel} value="今日数据" style={{ width: '82px' }} />
@@ -112,47 +118,53 @@ export default function TimeTrace({ data }) {
       </Row>
       <Row>
         <Col span={16}>
-          {/* 目标 */}
-          <Select
-            value={timeTrace.targetId}
-            className={styles.selectItem}
-            style={{ width: '245px' }}
-            options={targetOptions}
-            onSelect={(value) => {
-              let newVar = { ...timeTrace, workId: value, targetId: null };
-              setTimeTrace(newVar);
-              updateTrace(newVar).then();
-            }}
-          />
-          <Input className={styles.spanLabel} value="结束" style={{ width: '40px' }} />
-          <DatePicker
-            value={timeTrace.endDate}
-            className={styles.datePicker}
-            style={{ width: '90px' }}
-            format={dateFormat}
-            onChange={(date) => {
-              setTimeTrace({ ...timeTrace, endDate: date });
-              updateTrace({ ...timeTrace, endDate: date.format(dateFormat) }).then();
-            }}
-          />
-          <Input className={styles.spanLabel} value="消耗" style={{ width: '40px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.consumeCount}
-            style={{ width: '40px' }}
-          />
-          <Input className={styles.spanLabel} value="连续" style={{ width: '40px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.continuousCount}
-            style={{ width: '40px' }}
-          />
-          <Input className={styles.spanLabel} value="最大连续" style={{ width: '68px' }} />
-          <Input
-            className={styles.inputItem}
-            value={timeTrace.maxContinuous}
-            style={{ width: '40px' }}
-          />
+          <Row wrap={false}>
+            <Col flex={'auto'}>
+              {/* 目标 */}
+              <Select
+                value={timeTrace.targetId}
+                className={styles.selectItem}
+                style={{ width: 'calc(100% - 5px)' }}
+                options={targetOptions}
+                onSelect={(value) => {
+                  let newVar = { ...timeTrace, workId: value, targetId: null };
+                  setTimeTrace(newVar);
+                  updateTrace(newVar).then();
+                }}
+              />
+            </Col>
+            <Col flex={'450px'}>
+              <Input className={styles.spanLabel} value="结束" style={{ width: '40px' }} />
+              <DatePicker
+                value={timeTrace.endDate}
+                className={styles.datePicker}
+                style={{ width: '90px' }}
+                format={dateFormat}
+                onChange={(date) => {
+                  setTimeTrace({ ...timeTrace, endDate: date });
+                  updateTrace({ ...timeTrace, endDate: date.format(dateFormat) }).then();
+                }}
+              />
+              <Input className={styles.spanLabel} value="消耗" style={{ width: '40px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.consumeCount}
+                style={{ width: '40px' }}
+              />
+              <Input className={styles.spanLabel} value="连续" style={{ width: '40px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.continuousCount}
+                style={{ width: '40px' }}
+              />
+              <Input className={styles.spanLabel} value="最大连续" style={{ width: '68px' }} />
+              <Input
+                className={styles.inputItem}
+                value={timeTrace.maxContinuous}
+                style={{ width: '40px' }}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col span={8}>
           <ThumbsUp isUp={true} width={22} height={22} margin={'2px 5px 0 0'} color={'#81d3f8'} />
