@@ -31,6 +31,17 @@ export default function TimeTrace({ data }) {
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
 
+  const thumbsColor = (isUp, status) => {
+    if (dayRecord.completionStatus === 'INITIAL') {
+      return '#81d3f8';
+    }
+    if (isUp) {
+      return status === 'DONE' ? '#65be8a' : '#c6c6c6';
+    } else {
+      return status === 'CLOSED' ? '#f88a22' : '#c6c6c6';
+    }
+  };
+
   useEffect(() => {
     if (timeTrace.themeId) {
       getSubTags(timeTrace.themeId).then((result) => setWorkOptions(result));
@@ -191,13 +202,19 @@ export default function TimeTrace({ data }) {
           </Row>
         </Col>
         <Col span={8}>
-          <ThumbsUp isUp={true} width={22} height={22} margin={'2px 5px 0 2px'} color={'#81d3f8'} />
+          <ThumbsUp
+            isUp={true}
+            width={22}
+            height={22}
+            margin={'2px 5px 0 2px'}
+            color={thumbsColor(true, dayRecord.completionStatus)}
+          />
           <ThumbsUp
             isUp={false}
             width={22}
             height={22}
             margin={'2px 5px 0 2px'}
-            color={'#81d3f8'}
+            color={thumbsColor(false, dayRecord.completionStatus)}
           />
           <InputNumber
             style={{ width: '30px', top: '-5px' }}
