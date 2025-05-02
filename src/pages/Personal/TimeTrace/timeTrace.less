@@ -98,3 +98,21 @@
     display: none;
   }
 }
+
+.progress {
+  width: calc(100% - 5px);
+  margin-bottom: 20px;
+
+  :global(.ant-progress-outer) {
+    position: absolute;
+    top: -4px;
+  }
+
+  :global(.ant-progress-inner) {
+    border-radius: 2px;
+
+    :global(.ant-progress-bg) {
+      border-radius: 2px 0 0 2px;
+    }
+  }
+}

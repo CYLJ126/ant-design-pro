@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, DatePicker, Input, InputNumber, Row, Select } from 'antd';
+import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import { markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
@@ -217,6 +217,15 @@ export default function TimeTrace({ data }) {
             style={{ width: 'calc(100% - 146px)', top: '-5px' }}
           />
         </Col>
+      </Row>
+      <Row>
+        <Progress
+          percent={timeTrace.completionRate}
+          showInfo={false}
+          strokeColor="#81d3f8"
+          trailColor="#c6c6c6"
+          className={styles.progress}
+        />
       </Row>
     </div>
   );
