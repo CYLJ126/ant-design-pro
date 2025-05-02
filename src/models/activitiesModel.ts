@@ -121,7 +121,7 @@ export default () => {
       startTime: startTimeStr,
       endTime: endTimeStr,
     };
-    addDailyWorkBack(newOne).then();
+    addDailyWorkBack(newOne).then(() => message.success('推迟成功'));
   }, []);
 
   return {
