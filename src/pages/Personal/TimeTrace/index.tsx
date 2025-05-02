@@ -22,12 +22,12 @@ function TimeTraces() {
       <Header listFunc={fetch} />
       <hr className={styles.horizontal} />
       <Row>
-        <Col span={16}>
+        <Col span={18}>
           {timeTraces.map((trace) => {
             return <TimeTrace data={trace} key={trace.id + '-' + time} />;
           })}
         </Col>
-        <Col span={8}></Col>
+        <Col span={6}></Col>
       </Row>
     </DateProvider>
   );
