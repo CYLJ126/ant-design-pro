@@ -107,7 +107,8 @@ export const errorConfig: RequestConfig = {
       const { data } = response as unknown as ResponseStructure;
 
       if (data?.success === false) {
-        message.error('请求失败！');
+        const errMsg = data.desc?.substring(0, 256);
+        message.error(`请求失败！错误码【${data.code}】错误信息【${errMsg}】`).then();
       }
       return response;
     },

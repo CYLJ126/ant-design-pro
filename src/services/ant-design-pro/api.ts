@@ -23,9 +23,6 @@ export function jsonPost(path, data, options?: { [key: string]: any }) {
   }).then((resultContext) => {
     if (resultContext.success) {
       return resultContext.data;
-    } else {
-      const errMsg = resultContext.desc?.subString(0, 40);
-      message.error(`错误码【${resultContext.code}】错误信息【${errMsg}】`).then((r) => {});
     }
   });
 }
