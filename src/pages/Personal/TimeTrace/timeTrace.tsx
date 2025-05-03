@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
-import { markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
+import { listTraces, markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
 import styles from './timeTrace.less';
 import ThumbsUp from '@/icons/ThumbsUp';
@@ -44,6 +44,15 @@ export default function TimeTrace({ data }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [colSpan, setColSpan] = useState(12);
 
+  const getNewInfo = () => {
+    listTraces({ id: timeTrace.id, currentDate: currentDate.format(dateFormat) }).then((result) => {
+      const newOne = { ...result[0] };
+      newOne.startDate = dayjs(newOne.startDate);
+      newOne.endDate = dayjs(newOne.endDate);
+      setTimeTrace(newOne);
+    });
+  };
+
   useEffect(() => {
     if (timeTrace.themeId) {
       getSubTags(timeTrace.themeId).then((result) => setWorkOptions(result));
@@ -68,7 +77,6 @@ export default function TimeTrace({ data }) {
         newSize = 12;
       }
       setColSpan(newSize);
-      console.log('div宽度：' + width + '，newSize：' + newSize);
     });
 
     if (containerRef.current) {
@@ -124,7 +132,11 @@ export default function TimeTrace({ data }) {
                 format={dateFormat}
                 onChange={(date) => {
                   setTimeTrace({ ...timeTrace, startDate: date });
-                  updateTrace({ ...timeTrace, startDate: date.format(dateFormat) }).then();
+                  updateTrace({
+                    ...timeTrace,
+                    startDate: date.format(dateFormat),
+                    endDate: timeTrace.endDate.format(dateFormat),
+                  }).then();
                 }}
               />
               <Input
@@ -176,7 +188,9 @@ export default function TimeTrace({ data }) {
             value={dayRecord.recordValue}
             style={{ width: 'calc(100% - 146px)' }}
             onChange={(e) => setDayRecord({ ...dayRecord, recordValue: e.target.value })}
-            onBlur={() => markDay(dayRecord)}
+            onBlur={() => {
+              markDay(dayRecord).then(() => getNewInfo());
+            }}
           />
         </Col>
       </Row>
@@ -210,7 +224,11 @@ export default function TimeTrace({ data }) {
                 format={dateFormat}
                 onChange={(date) => {
                   setTimeTrace({ ...timeTrace, endDate: date });
-                  updateTrace({ ...timeTrace, endDate: date.format(dateFormat) }).then();
+                  updateTrace({
+                    ...timeTrace,
+                    startDate: timeTrace.startDate.format(dateFormat),
+                    endDate: date.format(dateFormat),
+                  }).then();
                 }}
               />
               <Input
@@ -255,9 +273,10 @@ export default function TimeTrace({ data }) {
             color={thumbsColor(true, dayRecord.completionStatus)}
             onClick={() => {
               if (dayRecord.completionStatus !== 'DONE') {
-                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) =>
-                  setDayRecord(result),
-                );
+                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
+                  setDayRecord(result);
+                  getNewInfo();
+                });
               }
             }}
           />
@@ -269,9 +288,10 @@ export default function TimeTrace({ data }) {
             color={thumbsColor(false, dayRecord.completionStatus)}
             onClick={() => {
               if (dayRecord.completionStatus !== 'CLOSED') {
-                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) =>
-                  setDayRecord(result),
-                );
+                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) => {
+                  setDayRecord(result);
+                  getNewInfo();
+                });
               }
             }}
           />
