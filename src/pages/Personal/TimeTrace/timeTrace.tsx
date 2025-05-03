@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
@@ -41,6 +41,8 @@ export default function TimeTrace({ data }) {
   const [dayRecord, setDayRecord] = useState(tempDayRecord);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [colSpan, setColSpan] = useState(12);
 
   useEffect(() => {
     if (timeTrace.themeId) {
@@ -49,12 +51,37 @@ export default function TimeTrace({ data }) {
     if (timeTrace.workId) {
       getSubTags(timeTrace.workId).then((result) => setTargetOptions(result));
     }
+    // 设置对屏幕的监听，响应式布局
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      // 根据 div 容器宽度，调整主题、事项、目标宽度占比
+      let newSize;
+      if (width < 960) {
+        newSize = 16;
+      } else if (width < 1080) {
+        newSize = 15;
+      } else if (width < 1180) {
+        newSize = 14;
+      } else if (width < 1280) {
+        newSize = 13;
+      } else {
+        newSize = 12;
+      }
+      setColSpan(newSize);
+      console.log('div宽度：' + width + '，newSize：' + newSize);
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div>
+    <div ref={containerRef}>
       <Row>
-        <Col span={16}>
+        <Col span={colSpan}>
           <Row wrap={false}>
             <Col flex={'auto'}>
               {/* 主题 */}
@@ -133,7 +160,7 @@ export default function TimeTrace({ data }) {
             </Col>
           </Row>
         </Col>
-        <Col span={8}>
+        <Col span={24 - colSpan}>
           <Input
             className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
             value="今日数据"
@@ -154,7 +181,7 @@ export default function TimeTrace({ data }) {
         </Col>
       </Row>
       <Row>
-        <Col span={16}>
+        <Col span={colSpan}>
           <Row wrap={false}>
             <Col flex={'auto'}>
               {/* 目标 */}
@@ -219,7 +246,7 @@ export default function TimeTrace({ data }) {
             </Col>
           </Row>
         </Col>
-        <Col span={8}>
+        <Col span={24 - colSpan}>
           <ThumbsUp
             isUp={true}
             width={22}
