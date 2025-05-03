@@ -85,7 +85,11 @@ export default function TimeTrace({ data }) {
               />
             </Col>
             <Col flex={'450px'}>
-              <Input value="开始" className={styles.spanLabel} style={{ width: '40px' }} />
+              <Input
+                value="开始"
+                className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+                style={{ width: '40px' }}
+              />
               <DatePicker
                 className={styles.datePicker}
                 style={{ width: '90px' }}
@@ -130,8 +134,16 @@ export default function TimeTrace({ data }) {
           </Row>
         </Col>
         <Col span={8}>
-          <Input className={styles.spanLabel} value="今日数据" style={{ width: '86px' }} />
-          <Input className={styles.spanLabel} value="设值" style={{ width: '40px' }} />
+          <Input
+            className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+            value="今日数据"
+            style={{ width: '86px' }}
+          />
+          <Input
+            className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+            value="设值"
+            style={{ width: '40px' }}
+          />
           <Input
             className={styles.inputItem}
             value={dayRecord.recordValue}
@@ -159,7 +171,11 @@ export default function TimeTrace({ data }) {
               />
             </Col>
             <Col flex={'450px'}>
-              <Input className={styles.spanLabel} value="结束" style={{ width: '40px' }} />
+              <Input
+                className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+                value="结束"
+                style={{ width: '40px' }}
+              />
               <DatePicker
                 value={timeTrace.endDate}
                 className={styles.datePicker}
@@ -243,7 +259,11 @@ export default function TimeTrace({ data }) {
             onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
             onBlur={() => markDay(dayRecord)}
           />
-          <Input className={styles.spanLabel} value="总结" style={{ width: '40px', top: '-5px' }} />
+          <Input
+            className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+            value="总结"
+            style={{ width: '40px', top: '-5px' }}
+          />
           <Input
             value={dayRecord.summary}
             className={styles.inputItem}
