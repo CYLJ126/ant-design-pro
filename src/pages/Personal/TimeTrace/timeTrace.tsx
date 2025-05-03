@@ -136,7 +136,7 @@ export default function TimeTrace({ data }) {
                     ...timeTrace,
                     startDate: date.format(dateFormat),
                     endDate: timeTrace.endDate.format(dateFormat),
-                  }).then();
+                  }).then(() => getNewInfo());
                 }}
               />
               <Input
@@ -228,7 +228,7 @@ export default function TimeTrace({ data }) {
                     ...timeTrace,
                     startDate: timeTrace.startDate.format(dateFormat),
                     endDate: date.format(dateFormat),
-                  }).then();
+                  }).then(() => getNewInfo());
                 }}
               />
               <Input
