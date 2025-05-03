@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
+import { CalendarOutlined, ReloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import { listTraces, markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
@@ -170,9 +171,12 @@ export default function TimeTrace({ data }) {
                 style={{ width: '68px', borderColor: '#f7c115', color: '#f7c115' }}
               />
             </Col>
+            <Col flex="25px">
+              <ReloadOutlined className={styles.refresh} onClick={getNewInfo} />
+            </Col>
           </Row>
         </Col>
-        <Col span={24 - colSpan}>
+        <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
           <Input
             className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
             value="今日数据"
@@ -262,9 +266,12 @@ export default function TimeTrace({ data }) {
                 style={{ width: '40px', borderColor: '#7e3b82', color: '#7e3b82' }}
               />
             </Col>
+            <Col flex="25px">
+              <CalendarOutlined className={styles.refresh} />
+            </Col>
           </Row>
         </Col>
-        <Col span={24 - colSpan}>
+        <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
           <ThumbsUp
             isUp={true}
             width={22}
