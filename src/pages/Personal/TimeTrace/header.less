@@ -7,17 +7,22 @@
   }
 }
 
+.date:hover {
+  background-color: #81d3f8;
+  color: #ffffff;
+}
+
+.date:focus-within {
+  // focus 且鼠标不在输入框上时的样式
+  background-color: #81d3f8;
+}
+
 .date {
   margin-top: 10px;
   height: 30px;
   width: 130px;
   border: none;
   background-color: #81d3f8;
-
-  :hover {
-    background-color: #81d3f8 !important;
-    color: #ffffff;
-  }
 
   // focus 且鼠标不在输入框上时的样式
   :global(:focus-within) {
