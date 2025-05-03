@@ -127,7 +127,7 @@ export default function TimeTrace({ data }) {
               />
               <Input
                 className={styles.inputItem}
-                value={timeTrace.completionRate}
+                value={`${timeTrace.completionRate}%`}
                 style={{ width: '68px', borderColor: '#f7c115', color: '#f7c115' }}
               />
             </Col>
