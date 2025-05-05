@@ -55,6 +55,7 @@ export default function Header({ listFunc }) {
       targetId: requestParam.targetId,
       startDate: date,
       endDate: date,
+      completionRate: '0',
     };
     addTrace(newOne).then(() => {
       refresh(requestParam);

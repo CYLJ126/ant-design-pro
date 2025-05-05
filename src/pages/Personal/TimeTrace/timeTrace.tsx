@@ -55,6 +55,8 @@ export default function TimeTrace({ data }) {
       const newOne = { ...result[0] };
       newOne.startDate = dayjs(newOne.startDate);
       newOne.endDate = dayjs(newOne.endDate);
+      // 避免显示 null%
+      newOne.completionRate = newOne.completionRate ?? '0';
       setTimeTrace(newOne);
     });
   };
