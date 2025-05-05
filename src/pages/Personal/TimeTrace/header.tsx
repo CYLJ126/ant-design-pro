@@ -94,41 +94,45 @@ export default function Header({ listFunc }) {
       {/* 新增 */}
       <PlusSquareOutlined className={styles.plusItem} onClick={addNewOne} />
       <Select
-        allowClear={true}
+        allowClear
         className={styles.selectItem}
         style={{ width: '120px' }}
         placeholder="请选择主题"
         value={requestParam.themeId}
         options={themeOptions}
-        onSelect={async (value) => {
+        onChange={(value) => {
           let newVar = { ...requestParam, themeId: value, workId: null, targetId: null };
           setRequestParam(newVar);
-          setWorkOptions(await getSubTags(value));
           refresh(newVar);
+          if (value && value !== '') {
+            getSubTags(value).then((result) => setWorkOptions(result));
+          }
         }}
       />
       <Select
-        allowClear={true}
+        allowClear
         className={styles.selectItem}
         style={{ width: '120px' }}
         placeholder="请选择事项"
         value={requestParam.workId}
         options={workOptions}
-        onSelect={async (value) => {
+        onChange={(value) => {
           let newVar = { ...requestParam, workId: value, targetId: null };
           setRequestParam(newVar);
-          setTargetOptions(await getSubTags(value));
           refresh(newVar);
+          if (value && value !== '') {
+            getSubTags(value).then((result) => setTargetOptions(result));
+          }
         }}
       />
       <Select
-        allowClear={true}
+        allowClear
         className={styles.selectItem}
         style={{ width: '150px' }}
         placeholder="请选择目标"
         value={requestParam.targetId}
         options={targetOptions}
-        onSelect={async (value) => {
+        onChange={(value) => {
           let newVar = { ...requestParam, targetId: value };
           setRequestParam(newVar);
           refresh(newVar);
