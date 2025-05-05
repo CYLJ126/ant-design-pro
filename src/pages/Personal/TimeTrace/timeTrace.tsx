@@ -23,7 +23,12 @@ const thumbsColor = (isUp, status) => {
 
 export default function TimeTrace({ data }) {
   const { getSubTags, themeOptions, currentDate } = useTimeTraceData();
-  let tempTimeTrace = { ...data, startDate: dayjs(data.startDate), endDate: dayjs(data.endDate) };
+  let tempTimeTrace = {
+    ...data,
+    startDate: dayjs(data.startDate),
+    endDate: dayjs(data.endDate),
+    completionRate: data.completionRate ?? '0',
+  };
   delete tempTimeTrace.timeTraceRecord;
   const [timeTrace, setTimeTrace] = useState(tempTimeTrace);
   let tempDayRecord;
