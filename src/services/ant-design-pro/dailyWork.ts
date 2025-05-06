@@ -167,6 +167,14 @@ export async function listDailyWork(param) {
 }
 
 /**
+ * 通过 ID 查询日课
+ * @param param 请求参数
+ */
+export async function getDailyWorkById(param) {
+  return jsonPost('/dw/dailyWork/getDailyWorkById', param);
+}
+
+/**
  * 更新日课
  * @param dailyWork 日课内容
  */

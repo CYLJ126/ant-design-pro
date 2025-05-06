@@ -32,7 +32,7 @@ function DailyWork() {
           <Header />
           <hr className={styles.horizontal} />
           {dailyWorks.map((item) => {
-            return <Activity key={item.id + time} dailyWorkParam={item} />;
+            return <Activity key={item.id + time} id={item.id} />;
           })}
         </Col>
         <Col span={6}>

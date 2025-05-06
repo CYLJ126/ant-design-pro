@@ -8,8 +8,12 @@ import {
 } from '@ant-design/icons';
 import activityStyle from './activityStyle';
 import styles from './activity.less';
-import { foldActivity, getTargetsForDaily } from '@/services/ant-design-pro/dailyWork';
-import { getSummaryById, getTags, saveSummary } from '@/services/ant-design-pro/base';
+import {
+  foldActivity,
+  getDailyWorkById,
+  getTargetsForDaily,
+} from '@/services/ant-design-pro/dailyWork';
+import { getTags, saveSummary } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
@@ -28,18 +32,13 @@ async function getSubTags(param) {
   );
 }
 
-export default function Activity({ dailyWorkParam }) {
-  const [dailyWork, setDailyWork] = useState({ ...dailyWorkParam });
+export default function Activity({ id }) {
+  const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
   const { updateActivity, pushNextDay, markDone, deleteActivity } = useModel('activitiesModel');
   const { setUpdateInfo } = useModel('activityUpdateModel');
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
-  const [summary, setSummary] = useState({
-    type: 'daily_work',
-    targetId: dailyWork.id,
-    content: '',
-  });
   const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
   const { styles: dynamicStyle } = activityStyle(dailyWork.status);
   const color = dailyWork.status === 'DONE' ? '#6294a5' : '#81d3f8';
@@ -49,48 +48,52 @@ export default function Activity({ dailyWorkParam }) {
     getSubTags({ name: '日课' }).then((rootTag) => {
       getSubTags({ fatherId: rootTag[0].value }).then((result) => {
         setThemeOptions(result);
-        if (!dailyWork.themeId) {
-          setDailyWork({ ...dailyWork, themeId: result[0]?.value });
-        }
       });
     });
-    // 获取总结内容
-    getSummaryById('daily_work', dailyWork.id).then((result) => {
-      setSummary(result ?? { type: 'daily_work', targetId: dailyWork.id, content: '' });
-      if (result?.content) {
-        // 如果有总结，则显示总结，占比 30%
-        setSizes(['70%', '30%']);
+    getDailyWorkById({ activityId: id }).then((result) => {
+      if (result) {
+        setDailyWork({
+          id: result.id,
+          themeId: result.themeId,
+          workId: result.workId,
+          targetId: result.targetId,
+          status: result.status,
+          score: result.score,
+          cost: result.cost,
+          proportion: result.proportion,
+          foldFlag: result.foldFlag,
+          content: result.content,
+          startTime: result.startTime,
+          endTime: result.endTime,
+          summaryId: result.summaryId,
+          summary: result.summary,
+        });
+        if (result.summary) {
+          // 如果有总结，则显示总结，占比 30%
+          setSizes(['70%', '30%']);
+        }
+      }
+      if (result.themeId) {
+        // 获取事项下拉
+        getSubTags({ fatherId: result.themeId }).then((result) => {
+          setWorkOptions(result);
+        });
+      }
+      if (result.workId) {
+        // 获取目标下拉
+        getTargetsForDaily({
+          workId: result.workId,
+          whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
+        }).then((result) => {
+          setTargetOptions(
+            result.map((item) => {
+              return { value: item.id, label: item.target };
+            }),
+          );
+        });
       }
     });
   }, []);
-
-  useEffect(() => {
-    // 日课主题下拉变化时，获取事项下拉
-    if (dailyWork?.themeId) {
-      getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
-        setWorkOptions(result);
-        if (!dailyWork.workId) {
-          setDailyWork({ ...dailyWork, workId: result[0]?.value });
-        }
-      });
-    }
-  }, [dailyWork.themeId]);
-
-  useEffect(() => {
-    // 日课事项下拉变化时，获取目标下拉
-    if (dailyWork?.workId) {
-      getTargetsForDaily({
-        workId: dailyWork.workId,
-        whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
-      }).then((result) => {
-        setTargetOptions(
-          result.map((item) => {
-            return { value: item.id, label: item.target };
-          }),
-        );
-      });
-    }
-  }, [dailyWork.workId]);
 
   return (
     <div className={styles.activity}>
@@ -122,10 +125,14 @@ export default function Activity({ dailyWorkParam }) {
                         value={dailyWork.themeId}
                         className={dynamicStyle.theme}
                         options={themeOptions}
-                        onSelect={(value) => {
+                        onChange={(value) => {
                           const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
                           setDailyWork(temp);
                           updateActivity(temp);
+                          // 日课主题下拉变化时，获取事项下拉
+                          getSubTags({ fatherId: value }).then((result) => {
+                            setWorkOptions(result);
+                          });
                         }}
                       />
                     </Col>
@@ -195,10 +202,21 @@ export default function Activity({ dailyWorkParam }) {
                   size={'small'}
                   className={dynamicStyle.work}
                   options={workOptions}
-                  onSelect={(value) => {
+                  onChange={(value) => {
                     const temp = { ...dailyWork, workId: value, targetId: '' };
                     setDailyWork(temp);
                     updateActivity(temp);
+                    // 日课事项下拉变化时，获取目标下拉
+                    getTargetsForDaily({
+                      workId: value,
+                      whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
+                    }).then((result) => {
+                      setTargetOptions(
+                        result.map((item) => {
+                          return { value: item.id, label: item.target };
+                        }),
+                      );
+                    });
                   }}
                 />
               </Col>
@@ -408,7 +426,7 @@ export default function Activity({ dailyWorkParam }) {
               value={dailyWork.targetId}
               className={dynamicStyle.target}
               options={targetOptions}
-              onSelect={(value) => {
+              onChange={(value) => {
                 const temp = { ...dailyWork, targetId: value };
                 setDailyWork(temp);
                 updateActivity(temp);
@@ -429,18 +447,23 @@ export default function Activity({ dailyWorkParam }) {
             </Splitter.Panel>
             <Splitter.Panel collapsible size={sizes[1]} min="30%" max="70%">
               <Input.TextArea
-                value={summary.content}
+                value={dailyWork.summary}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
                 className={dynamicStyle.content}
                 onChange={(e) =>
-                  setSummary({
-                    ...summary,
-                    type: 'daily_work',
-                    targetId: dailyWork.id,
-                    content: e.target.value,
+                  setDailyWork({
+                    ...dailyWork,
+                    summary: e.target.value,
                   })
                 }
-                onBlur={() => saveSummary(summary)}
+                onBlur={() =>
+                  saveSummary({
+                    type: 'daily_work',
+                    targetId: dailyWork.id,
+                    content: dailyWork.summary,
+                    id: dailyWork.summaryId,
+                  })
+                }
               />
             </Splitter.Panel>
           </Splitter>
