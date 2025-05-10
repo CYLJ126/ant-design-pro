@@ -7,6 +7,8 @@ import {
   UndoOutlined,
 } from '@ant-design/icons';
 import styles from './activity.less';
+import activityDone from './activityDone.less';
+import activityInitial from './activityInitial.less';
 import {
   foldActivity,
   getDailyWorkById,
@@ -41,9 +43,9 @@ export default function Activity({ id }) {
   const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
   const color = dailyWork.status === 'DONE' ? '#5cb3cc' : '#81d3f8';
 
-  /*const getStyles = () => {
+  const getStyles = () => {
     return dailyWork.status === 'DONE' ? activityDone : activityInitial;
-  }*/
+  };
   useEffect(() => {
     // 日课主题下拉内容，为标签“日课”的子标签
     getSubTags({ name: '日课' }).then((rootTag) => {
@@ -97,7 +99,7 @@ export default function Activity({ id }) {
   }, []);
 
   return (
-    <div className={styles.activity}>
+    <div className={`${styles.activity} ${getStyles().activity}`}>
       <Row>
         <Col span={2}>
           <Row style={{ marginBottom: dailyWork.foldFlag === 'YES' ? '64px' : '5px' }}>
@@ -124,7 +126,7 @@ export default function Activity({ id }) {
                     <Col span={12}>
                       <Select
                         value={dailyWork.themeId}
-                        className={styles.theme}
+                        className={`${styles.theme} ${getStyles().theme}`}
                         options={themeOptions}
                         onChange={(value) => {
                           const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
@@ -139,7 +141,7 @@ export default function Activity({ id }) {
                     </Col>
                     <Col span={12}>
                       <InputNumber
-                        className={styles.number}
+                        className={`${styles.number} ${getStyles().number}`}
                         step={1}
                         min={0}
                         max={10}
@@ -160,7 +162,7 @@ export default function Activity({ id }) {
                   <Row>
                     <Col span={12}>
                       <InputNumber
-                        className={styles.number}
+                        className={`${styles.number} ${getStyles().number}`}
                         step={5}
                         min={0}
                         max={100}
@@ -179,7 +181,7 @@ export default function Activity({ id }) {
                     </Col>
                     <Col span={12}>
                       <InputNumber
-                        className={styles.number}
+                        className={`${styles.number} ${getStyles().number}`}
                         step={0.5}
                         min={0}
                         max={10}
@@ -201,7 +203,7 @@ export default function Activity({ id }) {
                 <Select
                   value={dailyWork.workId}
                   size={'small'}
-                  className={styles.work}
+                  className={`${styles.work} ${getStyles().workAndTarget}`}
                   options={workOptions}
                   onChange={(value) => {
                     const temp = { ...dailyWork, workId: value, targetId: '' };
@@ -225,7 +227,7 @@ export default function Activity({ id }) {
                 <Row>
                   {/* 删除 */}
                   <DeleteIcon
-                    className={styles.deleteUnFoldIcon}
+                    className={`${styles.deleteUnFoldIcon} ${getStyles().icon}`}
                     onClick={() => {
                       deleteActivity(dailyWork.id).then(() => {
                         setUpdateInfo({ id: dailyWork.id, date: new Date() }).then(() => {
@@ -251,7 +253,7 @@ export default function Activity({ id }) {
                   ) : (
                     // 待办
                     <UndoOutlined
-                      className={styles.todoIcon}
+                      className={`${styles.todoUnfoldIcon} ${getStyles().icon}`}
                       onClick={() => {
                         markDone(dailyWork.id, 'INITIAL').then(() => {
                           setUpdateInfo({ id: dailyWork.id, date: new Date() });
@@ -262,7 +264,7 @@ export default function Activity({ id }) {
                   )}
                   {/* 折叠 */}
                   <FullscreenExitOutlined
-                    className={styles.foldIcon}
+                    className={`${styles.foldIcon} ${getStyles().icon}`}
                     onClick={() => {
                       setDailyWork({ ...dailyWork, foldFlag: 'NO' });
                       foldActivity(dailyWork.id, 'NO').then();
@@ -272,17 +274,14 @@ export default function Activity({ id }) {
                 <Row>
                   {/* 推到下一天 */}
                   <ArrowRightIcon
-                    width={23}
-                    height={24}
-                    color={color}
-                    margin="2px 0 0 2px"
+                    className={`${styles.pushUnfoldIcon} ${getStyles().pushIcon}`}
                     onClick={() => {
                       pushNextDay(dailyWork);
                     }}
                   />
                   {/* 总结 */}
                   <SolutionOutlined
-                    className={styles.summaryIcon}
+                    className={`${styles.summaryIcon} ${getStyles().icon}`}
                     onClick={() => setSizes(['50%', '50%'])}
                   />
                 </Row>
@@ -292,7 +291,7 @@ export default function Activity({ id }) {
             <Row>
               <Col span={4}>
                 <InputNumber
-                  className={styles.number}
+                  className={`${styles.number} ${getStyles().number}`}
                   step={5}
                   min={0}
                   max={100}
@@ -311,7 +310,7 @@ export default function Activity({ id }) {
               </Col>
               <Col span={4}>
                 <InputNumber
-                  className={styles.number}
+                  className={`${styles.number} ${getStyles().number}`}
                   step={1}
                   min={0}
                   max={10}
@@ -330,7 +329,7 @@ export default function Activity({ id }) {
               </Col>
               <Col span={4}>
                 <InputNumber
-                  className={styles.number}
+                  className={`${styles.number} ${getStyles().number}`}
                   step={0.5}
                   min={0}
                   max={10}
@@ -352,7 +351,7 @@ export default function Activity({ id }) {
                   <Col span={4}>
                     {/* 删除 */}
                     <DeleteIcon
-                      className={styles.deleteFoldIcon}
+                      className={`${styles.deleteFoldIcon} ${getStyles().icon}`}
                       onClick={() => {
                         deleteActivity(dailyWork.id).then(() => {
                           setUpdateInfo({ id: dailyWork.id, date: new Date() }).then(() => {
@@ -380,7 +379,7 @@ export default function Activity({ id }) {
                     ) : (
                       // 待办
                       <UndoOutlined
-                        className={styles.todoIcon}
+                        className={`${styles.todoFoldIcon} ${getStyles().icon}`}
                         onClick={() => {
                           markDone(dailyWork.id, 'INITIAL').then(() => {
                             setUpdateInfo({ id: dailyWork.id, date: new Date() });
@@ -392,15 +391,14 @@ export default function Activity({ id }) {
                   </Col>
                   <Col span={4} style={{ paddingLeft: '8px', paddingTop: '2px' }}>
                     {/* 总结 */}
-                    <SolutionOutlined className={styles.summaryFoldedIcon} />
+                    <SolutionOutlined
+                      className={`${styles.summaryFoldedIcon} ${getStyles().icon}`}
+                    />
                   </Col>
                   <Col span={4} style={{ paddingLeft: '12px', paddingTop: '1px' }}>
                     {/* 推到下一天 */}
                     <ArrowRightIcon
-                      width={23}
-                      height={24}
-                      color={color}
-                      margin="0 0 0 2px"
+                      className={`${styles.pushFoldIcon} ${getStyles().pushIcon}`}
                       onClick={() => {
                         pushNextDay(dailyWork);
                       }}
@@ -408,7 +406,7 @@ export default function Activity({ id }) {
                   </Col>
                   <Col span={4} style={{ paddingLeft: '12px', paddingTop: '3px' }}>
                     <FullscreenOutlined
-                      className={styles.unFoldIcon}
+                      className={`${styles.unFoldIcon} ${getStyles().icon}`}
                       onClick={() => {
                         setDailyWork({ ...dailyWork, foldFlag: 'YES' });
                         foldActivity(dailyWork.id, 'YES').then();
@@ -422,7 +420,7 @@ export default function Activity({ id }) {
           <Row>
             <Select
               value={dailyWork.targetId}
-              className={styles.target}
+              className={`${styles.target} ${getStyles().workAndTarget}`}
               options={targetOptions}
               onChange={(value) => {
                 const temp = { ...dailyWork, targetId: value };
@@ -438,7 +436,7 @@ export default function Activity({ id }) {
               <Input.TextArea
                 value={dailyWork.content}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
-                className={styles.content}
+                className={`${styles.content} ${getStyles().content}`}
                 onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
                 onBlur={() => updateActivity(dailyWork)}
               />
@@ -447,7 +445,7 @@ export default function Activity({ id }) {
               <Input.TextArea
                 value={dailyWork.summary}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
-                className={styles.content}
+                className={`${styles.content} ${getStyles().content}`}
                 onChange={(e) =>
                   setDailyWork({
                     ...dailyWork,
@@ -468,7 +466,7 @@ export default function Activity({ id }) {
         </Col>
       </Row>
       <Row>
-        <hr className={styles.separator} />
+        <hr className={`${styles.separator} ${getStyles().separator}`} />
       </Row>
     </div>
   );
