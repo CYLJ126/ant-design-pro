@@ -44,7 +44,7 @@ export default function WeeklyWork() {
   const targetsHeight = window.innerHeight - 43 - 15 - 70 + 'px';
   const time = new Date().getTime();
   return (
-    <div>
+    <div className={styles.wrapper}>
       <Row>
         <Col span={17}>
           <HeaderButtons whichWeek={whichWeek} addTarget={addNewTarget} toggleWeek={toggleWeek} />
