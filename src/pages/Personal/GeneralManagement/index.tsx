@@ -111,7 +111,7 @@ export function GeneralManagement() {
       <Row>
         <Col span={24 - sideBarSpan}>
           <Tabs
-            defaultActiveKey="WeeklyWork"
+            defaultActiveKey="DailyWork"
             className={styles.tabs}
             style={{ height: tabsHeight + 'px' }}
             items={tabInfos}
