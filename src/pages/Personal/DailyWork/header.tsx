@@ -8,7 +8,7 @@ import {
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
-import headerStyle from './headerStyle';
+import styles from './header.less';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
@@ -30,7 +30,6 @@ export default function Header() {
   dayjs.extend(utc);
   const [whichDay, setWhichDay] = useState(new Date());
   const [headInfo, setHeadInfo] = useState(initialHeadInfo);
-  const { styles: dynamicStyle } = headerStyle(headInfo);
   const { initialActivities, addNewActivity } = useModel('activitiesModel');
   const { updateInfo } = useModel('activityUpdateModel');
   const navigateTo = useNavigate();
@@ -54,6 +53,14 @@ export default function Header() {
     // 四舍五入两位小数
     temp.score = parseFloat(temp.score.toFixed(2));
     setHeadInfo(temp);
+    // 设置占比颜色
+    if (temp.proportion < 100) {
+      document.documentElement.style.setProperty('--daily-percent-color', '#81d3f8');
+    } else if (temp.proportion > 100) {
+      document.documentElement.style.setProperty('--daily-percent-color', '#ff0000');
+    } else {
+      document.documentElement.style.setProperty('--daily-percent-color', '#5bb1c9');
+    }
   }
 
   // 日期切换
@@ -86,12 +93,12 @@ export default function Header() {
       <Row>
         {/* 向前一天 */}
         <VerticalRightOutlined
-          className={dynamicStyle.forwardWeek}
+          className={styles.switchDay}
           onClick={() => toggleDay('former', null)}
         />
         {/* 当前日期 */}
         <DatePicker
-          className={dynamicStyle.date}
+          className={styles.date}
           value={dayjs(whichDay)}
           format={dateFormat}
           onChange={(date) => {
@@ -100,37 +107,34 @@ export default function Header() {
         />
         {/* 向后一天 */}
         <VerticalLeftOutlined
-          className={dynamicStyle.forwardWeek}
+          className={styles.switchDay}
           onClick={() => toggleDay('latter', null)}
         />
         {/* 得分 */}
-        <span className={dynamicStyle.dailyScore}>{'' + headInfo.score + '分'}</span>
+        <span className={styles.dailyScore}>{'' + headInfo.score + '分'}</span>
         {/* 小时数 */}
-        <span className={dynamicStyle.dailyScore}>{'' + headInfo.cost + 'h'}</span>
+        <span className={styles.dailyScore}>{'' + headInfo.cost + 'h'}</span>
         {/* 占比 */}
-        <span key={new Date().getTime()} className={dynamicStyle.proportion}>
+        <span key={new Date().getTime()} className={styles.proportion}>
           {'' + headInfo.proportion + '%'}
         </span>
         {/* 完成项 */}
-        <span className={`${dynamicStyle.itemCount} ${dynamicStyle.completedItems}`}>
+        <span className={`${styles.itemCount} ${styles.completedItems}`}>
           {'完成项 - ' + headInfo.completedWork}
         </span>
         {/* 待办项 */}
-        <span className={`${dynamicStyle.itemCount} ${dynamicStyle.todoItems}`}>
+        <span className={`${styles.itemCount} ${styles.todoItems}`}>
           {'待办项 - ' + headInfo.todoWork}
         </span>
         {/* 刷新 */}
-        <ReloadOutlined onClick={statisticsHeadInfo} className={dynamicStyle.refresh} />
+        <ReloadOutlined onClick={statisticsHeadInfo} className={styles.refresh} />
         {/* 新增 */}
-        <PlusSquareOutlined
-          className={dynamicStyle.plusItem}
-          onClick={() => addNewActivity(whichDay)}
-        />
+        <PlusSquareOutlined className={styles.plusItem} onClick={() => addNewActivity(whichDay)} />
         {/* 总结 */}
-        <ExportOutlined className={dynamicStyle.showSummary} />
+        <ExportOutlined className={styles.showSummary} />
         {/* 跳转到周计划 */}
         <SendOutlined
-          className={dynamicStyle.myIconJump}
+          className={styles.myIconJump}
           onClick={() => {
             navigateTo('/Personal/WeeklyWork');
           }}
