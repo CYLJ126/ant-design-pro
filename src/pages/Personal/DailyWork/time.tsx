@@ -7,7 +7,7 @@ import 'dayjs/locale/zh-cn';
 import { Col, Row, TimePicker } from 'antd';
 
 export default function Time({ dailyWork, save, showLine }) {
-  const { styles: dynamicStyle } = timeStyle(dailyWork.status);
+  const { styles: dynamicStyle } = timeStyle(dailyWork);
   const [date, setDate] = useState(dayjs(dailyWork[dailyWork.mark]).utc().local());
   dayjs.extend(utc);
   return (

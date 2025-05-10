@@ -37,6 +37,20 @@ export default function tagStyle(title, color, level) {
     `,
     deleteIcon: css`
       padding-left: 15px;
+
+      svg {
+        width: 25px;
+        height: 25px;
+        fill: ${color};
+
+        line {
+          stroke: ${color};
+        }
+
+        rect {
+          stroke: ${color};
+        }
+      }
     `,
   }))();
 }

@@ -37,7 +37,7 @@ function Title({ tagDto, handleFunc }) {
         className={dynamicStyle.deleteIcon}
         onClick={() => handleFunc({ ...tagDto, type: 'delete' })}
       >
-        <DeleteIcon width={23} height={23} color={tagDto.color} />
+        <DeleteIcon color={tagDto.color} />
       </Space.Compact>
     </Space>
   );
