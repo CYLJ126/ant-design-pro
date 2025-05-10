@@ -19,8 +19,10 @@ export default function headerDateStyle(date) {
       }
     `,
     dayOfDate: css`
+      top: -3px;
       width: 50px;
       height: 20px;
+      margin-top: -2px !important;
       border-radius: 0 0 5px 5px;
       border: 1.5px solid ${backgroundColor};
       border-top: 0;

@@ -71,7 +71,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   }, [weekInfo.proportion]);
 
   return (
-    <Row>
+    <Row style={{ marginTop: '5px' }}>
       {/* 向前一周 */}
       <VerticalRightOutlined
         className={styles.forwardWeek}
