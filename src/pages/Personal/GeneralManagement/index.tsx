@@ -13,7 +13,7 @@ import { MenuSlot } from '@/pages/Personal/GeneralManagement/MenuSlot';
 import Tags from '@/pages/Personal/Tags';
 import styles from './index.less';
 import { GeneralManagementProvider } from './GeneralManagementContext';
-import TodoWorPane from '@/pages/Personal/TodoWork';
+import TodoWorkPane from '@/pages/Personal/TodoWork';
 
 const tabInfos = [
   {
@@ -73,17 +73,23 @@ function getActiveInfo(activeKey) {
 
 export function GeneralManagement() {
   const [tabsHeight, setTabsHeight] = useState(window.innerHeight - 43);
-  const [sideContent, setSideContent] = useState(<TodoWorPane />);
+  const [sideContent, setSideContent] = useState(<TodoWorkPane />);
   const [sideBarSpan, setSideBarSpan] = useState(6);
 
+  // 切换 tab 页
   const switchTab = (activeKey) => {
     setSideBarSpan(getActiveInfo(activeKey)?.sideBarSpan ?? 6);
   };
 
+  // 切换右侧侧边栏
   const switchSide = (sideKey) => {
     switch (sideKey) {
       case 'todo':
-        setSideContent(<TodoWorPane />);
+        setSideContent(<TodoWorkPane />);
+        setSideBarSpan(6);
+        return;
+      case 'close':
+        setSideBarSpan(0);
         return;
     }
   };
