@@ -7,8 +7,8 @@ export default function todoWorkStyle(todo) {
   return createStyles(({ css }) => ({
     todoWrap: css`
       margin-top: 5px;
-      width: 90%;
-      margin-left: 5%;
+      width: calc(100% - 10px);
+      margin-left: 5px;
 
       .ant-input-number-handler-wrap {
         display: none;

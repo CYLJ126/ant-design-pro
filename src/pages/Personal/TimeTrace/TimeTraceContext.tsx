@@ -54,7 +54,7 @@ export function TimeTraceProvider({ children }) {
 export function useTimeTraceData() {
   const context = useContext(TimeTraceContext);
   if (!context) {
-    throw new Error('useDate must be used within a DateProvider');
+    throw new Error('useTimeTraceData must be used within a DataProvider');
   }
   return context;
 }

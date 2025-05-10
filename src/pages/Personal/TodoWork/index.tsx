@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { DatePicker, Row } from 'antd';
-import todoWorkWrapStyle from './todoWorkWrapStyle';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
@@ -8,13 +7,13 @@ import 'dayjs/locale/zh-cn';
 import { listTodoWork } from '@/services/ant-design-pro/dailyWork';
 import TodoWork from './todoWork';
 import { PlusOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons';
+import styles from './index.less';
 
 const dateFormat = 'YYYY-MM-DD';
 
-export default function TodoWorkWrap() {
+export default function TodoWorPane() {
   const [date, setDate] = useState(dayjs());
   const [todoWorks, setTodoWorks] = useState([]);
-  const { styles: dynamicStyle } = todoWorkWrapStyle();
   dayjs.extend(utc);
 
   function toggleDay(type) {
@@ -53,27 +52,24 @@ export default function TodoWorkWrap() {
 
   const time = new Date().getTime();
   return (
-    <div className={dynamicStyle.wrap}>
-      <Row className={dynamicStyle.headRow}>
-        <Row className={dynamicStyle.headDiv}>
+    <div className={styles.wrap}>
+      <Row className={styles.headRow}>
+        <Row className={styles.headDiv}>
           <VerticalRightOutlined
-            className={dynamicStyle.forwardDay}
+            className={styles.forwardDay}
             onClick={() => toggleDay('former')}
           />
           <DatePicker
             value={dayjs(date, dateFormat)}
-            className={dynamicStyle.date}
+            className={styles.date}
             format={dateFormat}
             onChange={(date) => {
               setDate(date);
             }}
           />
-          <VerticalLeftOutlined
-            className={dynamicStyle.forwardDay}
-            onClick={() => toggleDay('latter')}
-          />
+          <VerticalLeftOutlined className={styles.forwardDay} onClick={() => toggleDay('latter')} />
         </Row>
-        <PlusOutlined onClick={addTodo} className={dynamicStyle.headPlus} />
+        <PlusOutlined onClick={addTodo} className={styles.headPlus} />
       </Row>
       <Row>
         {todoWorks.map((item) => (

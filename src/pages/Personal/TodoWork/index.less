@@ -1,0 +1,85 @@
+.wrap {
+  width: 100%;
+  height: 100%;
+  background-color: #ccebf7;
+  border-radius: 10px;
+  box-shadow: -3px 5px 7px #bdc4bd;
+  // 支持滚动，但不显示滚动条
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.headRow {
+  width: 100%;
+  height: 50px;
+  background-color: #81d3f8;
+  border-radius: 10px 10px 0 0;
+}
+
+.headDiv {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  gap: 8px; /* 元素间距 */
+  flex: 1; /* 关键：撑满剩余空间 */
+}
+
+.forwardDay {
+  svg {
+    width: 25px;
+    height: 25px;
+    color: #ffffff;
+  }
+}
+
+.date {
+  height: 35px;
+  width: 105px;
+  padding: 0;
+  border: none;
+  background-color: #81d3f8;
+
+  :global(.ant-picker-input) {
+    input {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    input:hover {
+      color: white;
+      background-color: #81d3f8;
+      cursor: pointer;
+    }
+  }
+
+  :global(.anticon) {
+    display: none;
+  }
+}
+
+.date:hover {
+  background-color: #81d3f8;
+}
+
+// focus 且鼠标不在输入框上时的样式
+.date:focus-within {
+  background-color: #81d3f8;
+}
+
+.headPlus {
+  position: absolute;
+  top: 10px;
+  // 显示在右侧
+  right: 10px;
+
+  svg {
+    width: 27px;
+    height: 27px;
+    color: #ffffff;
+  }
+}
