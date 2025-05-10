@@ -45,11 +45,11 @@ export default function WeeklyWork() {
   const time = new Date().getTime();
   return (
     <div className={styles.wrapper}>
-      <Row>
-        <Col span={17}>
+      <Row wrap={false}>
+        <Col flex={'auto'}>
           <HeaderButtons whichWeek={whichWeek} addTarget={addNewTarget} toggleWeek={toggleWeek} />
         </Col>
-        <Col span={7}>
+        <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
           <HeaderDate whichWeek={whichWeek} />
         </Col>
       </Row>
@@ -60,7 +60,7 @@ export default function WeeklyWork() {
             const id = targets[field].id;
             return (
               <Row key={id + '_' + time}>
-                <Col span={5}>
+                <Col flex="1">
                   <TargetInfo
                     targetId={id}
                     saveHead={(param) => {
@@ -72,10 +72,10 @@ export default function WeeklyWork() {
                     }}
                   />
                 </Col>
-                <Col span={12} className={styles.stepCol}>
+                <Col flex="2" className={styles.stepCol}>
                   <Steps targetId={id} />
                 </Col>
-                <Col span={7}>
+                <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
                   <DayRecords targetId={id} weekId={whichWeek} />
                 </Col>
               </Row>
