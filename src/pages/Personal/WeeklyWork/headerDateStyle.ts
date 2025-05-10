@@ -14,7 +14,12 @@ export default function headerDateStyle(date) {
       color: #ffffff;
 
       :hover {
-        color: ${backgroundColor};
+        background-color: ${backgroundColor};
+        border: 1.5px solid ${backgroundColor};
+      }
+
+      :focus-within {
+        background-color: ${backgroundColor};
         border: 1.5px solid ${backgroundColor};
       }
     `,
@@ -29,6 +34,10 @@ export default function headerDateStyle(date) {
       padding: 2px;
       text-align: center;
       color: ${backgroundColor};
+
+      :hover {
+        color: ${backgroundColor};
+      }
     `,
   }))();
 }
