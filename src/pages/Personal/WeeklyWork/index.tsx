@@ -12,10 +12,9 @@ import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
-import KeepAlive from 'react-activation';
 import { useModel } from 'umi';
 
-export function WeeklyWork() {
+export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const { targets, addNewTarget, updateTarget, initialTargets } = useModel('targetsModel');
   dayjs.extend(utc);
@@ -86,11 +85,3 @@ export function WeeklyWork() {
     </div>
   );
 }
-
-export default () => {
-  return (
-    <KeepAlive name="weeklyWork">
-      <WeeklyWork />
-    </KeepAlive>
-  );
-};

@@ -8,10 +8,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
-import KeepAlive from 'react-activation';
 import { useModel } from 'umi';
 
-export function DailyWork() {
+export default function DailyWork() {
   const [dailyWorks, setDailyWorks] = useState([]);
   const { activities } = useModel('activitiesModel');
   dayjs.extend(utc);
@@ -42,11 +41,3 @@ export function DailyWork() {
     </div>
   );
 }
-
-export default () => {
-  return (
-    <KeepAlive name="dailyWork">
-      <DailyWork />
-    </KeepAlive>
-  );
-};

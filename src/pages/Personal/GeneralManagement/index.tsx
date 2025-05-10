@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import { debounce } from 'lodash';
-import { TimeTraces } from '@/pages/Personal/TimeTrace';
-import { DailyWork } from '@/pages/Personal/DailyWork';
-import { WeeklyWork } from '@/pages/Personal/WeeklyWork';
-import { MonthlyWork } from '@/pages/Personal/MonthlyWork';
+import TimeTraces from '@/pages/Personal/TimeTrace';
+import DailyWork from '@/pages/Personal/DailyWork';
+import WeeklyWork from '@/pages/Personal/WeeklyWork';
+import MonthlyWork from '@/pages/Personal/MonthlyWork';
 import QuarterlyWork from '@/pages/Personal/QuarterlyWork';
 import SemiannualWork from '@/pages/Personal/SemiannualWork';
 import AnnualWork from '@/pages/Personal/AnnualWork';
@@ -17,42 +17,42 @@ export function GeneralManagement() {
   const tabInfos = [
     {
       label: '痕',
-      key: '1',
+      key: 'TimeTraces',
       children: <TimeTraces />,
     },
     {
       label: '日',
-      key: '2',
+      key: 'DailyWork',
       children: <DailyWork />,
     },
     {
       label: '周',
-      key: '3',
+      key: 'WeeklyWork',
       children: <WeeklyWork />,
     },
     {
       label: '月',
-      key: '4',
+      key: 'MonthlyWork',
       children: <MonthlyWork />,
     },
     {
       label: '季',
-      key: '5',
+      key: 'QuarterlyWork',
       children: <QuarterlyWork />,
     },
     {
       label: '半',
-      key: '6',
+      key: 'SemiannualWork',
       children: <SemiannualWork />,
     },
     {
       label: '年',
-      key: '7',
+      key: 'AnnualWork',
       children: <AnnualWork />,
     },
     {
       label: '签',
-      key: '8',
+      key: 'Tags',
       children: <Tags />,
     },
   ];
@@ -72,6 +72,7 @@ export function GeneralManagement() {
 
   return (
     <Tabs
+      defaultActiveKey="DailyWork"
       className={styles.tabs}
       style={{ height: tabsHeight + 'px' }}
       items={tabInfos}

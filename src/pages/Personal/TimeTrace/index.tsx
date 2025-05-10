@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'antd';
-import KeepAlive from 'react-activation';
 import Header from './header';
 import TimeTrace from './timeTrace';
 import styles from './index.less';
 import { listTraces } from '@/services/ant-design-pro/dailyWork';
 import { TimeTraceProvider } from './TimeTraceContext';
 
-export function TimeTraces() {
+export default function TimeTraces() {
   const [timeTraces, setTimeTraces] = useState([]);
 
   const fetch = (param) => {
@@ -32,11 +31,3 @@ export function TimeTraces() {
     </TimeTraceProvider>
   );
 }
-
-export default () => {
-  return (
-    <KeepAlive name="timeTraces">
-      <TimeTraces />
-    </KeepAlive>
-  );
-};
