@@ -15,7 +15,7 @@ import 'dayjs/locale/zh-cn';
 import KeepAlive from 'react-activation';
 import { useModel } from 'umi';
 
-function WeeklyWork() {
+export function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
   const { targets, addNewTarget, updateTarget, initialTargets } = useModel('targetsModel');
   dayjs.extend(utc);

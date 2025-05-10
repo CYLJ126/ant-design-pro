@@ -1,11 +1,10 @@
-import Tags from '../Tags/index';
 import KeepAlive from 'react-activation';
 import React from 'react';
 
-function MonthlyWork() {
+export function MonthlyWork() {
   return (
     <div>
-      <Tags />
+      <h1>MonthlyWork</h1>
     </div>
   );
 }

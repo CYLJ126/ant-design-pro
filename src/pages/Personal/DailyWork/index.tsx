@@ -11,7 +11,7 @@ import TodoWorkWrap from '@/pages/Personal/DailyWork/todoWorkWrap';
 import KeepAlive from 'react-activation';
 import { useModel } from 'umi';
 
-function DailyWork() {
+export function DailyWork() {
   const [dailyWorks, setDailyWorks] = useState([]);
   const { activities } = useModel('activitiesModel');
   dayjs.extend(utc);

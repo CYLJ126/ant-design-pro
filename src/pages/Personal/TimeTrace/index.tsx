@@ -7,7 +7,7 @@ import styles from './index.less';
 import { listTraces } from '@/services/ant-design-pro/dailyWork';
 import { TimeTraceProvider } from './TimeTraceContext';
 
-function TimeTraces() {
+export function TimeTraces() {
   const [timeTraces, setTimeTraces] = useState([]);
 
   const fetch = (param) => {
