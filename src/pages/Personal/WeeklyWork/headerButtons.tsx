@@ -71,70 +71,72 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   }, [weekInfo.proportion]);
 
   return (
-    <Row style={{ marginTop: '5px' }}>
-      {/* 向前一周 */}
-      <VerticalRightOutlined
-        className={styles.forwardWeek}
-        onClick={() => {
-          toggleWeek('former');
-          setWeekOptions(getWeekOptions(whichWeek - 1));
-        }}
-      />
-      <Select
-        className={styles.whichWeek}
-        options={weekOptions}
-        value={'第 ' + whichWeek + ' 周'}
-        onSelect={(value) => {
-          toggleWeek('former');
-          setWeekOptions(getWeekOptions(value));
-        }}
-      />
-      {/* 向后一周 */}
-      <VerticalLeftOutlined
-        className={styles.forwardWeek}
-        onClick={() => {
-          toggleWeek('latter');
-          setWeekOptions(getWeekOptions(whichWeek + 1));
-        }}
-      />
-      {/* 得分 */}
-      <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
-      {/* 占比 */}
-      <span key={new Date().getTime()} className={styles.proportion}>
-        {'' + weekInfo.proportion + '%'}
-      </span>
-      <span className={`${styles.itemCount} ${styles.completedItems}`}>
-        {'完成项 - ' + weekInfo.completedWork}
-      </span>
-      <span className={`${styles.itemCount} ${styles.todoItems}`}>
-        {'待办项 - ' + weekInfo.todoWork}
-      </span>
-      <span className={`${styles.itemCount} ${styles.overdueItems}`}>
-        {'逾期项 - ' + weekInfo.overdueWork}
-      </span>
-      {/* 跳转到日计划 */}
-      <SendOutlined
-        className={`${styles.myIconJump} ${styles.reverse}`}
-        onClick={() => {
-          navigateTo('/Personal/DailyWork');
-        }}
-      />
-      {/* 添加新目标 */}
-      <PlusSquareOutlined onClick={() => addNewTarget(whichWeek)} className={styles.plusItem} />
-      {/* 周统计数据 */}
-      <BarChartOutlined
-        onClick={() => showWeeklyStatistics(whichWeek)}
-        className={styles.statistics}
-      />
-      {/* 刷新数据 */}
-      <ReloadOutlined onClick={() => refreshStatistics(whichWeek)} className={styles.refresh} />
-      {/* 跳转到月计划 */}
-      <SendOutlined
-        className={styles.myIconJump}
-        onClick={() => {
-          navigateTo('/Personal/MonthlyWork');
-        }}
-      />
-    </Row>
+    <div className={styles.wrapper}>
+      <Row wrap={false} style={{ marginTop: '5px' }}>
+        {/* 向前一周 */}
+        <VerticalRightOutlined
+          className={styles.forwardWeek}
+          onClick={() => {
+            toggleWeek('former');
+            setWeekOptions(getWeekOptions(whichWeek - 1));
+          }}
+        />
+        <Select
+          className={styles.whichWeek}
+          options={weekOptions}
+          value={'第 ' + whichWeek + ' 周'}
+          onSelect={(value) => {
+            toggleWeek('former');
+            setWeekOptions(getWeekOptions(value));
+          }}
+        />
+        {/* 向后一周 */}
+        <VerticalLeftOutlined
+          className={styles.forwardWeek}
+          onClick={() => {
+            toggleWeek('latter');
+            setWeekOptions(getWeekOptions(whichWeek + 1));
+          }}
+        />
+        {/* 得分 */}
+        <span className={styles.weeklyScore}>{'' + weekInfo.score + '分'}</span>
+        {/* 占比 */}
+        <span key={new Date().getTime()} className={styles.proportion}>
+          {'' + weekInfo.proportion + '%'}
+        </span>
+        <span className={`${styles.itemCount} ${styles.completedItems}`}>
+          {'完成项 - ' + weekInfo.completedWork}
+        </span>
+        <span className={`${styles.itemCount} ${styles.todoItems}`}>
+          {'待办项 - ' + weekInfo.todoWork}
+        </span>
+        <span className={`${styles.itemCount} ${styles.overdueItems}`}>
+          {'逾期项 - ' + weekInfo.overdueWork}
+        </span>
+        {/* 跳转到日计划 */}
+        <SendOutlined
+          className={`${styles.myIconJump} ${styles.reverse}`}
+          onClick={() => {
+            navigateTo('/Personal/DailyWork');
+          }}
+        />
+        {/* 添加新目标 */}
+        <PlusSquareOutlined onClick={() => addNewTarget(whichWeek)} className={styles.plusItem} />
+        {/* 周统计数据 */}
+        <BarChartOutlined
+          onClick={() => showWeeklyStatistics(whichWeek)}
+          className={styles.statistics}
+        />
+        {/* 刷新数据 */}
+        <ReloadOutlined onClick={() => refreshStatistics(whichWeek)} className={styles.refresh} />
+        {/* 跳转到月计划 */}
+        <SendOutlined
+          className={styles.myIconJump}
+          onClick={() => {
+            navigateTo('/Personal/MonthlyWork');
+          }}
+        />
+      </Row>
+    </div>
   );
 }
