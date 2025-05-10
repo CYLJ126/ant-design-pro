@@ -54,7 +54,7 @@ export default function WeeklyWork() {
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      <div className={styles.weeklyData} style={{ height: targetsHeight }}>
+      <div style={{ height: targetsHeight }}>
         {Object.keys(targets).length !== 0 &&
           Object.keys(targets).map((field) => {
             const id = targets[field].id;
