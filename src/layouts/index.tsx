@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { history, Outlet, useIntl, useModel } from 'umi';
-import { AliveScope } from 'react-activation';
+import { AliveScope, useAliveController } from 'react-activation';
 import { RouteContext } from '@ant-design/pro-layout';
 import { PageContainer } from '@ant-design/pro-components';
 import { MenuTabProps } from '@/models/menuTags';
@@ -35,6 +35,7 @@ export default function Layout() {
     updateMenuTags: model.updateMenuTags,
   }));
   const intl = useIntl();
+  const { dropScope } = useAliveController();
 
   // 不需要缓存的路由
   const noCacheRoutes = ['/', '/user/login'];
@@ -100,6 +101,8 @@ export default function Layout() {
     if (highLight < 0) {
       highLight = 0;
     }
+    // 关闭页签去掉缓存
+    dropScope(key).then((r) => console.log('关闭页面：', key, '结果：', r));
     updateMenuTags(temp);
     let toKey = temp[highLight].key;
     setActiveKey(toKey);

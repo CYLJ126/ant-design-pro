@@ -130,7 +130,7 @@ export function GeneralManagement() {
 
 export default () => {
   return (
-    <KeepAlive name="generalManagement">
+    <KeepAlive name="/Personal/GeneralManagement">
       <GeneralManagement />
     </KeepAlive>
   );

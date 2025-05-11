@@ -394,7 +394,7 @@ function TextFormatter() {
 
 export default () => {
   return (
-    <KeepAlive name="textFormatter">
+    <KeepAlive name="/Tools/TextFormatter">
       <TextFormatter />
     </KeepAlive>
   );

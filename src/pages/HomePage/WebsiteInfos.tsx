@@ -203,6 +203,10 @@ export default function WebsiteInfos() {
   const [newsTab, setNewsTab] = useState([]);
 
   useEffect(() => {
+    if (newsTab?.length > 0) {
+      console.log('不重新加载新闻');
+      return;
+    }
     // 获取 新闻资讯 的 ID 去查询子标签
     getTags({ name: '新闻资讯' }).then((rootTag) => {
       getTags({ fatherId: rootTag[0].id }).then((result) => {
