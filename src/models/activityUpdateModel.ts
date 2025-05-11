@@ -5,7 +5,7 @@ import { useState } from 'react';
  * 1. 更新活动时，更新顶部统计信息；
  */
 export default () => {
-  const [updateInfo, setUpdateInfo] = useState({});
+  const [updateInfo, setUpdateInfo] = useState({ id: -1 });
 
   return {
     updateInfo,

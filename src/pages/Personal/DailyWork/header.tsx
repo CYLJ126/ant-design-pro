@@ -37,8 +37,8 @@ export default function Header() {
   /**
    * 统计头部信息
    */
-  async function statisticsHeadInfo() {
-    const result = await listActivities(whichDay);
+  async function statisticsHeadInfo(date) {
+    const result = await listActivities(date);
     let temp = { ...initialHeadInfo };
     result.forEach((activity) => {
       if (activity.status === 'DONE') {
@@ -77,7 +77,7 @@ export default function Header() {
     }
     setWhichDay(newDay);
     initialActivities(newDay);
-    statisticsHeadInfo().then();
+    statisticsHeadInfo(newDay).then();
   }
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    statisticsHeadInfo().then();
+    statisticsHeadInfo(whichDay).then();
   }, [initialActivities, updateInfo]);
 
   return (
@@ -127,7 +127,7 @@ export default function Header() {
           {'待办项 - ' + headInfo.todoWork}
         </span>
         {/* 刷新 */}
-        <ReloadOutlined onClick={statisticsHeadInfo} className={styles.refresh} />
+        <ReloadOutlined onClick={() => statisticsHeadInfo(whichDay)} className={styles.refresh} />
         {/* 新增 */}
         <PlusSquareOutlined className={styles.plusItem} onClick={() => addNewActivity(whichDay)} />
         {/* 总结 */}
