@@ -7,6 +7,7 @@ const TimeTraceContext = createContext({});
 export function TimeTraceProvider({ children }) {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
+  const [foldFlag, setFoldFlag] = useState(false);
 
   useEffect(() => {
     // 加载主题下拉
@@ -45,6 +46,8 @@ export function TimeTraceProvider({ children }) {
     themeOptions,
     currentDate,
     updateDate,
+    foldFlag,
+    setFoldFlag,
   };
 
   return <TimeTraceContext.Provider value={value}>{children}</TimeTraceContext.Provider>;

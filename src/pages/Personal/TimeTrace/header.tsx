@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { DatePicker, message, Row, Select } from 'antd';
-import { PlusSquareOutlined, VerticalLeftOutlined, VerticalRightOutlined } from '@ant-design/icons';
+import {
+  FullscreenExitOutlined,
+  FullscreenOutlined,
+  PlusSquareOutlined,
+  VerticalLeftOutlined,
+  VerticalRightOutlined,
+} from '@ant-design/icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 // 格式化时间为本地时间
@@ -13,7 +19,8 @@ const dateFormat = 'YYYY-MM-DD';
 
 export default function Header({ listFunc }) {
   dayjs.extend(utc);
-  const { getSubTags, themeOptions, currentDate, updateDate } = useTimeTraceData();
+  const { getSubTags, themeOptions, currentDate, updateDate, foldFlag, setFoldFlag } =
+    useTimeTraceData();
   let tempParam = {
     themeId: null,
     workId: null,
@@ -92,7 +99,13 @@ export default function Header({ listFunc }) {
         }}
       />
       {/* 新增 */}
-      <PlusSquareOutlined className={styles.plusItem} onClick={addNewOne} />
+      <PlusSquareOutlined className={styles.plusIcon} onClick={addNewOne} />
+      {/* 折叠/展开 */}
+      {foldFlag ? (
+        <FullscreenOutlined className={styles.foldIcon} onClick={() => setFoldFlag(false)} />
+      ) : (
+        <FullscreenExitOutlined className={styles.foldIcon} onClick={() => setFoldFlag(true)} />
+      )}
       <Select
         allowClear
         className={styles.selectItem}

@@ -22,7 +22,7 @@ const thumbsColor = (isUp, status) => {
 };
 
 export default function TimeTrace({ data }) {
-  const { getSubTags, themeOptions, currentDate } = useTimeTraceData();
+  const { getSubTags, themeOptions, currentDate, foldFlag } = useTimeTraceData();
   let tempTimeTrace = {
     ...data,
     startDate: dayjs(data.startDate),
@@ -205,136 +205,138 @@ export default function TimeTrace({ data }) {
           />
         </Col>
       </Row>
-      <Row>
-        <Col span={colSpan}>
-          <Row wrap={false}>
-            <Col flex={'auto'}>
-              {/* 目标 */}
-              <Select
-                value={timeTrace.targetId}
-                className={styles.selectItem}
-                style={{ width: 'calc(100% - 5px)' }}
-                options={targetOptions}
-                onSelect={(value) => {
-                  let newVar = { ...timeTrace, workId: value, targetId: null };
-                  setTimeTrace(newVar);
-                  updateTrace(newVar).then();
-                }}
-              />
-            </Col>
-            <Col flex={'450px'}>
-              <Input
-                className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
-                value="结束"
-                style={{ width: '40px' }}
-              />
-              <DatePicker
-                value={timeTrace.endDate}
-                className={styles.datePicker}
-                style={{ width: '90px' }}
-                format={dateFormat}
-                onChange={(date) => {
-                  setTimeTrace({ ...timeTrace, endDate: date });
-                  updateTrace({
-                    ...timeTrace,
-                    startDate: timeTrace.startDate.format(dateFormat),
-                    endDate: date.format(dateFormat),
-                  }).then(() => getNewInfo());
-                }}
-              />
-              <Input
-                className={styles.spanLabel}
-                value="消耗"
-                style={{ width: '40px', borderColor: '#5bb1c9', backgroundColor: '#5bb1c9' }}
-              />
-              <Input
-                className={styles.inputItem}
-                value={timeTrace.consumeCount}
-                style={{ width: '40px', borderColor: '#5bb1c9', color: '#5bb1c9' }}
-              />
-              <Input
-                className={styles.spanLabel}
-                value="连续"
-                style={{ width: '40px', borderColor: '#2585b7', backgroundColor: '#2585b7' }}
-              />
-              <Input
-                className={styles.inputItem}
-                value={timeTrace.continuousCount}
-                style={{ width: '40px', borderColor: '#2585b7', color: '#2585b7' }}
-              />
-              <Input
-                className={styles.spanLabel}
-                value="最大连续"
-                style={{ width: '68px', borderColor: '#7e3b82', backgroundColor: '#7e3b82' }}
-              />
-              <Input
-                className={styles.inputItem}
-                value={timeTrace.maxContinuous}
-                style={{ width: '40px', borderColor: '#7e3b82', color: '#7e3b82' }}
-              />
-            </Col>
-            <Col flex="25px">
-              <CalendarOutlined className={styles.refresh} />
-            </Col>
-          </Row>
-        </Col>
-        <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
-          <ThumbsUp
-            isUp={true}
-            width={22}
-            height={22}
-            margin={'2px 5px 0 2px'}
-            color={thumbsColor(true, dayRecord.completionStatus)}
-            onClick={() => {
-              if (dayRecord.completionStatus !== 'DONE') {
-                markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
-                  setDayRecord(result);
-                  getNewInfo();
-                });
-              }
-            }}
-          />
-          <ThumbsUp
-            isUp={false}
-            width={22}
-            height={22}
-            margin={'2px 5px 0 2px'}
-            color={thumbsColor(false, dayRecord.completionStatus)}
-            onClick={() => {
-              if (dayRecord.completionStatus !== 'CLOSED') {
-                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) => {
-                  setDayRecord(result);
-                  getNewInfo();
-                });
-              }
-            }}
-          />
-          <InputNumber
-            style={{ width: '30px', top: '-5px' }}
-            className={styles.inputNumberItem}
-            step={1}
-            min={0}
-            max={10}
-            changeOnWheel={true}
-            value={dayRecord.score}
-            onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
-            onBlur={() => markDay(dayRecord)}
-          />
-          <Input
-            className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
-            value="总结"
-            style={{ width: '40px', top: '-5px' }}
-          />
-          <Input
-            value={dayRecord.summary}
-            className={styles.inputItem}
-            style={{ width: 'calc(100% - 146px)', top: '-5px' }}
-            onChange={(e) => setDayRecord({ ...dayRecord, summary: e.target.value })}
-            onBlur={() => markDay(dayRecord)}
-          />
-        </Col>
-      </Row>
-      <Row>
+      {!foldFlag && (
+        <Row>
+          <Col span={colSpan}>
+            <Row wrap={false}>
+              <Col flex={'auto'}>
+                {/* 目标 */}
+                <Select
+                  value={timeTrace.targetId}
+                  className={styles.selectItem}
+                  style={{ width: 'calc(100% - 5px)' }}
+                  options={targetOptions}
+                  onSelect={(value) => {
+                    let newVar = { ...timeTrace, workId: value, targetId: null };
+                    setTimeTrace(newVar);
+                    updateTrace(newVar).then();
+                  }}
+                />
+              </Col>
+              <Col flex={'450px'}>
+                <Input
+                  className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+                  value="结束"
+                  style={{ width: '40px' }}
+                />
+                <DatePicker
+                  value={timeTrace.endDate}
+                  className={styles.datePicker}
+                  style={{ width: '90px' }}
+                  format={dateFormat}
+                  onChange={(date) => {
+                    setTimeTrace({ ...timeTrace, endDate: date });
+                    updateTrace({
+                      ...timeTrace,
+                      startDate: timeTrace.startDate.format(dateFormat),
+                      endDate: date.format(dateFormat),
+                    }).then(() => getNewInfo());
+                  }}
+                />
+                <Input
+                  className={styles.spanLabel}
+                  value="消耗"
+                  style={{ width: '40px', borderColor: '#5bb1c9', backgroundColor: '#5bb1c9' }}
+                />
+                <Input
+                  className={styles.inputItem}
+                  value={timeTrace.consumeCount}
+                  style={{ width: '40px', borderColor: '#5bb1c9', color: '#5bb1c9' }}
+                />
+                <Input
+                  className={styles.spanLabel}
+                  value="连续"
+                  style={{ width: '40px', borderColor: '#2585b7', backgroundColor: '#2585b7' }}
+                />
+                <Input
+                  className={styles.inputItem}
+                  value={timeTrace.continuousCount}
+                  style={{ width: '40px', borderColor: '#2585b7', color: '#2585b7' }}
+                />
+                <Input
+                  className={styles.spanLabel}
+                  value="最大连续"
+                  style={{ width: '68px', borderColor: '#7e3b82', backgroundColor: '#7e3b82' }}
+                />
+                <Input
+                  className={styles.inputItem}
+                  value={timeTrace.maxContinuous}
+                  style={{ width: '40px', borderColor: '#7e3b82', color: '#7e3b82' }}
+                />
+              </Col>
+              <Col flex="25px">
+                <CalendarOutlined className={styles.refresh} />
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
+            <ThumbsUp
+              isUp={true}
+              width={22}
+              height={22}
+              margin={'2px 5px 0 2px'}
+              color={thumbsColor(true, dayRecord.completionStatus)}
+              onClick={() => {
+                if (dayRecord.completionStatus !== 'DONE') {
+                  markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
+                    setDayRecord(result);
+                    getNewInfo();
+                  });
+                }
+              }}
+            />
+            <ThumbsUp
+              isUp={false}
+              width={22}
+              height={22}
+              margin={'2px 5px 0 2px'}
+              color={thumbsColor(false, dayRecord.completionStatus)}
+              onClick={() => {
+                if (dayRecord.completionStatus !== 'CLOSED') {
+                  markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) => {
+                    setDayRecord(result);
+                    getNewInfo();
+                  });
+                }
+              }}
+            />
+            <InputNumber
+              style={{ width: '30px', top: '-5px' }}
+              className={styles.inputNumberItem}
+              step={1}
+              min={0}
+              max={10}
+              changeOnWheel={true}
+              value={dayRecord.score}
+              onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
+              onBlur={() => markDay(dayRecord)}
+            />
+            <Input
+              className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+              value="总结"
+              style={{ width: '40px', top: '-5px' }}
+            />
+            <Input
+              value={dayRecord.summary}
+              className={styles.inputItem}
+              style={{ width: 'calc(100% - 146px)', top: '-5px' }}
+              onChange={(e) => setDayRecord({ ...dayRecord, summary: e.target.value })}
+              onBlur={() => markDay(dayRecord)}
+            />
+          </Col>
+        </Row>
+      )}
+      <Row style={{ marginTop: foldFlag ? '1px' : '-2px' }}>
         <Progress
           percent={timeTrace.completionRate}
           showInfo={false}
