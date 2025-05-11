@@ -108,7 +108,7 @@ export default function Activity({ id }) {
               mark="startTime"
               colorStyles={getStyles()}
               save={(time) => {
-                updateActivity({ ...dailyWork, startTime: time });
+                updateActivity({ ...dailyWork, startTime: time, refreshFlag: true });
               }}
             />
           </Row>

@@ -80,11 +80,14 @@ export default () => {
 
   // 向后端更新活动
   const updateActivity = useCallback(async (param) => {
+    let startTime =
+      param.startTimeStr || dayjs(param.startTime).utc().local().format('YYYY-MM-DD HH:mm:ss');
+    let endTime =
+      param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss');
     let data = {
       id: param.id,
-      startTime:
-        param.startTimeStr || dayjs(param.startTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
-      endTime: param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+      startTime: startTime,
+      endTime: endTime,
       targetId: param.targetId,
       score: param.score,
       cost: param.cost,
@@ -94,6 +97,9 @@ export default () => {
     };
     updateDailyWork(data).then(() => {
       setUpdateInfo({ id: param.id, date: new Date() });
+      if (param.refreshFlag) {
+        initialActivities(new Date(startTime));
+      }
     });
   }, []);
 
