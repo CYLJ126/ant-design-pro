@@ -22,8 +22,8 @@ const thumbsColor = (isUp, status) => {
   }
 };
 
-export default function TimeTrace({ data, currentDate }) {
-  const { getSubTags, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
+export default function TimeTrace({ data }) {
+  const { getSubTags, currentDate, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
   let tempTimeTrace = {
     ...data,
     startDate: dayjs(data.startDate),
