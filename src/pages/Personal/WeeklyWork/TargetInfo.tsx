@@ -185,7 +185,7 @@ export default function TargetInfo({ targetId }) {
           target={current}
           onChangeFunc={(param) => {
             setCurrent(param);
-            saveCurrent({ ...param, refreshFlag: true });
+            saveCurrent(param);
             setUpdateInfo({
               targetId: targetId,
               fold: fold,
