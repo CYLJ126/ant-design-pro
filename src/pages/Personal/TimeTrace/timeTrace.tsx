@@ -38,7 +38,7 @@ export default function TimeTrace({ data }) {
   } else {
     tempDayRecord = {
       traceId: data.id,
-      recordDate: currentDate.format(dateFormat),
+      recordDate: currentDate.current?.format(dateFormat),
       completionStatus: 'INITIAL', // 0-INITIAL-初始；2-DONE-完成；3-CLOSED-没做；
       score: 0,
       recordValue: '',

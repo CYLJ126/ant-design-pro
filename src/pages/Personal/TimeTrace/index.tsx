@@ -5,14 +5,14 @@ import styles from './index.less';
 import { TimeTraceProvider, useTimeTraceData } from './TimeTraceContext';
 
 function TraceWrap() {
-  const { currentDate, timeTraces } = useTimeTraceData();
+  const { timeTraces } = useTimeTraceData();
   const time = new Date().getTime();
   return (
     <>
       <Header />
       <hr className={styles.horizontal} />
       {timeTraces?.map((trace) => {
-        return <TimeTrace data={trace} currentDate={currentDate} key={trace.id + '-' + time} />;
+        return <TimeTrace data={trace} key={trace.id + '-' + time} />;
       })}
     </>
   );

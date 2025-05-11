@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import dayjs from 'dayjs';
 import { getTags } from '@/services/ant-design-pro/base';
 import { deleteTrace, listTraces } from '@/services/ant-design-pro/dailyWork';
@@ -7,7 +15,7 @@ import { message } from 'antd';
 const TimeTraceContext = createContext({});
 
 export function TimeTraceProvider({ children }) {
-  const [currentDate, setCurrentDate] = useState(dayjs());
+  const currentDate = useRef(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
   const [foldFlag, setFoldFlag] = useState(false);
   const [timeTraces, setTimeTraces] = useState([]);
@@ -25,7 +33,7 @@ export function TimeTraceProvider({ children }) {
 
   // 封装修改日期的方法
   const updateDate = useCallback((newDate) => {
-    setCurrentDate(dayjs(newDate));
+    currentDate.current = dayjs(newDate);
   }, []);
 
   // 刷新数据
@@ -39,7 +47,7 @@ export function TimeTraceProvider({ children }) {
   const deleteOne = useCallback(
     (id) => {
       deleteTrace({ id: id }).then((result) => {
-        fetchTraces({ currentDate: currentDate.format('YYYY-MM-DD') });
+        fetchTraces({ currentDate: currentDate.current.format('YYYY-MM-DD') });
         if (result) {
           message.success('删除成功').then();
         } else {
@@ -47,7 +55,7 @@ export function TimeTraceProvider({ children }) {
         }
       });
     },
-    [currentDate, fetchTraces],
+    [fetchTraces],
   );
 
   useEffect(() => {
@@ -64,7 +72,7 @@ export function TimeTraceProvider({ children }) {
       });
     });
     // 初始化时加载留痕数据
-    fetchTraces({ currentDate: currentDate.format('YYYY-MM-DD') });
+    fetchTraces({ currentDate: currentDate.current.format('YYYY-MM-DD') });
   }, []);
 
   // 提供日期和修改方法给子组件

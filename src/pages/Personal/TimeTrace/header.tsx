@@ -15,12 +15,13 @@ import utc from 'dayjs/plugin/utc';
 import styles from './header.less';
 import { addTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
+import { debounce } from 'lodash';
 
 const dateFormat = 'YYYY-MM-DD';
 
 export default function Header() {
   dayjs.extend(utc);
-  const { fetchTraces, getSubTags, themeOptions, currentDate, updateDate, foldFlag, setFoldFlag } =
+  const { fetchTraces, getSubTags, themeOptions, updateDate, foldFlag, setFoldFlag } =
     useTimeTraceData();
   let tempParam = {
     themeId: null,
@@ -30,9 +31,11 @@ export default function Header() {
   const [requestParam, setRequestParam] = useState(tempParam);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
+  const [today, setToday] = useState(dayjs());
+  debounce(() => updateDate(today), 5);
 
   function refresh(param, date?) {
-    let dateStr = date ? date.format(dateFormat) : currentDate.format(dateFormat);
+    let dateStr = date ? date.format(dateFormat) : today.format(dateFormat);
     const req = { ...param, currentDate: dateStr };
     fetchTraces(req);
   }
@@ -45,9 +48,10 @@ export default function Header() {
       newDay = value;
     } else {
       // 往前推一天或往后推一天
-      newDay = currentDate.add(type === 'former' ? -1 : 1, 'day');
+      newDay = today.add(type === 'former' ? -1 : 1, 'day');
     }
     updateDate(newDay);
+    setToday(newDay);
     refresh(requestParam, newDay);
   }
 
@@ -56,7 +60,7 @@ export default function Header() {
       message.warning('请选择主题');
       return;
     }
-    let date = currentDate.format(dateFormat);
+    let date = today.format(dateFormat);
     const newOne = {
       themeId: requestParam.themeId,
       workId: requestParam.workId,
@@ -82,7 +86,7 @@ export default function Header() {
       {/* 当前日期 */}
       <DatePicker
         className={styles.date}
-        value={currentDate}
+        value={today}
         format={dateFormat}
         onChange={(date) => {
           toggleDay('set', date);
