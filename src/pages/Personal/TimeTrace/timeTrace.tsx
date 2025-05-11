@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd';
-import { CalendarOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
-import { listTraces, markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
+import { markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
 import styles from './timeTrace.less';
 import ThumbsUp from '@/icons/ThumbsUp';
+import DeleteIcon from '@/icons/DeleteIcon';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -21,8 +22,8 @@ const thumbsColor = (isUp, status) => {
   }
 };
 
-export default function TimeTrace({ data }) {
-  const { getSubTags, themeOptions, currentDate, foldFlag } = useTimeTraceData();
+export default function TimeTrace({ data, currentDate }) {
+  const { getSubTags, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
   let tempTimeTrace = {
     ...data,
     startDate: dayjs(data.startDate),
@@ -49,17 +50,6 @@ export default function TimeTrace({ data }) {
   const [targetOptions, setTargetOptions] = useState([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [colSpan, setColSpan] = useState(12);
-
-  const getNewInfo = () => {
-    listTraces({ id: timeTrace.id, currentDate: currentDate.format(dateFormat) }).then((result) => {
-      const newOne = { ...result[0] };
-      newOne.startDate = dayjs(newOne.startDate);
-      newOne.endDate = dayjs(newOne.endDate);
-      // 避免显示 null%
-      newOne.completionRate = newOne.completionRate ?? '0';
-      setTimeTrace(newOne);
-    });
-  };
 
   useEffect(() => {
     if (timeTrace.themeId) {
@@ -144,7 +134,7 @@ export default function TimeTrace({ data }) {
                     ...timeTrace,
                     startDate: date.format(dateFormat),
                     endDate: timeTrace.endDate.format(dateFormat),
-                  }).then(() => getNewInfo());
+                  }).then();
                 }}
               />
               <Input
@@ -179,7 +169,7 @@ export default function TimeTrace({ data }) {
               />
             </Col>
             <Col flex="25px">
-              <ReloadOutlined className={styles.refresh} onClick={getNewInfo} />
+              <DeleteIcon className={styles.deleteIcon} onClick={() => deleteOne(timeTrace.id)} />
             </Col>
           </Row>
         </Col>
@@ -200,7 +190,7 @@ export default function TimeTrace({ data }) {
             style={{ width: 'calc(100% - 146px)' }}
             onChange={(e) => setDayRecord({ ...dayRecord, recordValue: e.target.value })}
             onBlur={() => {
-              markDay(dayRecord).then(() => getNewInfo());
+              markDay(dayRecord).then();
             }}
           />
         </Col>
@@ -240,7 +230,7 @@ export default function TimeTrace({ data }) {
                       ...timeTrace,
                       startDate: timeTrace.startDate.format(dateFormat),
                       endDate: date.format(dateFormat),
-                    }).then(() => getNewInfo());
+                    }).then();
                   }}
                 />
                 <Input
@@ -290,7 +280,6 @@ export default function TimeTrace({ data }) {
                 if (dayRecord.completionStatus !== 'DONE') {
                   markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
                     setDayRecord(result);
-                    getNewInfo();
                   });
                 }
               }}
@@ -305,7 +294,6 @@ export default function TimeTrace({ data }) {
                 if (dayRecord.completionStatus !== 'CLOSED') {
                   markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) => {
                     setDayRecord(result);
-                    getNewInfo();
                   });
                 }
               }}

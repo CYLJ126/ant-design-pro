@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './header';
 import TimeTrace from './timeTrace';
 import styles from './index.less';
-import { listTraces } from '@/services/ant-design-pro/dailyWork';
-import { TimeTraceProvider } from './TimeTraceContext';
+import { TimeTraceProvider, useTimeTraceData } from './TimeTraceContext';
 
-export default function TimeTraces() {
-  const [timeTraces, setTimeTraces] = useState([]);
-
-  const fetch = (param) => {
-    listTraces(param).then((result) => {
-      setTimeTraces(result);
-    });
-  };
-
+function TraceWrap() {
+  const { currentDate, timeTraces } = useTimeTraceData();
   const time = new Date().getTime();
   return (
-    <TimeTraceProvider>
-      <Header listFunc={fetch} />
+    <>
+      <Header />
       <hr className={styles.horizontal} />
-      {timeTraces.map((trace) => {
-        return <TimeTrace data={trace} key={trace.id + '-' + time} />;
+      {timeTraces?.map((trace) => {
+        return <TimeTrace data={trace} currentDate={currentDate} key={trace.id + '-' + time} />;
       })}
+    </>
+  );
+}
+
+export default function TimeTraces() {
+  return (
+    <TimeTraceProvider>
+      <TraceWrap />
     </TimeTraceProvider>
   );
 }

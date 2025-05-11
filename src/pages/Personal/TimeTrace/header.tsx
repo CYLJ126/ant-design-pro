@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DatePicker, message, Row, Select } from 'antd';
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
   PlusSquareOutlined,
+  ReloadOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 // 格式化时间为本地时间
-import utc from 'dayjs-plugin-utc';
+import utc from 'dayjs/plugin/utc';
 import styles from './header.less';
 import { addTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
 
 const dateFormat = 'YYYY-MM-DD';
 
-export default function Header({ listFunc }) {
+export default function Header() {
   dayjs.extend(utc);
-  const { getSubTags, themeOptions, currentDate, updateDate, foldFlag, setFoldFlag } =
+  const { fetchTraces, getSubTags, themeOptions, currentDate, updateDate, foldFlag, setFoldFlag } =
     useTimeTraceData();
   let tempParam = {
     themeId: null,
@@ -33,7 +34,7 @@ export default function Header({ listFunc }) {
   function refresh(param, date?) {
     let dateStr = date ? date.format(dateFormat) : currentDate.format(dateFormat);
     const req = { ...param, currentDate: dateStr };
-    listFunc(req);
+    fetchTraces(req);
   }
 
   // 日期切换
@@ -69,10 +70,6 @@ export default function Header({ listFunc }) {
     });
   }
 
-  useEffect(() => {
-    refresh(requestParam);
-  }, []);
-
   return (
     <Row>
       {/* 向前一天 */}
@@ -100,6 +97,8 @@ export default function Header({ listFunc }) {
       />
       {/* 新增 */}
       <PlusSquareOutlined className={styles.plusIcon} onClick={addNewOne} />
+      {/* 刷新 */}
+      <ReloadOutlined className={styles.refresh} onClick={() => refresh(requestParam)} />
       {/* 折叠/展开 */}
       {foldFlag ? (
         <FullscreenOutlined className={styles.foldIcon} onClick={() => setFoldFlag(false)} />

@@ -18,7 +18,7 @@ import TodoWorkPane from '@/pages/Personal/TodoWork';
 const tabInfos = [
   {
     label: '痕',
-    key: 'TimeTraces',
+    key: 'TimeTrace',
     children: <TimeTraces />,
     sideBarSpan: 6, // 侧边栏宽度
   },
