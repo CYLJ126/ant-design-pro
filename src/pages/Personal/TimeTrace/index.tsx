@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'antd';
 import Header from './header';
 import TimeTrace from './timeTrace';
 import styles from './index.less';
@@ -20,14 +19,9 @@ export default function TimeTraces() {
     <TimeTraceProvider>
       <Header listFunc={fetch} />
       <hr className={styles.horizontal} />
-      <Row>
-        <Col span={18}>
-          {timeTraces.map((trace) => {
-            return <TimeTrace data={trace} key={trace.id + '-' + time} />;
-          })}
-        </Col>
-        <Col span={6}></Col>
-      </Row>
+      {timeTraces.map((trace) => {
+        return <TimeTrace data={trace} key={trace.id + '-' + time} />;
+      })}
     </TimeTraceProvider>
   );
 }
