@@ -9,19 +9,25 @@ import {
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
+import utc from 'dayjs/plugin/utc';
 import { message } from 'antd';
+import { useModel } from 'umi';
+
+dayjs.extend(utc);
 
 export async function listActivities(whichDay) {
   let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
   let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
-  start = dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss');
-  end = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
-  return await listDailyWork({ startDateTimeCeil: start, startDateTimeFloor: end });
+  return await listDailyWork({
+    startDateTimeCeil: dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+    startDateTimeFloor: dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+  });
 }
 
 export default () => {
   // 每日活动列表
   const [activities, setActivities] = useState({});
+  const { setUpdateInfo } = useModel('activityUpdateModel');
 
   // 初始化活动列表
   const initialActivities = useCallback(async (whichDay) => {
@@ -86,23 +92,15 @@ export default () => {
       proportion: param.proportion,
       content: param.content,
     };
-    updateDailyWork(data).then((result) => {
-      if (result) {
-        if (param.mark) {
-          initialActivities(new Date(param.startTime));
-        }
-      } else {
-        message.error('更新失败！');
-      }
+    updateDailyWork(data).then(() => {
+      setUpdateInfo({ id: param.id, date: new Date() });
     });
   }, []);
 
   // 向后端更新活动状态
   const markDone = useCallback(async (id, state) => {
-    markDoneBack(id, state).then((result) => {
-      if (!result) {
-        message.error('状态更新失败！');
-      }
+    markDoneBack(id, state).then(() => {
+      setUpdateInfo({ id: id, date: new Date() });
     });
   }, []);
 

@@ -1,8 +1,8 @@
 import { createStyles } from 'antd-style';
 
-export default function timeStyle(dailyWork) {
+export default function timeStyle(status) {
   let frontColor;
-  if (dailyWork.status === 'DONE') {
+  if (status === 'DONE') {
     frontColor = '#5cb3cc';
   } else {
     frontColor = '#81d3f8';

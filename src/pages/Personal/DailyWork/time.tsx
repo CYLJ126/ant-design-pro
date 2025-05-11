@@ -1,15 +1,21 @@
 import timeStyle from './timeStyle';
-import React, { useState } from 'react';
-import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 // 格式化时间为本地时间
-import utc from 'dayjs-plugin-utc';
+import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/zh-cn';
 import { Col, Row, TimePicker } from 'antd';
 
-export default function Time({ dailyWork, save, showLine }) {
-  const { styles: dynamicStyle } = timeStyle(dailyWork);
-  const [date, setDate] = useState(dayjs(dailyWork[dailyWork.mark]).utc().local());
-  dayjs.extend(utc);
+dayjs.extend(utc);
+
+export default function Time({ timeParam, mark, status, save, showLine }) {
+  const [dateTime, setDateTime] = useState<Dayjs>(null);
+  const { styles: dynamicStyle } = timeStyle(status);
+
+  useEffect(() => {
+    setDateTime(timeParam.clone());
+  }, [timeParam]);
+
   return (
     <Row>
       <Col span={showLine ? 8 : 0}>
@@ -17,24 +23,14 @@ export default function Time({ dailyWork, save, showLine }) {
       </Col>
       <Col span={showLine ? 16 : 24}>
         <TimePicker
-          value={date}
+          value={dateTime}
           format="HH:mm"
           className={dynamicStyle.time}
-          placeholder={dailyWork.placeholder}
-          onChange={(time, timeString) => {
-            let temp = { ...dailyWork };
-            const dateStr = dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD');
-            if (dailyWork.mark === 'startTime') {
-              temp.startTimeStr = dateStr + ' ' + timeString + ':00';
-              temp.endTimeStr =
-                dateStr + ' ' + dayjs(dailyWork.endTime).utc().local().format('HH:mm:ss');
-            } else {
-              temp.endTimeStr = dateStr + ' ' + timeString + ':59';
-              temp.startTimeStr =
-                dateStr + ' ' + dayjs(dailyWork.startTime).utc().local().format('HH:mm:ss');
-            }
-            setDate(time);
-            save(temp);
+          onChange={(temp, timeString) => {
+            const dateStr = temp.utc().local().format('YYYY-MM-DD');
+            const seconds = mark === 'startTime' ? ':00' : ':59';
+            save(dateStr + ' ' + timeString + seconds);
+            setDateTime(temp);
           }}
         />
       </Col>

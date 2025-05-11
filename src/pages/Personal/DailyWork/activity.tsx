@@ -36,7 +36,6 @@ async function getSubTags(param) {
 export default function Activity({ id }) {
   const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
   const { updateActivity, pushNextDay, markDone, deleteActivity } = useModel('activitiesModel');
-  const { setUpdateInfo } = useModel('activityUpdateModel');
   const [themeOptions, setThemeOptions] = useState([]);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
@@ -85,7 +84,7 @@ export default function Activity({ id }) {
           // 获取目标下拉
           getTargetsForDaily({
             workId: result.workId,
-            whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
+            whichDay: dayjs(result.startTime).utc().local().format('YYYY-MM-DD'),
           }).then((result) => {
             setTargetOptions(
               result.map((item) => {
@@ -105,15 +104,21 @@ export default function Activity({ id }) {
           <Row style={{ marginBottom: dailyWork.foldFlag === 'YES' ? '64px' : '5px' }}>
             <Time
               showLine={true}
-              dailyWork={{ ...dailyWork, mark: 'startTime', placeholder: '开始时间' }}
-              save={updateActivity}
+              timeParam={dayjs(dailyWork.startTime)}
+              mark="startTime"
+              save={(time) => {
+                updateActivity({ ...dailyWork, startTime: time });
+              }}
             />
           </Row>
           <Row>
             <Time
               showLine={true}
-              dailyWork={{ ...dailyWork, mark: 'endTime', placeholder: '结束时间' }}
-              save={updateActivity}
+              timeParam={dayjs(dailyWork.endTime)}
+              mark="endTime"
+              save={(time) => {
+                updateActivity({ ...dailyWork, endTime: time });
+              }}
             />
           </Row>
         </Col>
@@ -152,9 +157,7 @@ export default function Activity({ id }) {
                         value={dailyWork.score}
                         onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
                         onBlur={() => {
-                          updateActivity(dailyWork).then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                          });
+                          updateActivity(dailyWork);
                         }}
                       />
                     </Col>
@@ -173,9 +176,7 @@ export default function Activity({ id }) {
                         value={dailyWork.proportion}
                         onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
                         onBlur={() => {
-                          updateActivity(dailyWork).then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                          });
+                          updateActivity(dailyWork);
                         }}
                       />
                     </Col>
@@ -192,9 +193,7 @@ export default function Activity({ id }) {
                         value={dailyWork.cost}
                         onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
                         onBlur={() => {
-                          updateActivity(dailyWork).then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                          });
+                          updateActivity(dailyWork);
                         }}
                       />
                     </Col>
@@ -229,11 +228,7 @@ export default function Activity({ id }) {
                   <DeleteIcon
                     className={`${styles.deleteUnFoldIcon} ${getStyles().icon}`}
                     onClick={() => {
-                      deleteActivity(dailyWork.id).then(() => {
-                        setUpdateInfo({ id: dailyWork.id, date: new Date() }).then(() => {
-                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                        });
-                      });
+                      deleteActivity(dailyWork.id);
                     }}
                   />
                   {dailyWork.status === 'INITIAL' ? (
@@ -245,7 +240,6 @@ export default function Activity({ id }) {
                       margin="4px 0 0 4px"
                       onClick={() => {
                         markDone(dailyWork.id, 'DONE').then(() => {
-                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
                           setDailyWork({ ...dailyWork, status: 'DONE' });
                         });
                       }}
@@ -256,7 +250,6 @@ export default function Activity({ id }) {
                       className={`${styles.todoUnfoldIcon} ${getStyles().icon}`}
                       onClick={() => {
                         markDone(dailyWork.id, 'INITIAL').then(() => {
-                          setUpdateInfo({ id: dailyWork.id, date: new Date() });
                           setDailyWork({ ...dailyWork, status: 'INITIAL' });
                         });
                       }}
@@ -302,9 +295,7 @@ export default function Activity({ id }) {
                   value={dailyWork.proportion}
                   onChange={(value) => setDailyWork({ ...dailyWork, proportion: value })}
                   onBlur={() => {
-                    updateActivity(dailyWork).then(() => {
-                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                    });
+                    updateActivity(dailyWork);
                   }}
                 />
               </Col>
@@ -321,9 +312,7 @@ export default function Activity({ id }) {
                   value={dailyWork.score}
                   onChange={(value) => setDailyWork({ ...dailyWork, score: value })}
                   onBlur={() => {
-                    updateActivity(dailyWork).then(() => {
-                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                    });
+                    updateActivity(dailyWork);
                   }}
                 />
               </Col>
@@ -340,9 +329,7 @@ export default function Activity({ id }) {
                   value={dailyWork.cost}
                   onChange={(value) => setDailyWork({ ...dailyWork, cost: value })}
                   onBlur={() => {
-                    updateActivity(dailyWork).then(() => {
-                      setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                    });
+                    updateActivity(dailyWork);
                   }}
                 />
               </Col>
@@ -353,11 +340,7 @@ export default function Activity({ id }) {
                     <DeleteIcon
                       className={`${styles.deleteFoldIcon} ${getStyles().icon}`}
                       onClick={() => {
-                        deleteActivity(dailyWork.id).then(() => {
-                          setUpdateInfo({ id: dailyWork.id, date: new Date() }).then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
-                          });
-                        });
+                        deleteActivity(dailyWork.id);
                       }}
                     />
                   </Col>
@@ -371,7 +354,6 @@ export default function Activity({ id }) {
                         margin="0 0 0 4px"
                         onClick={() => {
                           markDone(dailyWork.id, 'DONE').then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
                             setDailyWork({ ...dailyWork, status: 'DONE' });
                           });
                         }}
@@ -382,7 +364,6 @@ export default function Activity({ id }) {
                         className={`${styles.todoFoldIcon} ${getStyles().icon}`}
                         onClick={() => {
                           markDone(dailyWork.id, 'INITIAL').then(() => {
-                            setUpdateInfo({ id: dailyWork.id, date: new Date() });
                             setDailyWork({ ...dailyWork, status: 'INITIAL' });
                           });
                         }}
