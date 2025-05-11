@@ -219,3 +219,30 @@
     cursor: pointer;
   }
 }
+
+.line {
+  height: 2px;
+  border: none;
+  margin: 12px 0 0 0;
+}
+
+.time {
+  width: 70px;
+  height: 25px;
+  border-radius: 5px;
+  color: #ffffff;
+  padding: 0;
+
+  :global(.ant-picker-input) {
+    input {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      padding-left: 2px;
+    }
+
+    :global(.anticon) {
+      display: none;
+    }
+  }
+}

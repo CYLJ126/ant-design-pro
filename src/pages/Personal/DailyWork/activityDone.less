@@ -66,3 +66,27 @@
     }
   }
 }
+
+.line {
+  background-color: #5cb3cc;
+}
+
+.time {
+  border: 1.5px solid #5cb3cc;
+  background-color: #5cb3cc;
+
+  :global(.ant-picker-input) {
+    input:hover::placeholder {
+      color: #5cb3cc;
+    }
+
+    .aria-invalid {
+      color: #5cb3cc;
+    }
+  }
+}
+
+.time:hover {
+  color: #5cb3cc;
+  border-color: #5cb3cc;
+}

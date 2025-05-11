@@ -106,6 +106,7 @@ export default function Activity({ id }) {
               showLine={true}
               timeParam={dayjs(dailyWork.startTime)}
               mark="startTime"
+              colorStyles={getStyles()}
               save={(time) => {
                 updateActivity({ ...dailyWork, startTime: time });
               }}
@@ -116,6 +117,7 @@ export default function Activity({ id }) {
               showLine={true}
               timeParam={dayjs(dailyWork.endTime)}
               mark="endTime"
+              colorStyles={getStyles()}
               save={(time) => {
                 updateActivity({ ...dailyWork, endTime: time });
               }}
