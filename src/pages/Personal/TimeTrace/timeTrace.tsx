@@ -3,7 +3,7 @@ import { Col, DatePicker, Input, InputNumber, Progress, Row, Select } from 'antd
 import { CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
-import { markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
+import { listTraces, markDay, updateTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
 import styles from './timeTrace.less';
 import ThumbsUp from '@/icons/ThumbsUp';
@@ -22,22 +22,20 @@ const thumbsColor = (isUp, status) => {
   }
 };
 
-export default function TimeTrace({ data }) {
-  const { getSubTags, currentDate, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
+function initialData(rawTimeTrace, currentDate) {
   let tempTimeTrace = {
-    ...data,
-    startDate: dayjs(data.startDate),
-    endDate: dayjs(data.endDate),
-    completionRate: data.completionRate ?? '0',
+    ...rawTimeTrace,
+    startDate: dayjs(rawTimeTrace.startDate),
+    endDate: dayjs(rawTimeTrace.endDate),
+    completionRate: rawTimeTrace.completionRate ?? '0',
   };
   delete tempTimeTrace.timeTraceRecord;
-  const [timeTrace, setTimeTrace] = useState(tempTimeTrace);
   let tempDayRecord;
-  if (data.timeTraceRecord) {
-    tempDayRecord = { ...data.timeTraceRecord };
+  if (rawTimeTrace.timeTraceRecord) {
+    tempDayRecord = { ...rawTimeTrace.timeTraceRecord };
   } else {
     tempDayRecord = {
-      traceId: data.id,
+      traceId: rawTimeTrace.id,
       recordDate: currentDate.current?.format(dateFormat),
       completionStatus: 'INITIAL', // 0-INITIAL-初始；2-DONE-完成；3-CLOSED-没做；
       score: 0,
@@ -45,6 +43,13 @@ export default function TimeTrace({ data }) {
       summary: '',
     };
   }
+  return { tempTimeTrace: tempTimeTrace, tempDayRecord: tempDayRecord };
+}
+
+export default function TimeTrace({ data }) {
+  const { getSubTags, currentDate, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
+  const { tempTimeTrace, tempDayRecord } = initialData(data, currentDate);
+  const [timeTrace, setTimeTrace] = useState(tempTimeTrace);
   const [dayRecord, setDayRecord] = useState(tempDayRecord);
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
@@ -278,8 +283,15 @@ export default function TimeTrace({ data }) {
               color={thumbsColor(true, dayRecord.completionStatus)}
               onClick={() => {
                 if (dayRecord.completionStatus !== 'DONE') {
-                  markDay({ ...dayRecord, completionStatus: 'DONE' }).then((result) => {
-                    setDayRecord(result);
+                  markDay({ ...dayRecord, completionStatus: 'DONE' }).then(() => {
+                    listTraces({
+                      id: timeTrace.id,
+                      currentDate: currentDate.current.format('YYYY-MM-DD'),
+                    }).then((result) => {
+                      const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
+                      setTimeTrace(tempTimeTrace);
+                      setDayRecord(tempDayRecord);
+                    });
                   });
                 }
               }}
@@ -292,8 +304,15 @@ export default function TimeTrace({ data }) {
               color={thumbsColor(false, dayRecord.completionStatus)}
               onClick={() => {
                 if (dayRecord.completionStatus !== 'CLOSED') {
-                  markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then((result) => {
-                    setDayRecord(result);
+                  markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then(() => {
+                    listTraces({
+                      id: timeTrace.id,
+                      currentDate: currentDate.current.format('YYYY-MM-DD'),
+                    }).then((result) => {
+                      const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
+                      setTimeTrace(tempTimeTrace);
+                      setDayRecord(tempDayRecord);
+                    });
                   });
                 }
               }}
