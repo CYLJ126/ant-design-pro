@@ -66,6 +66,8 @@ export default function TimeTrace({ data }) {
     // 设置对屏幕的监听，响应式布局
     const observer = new ResizeObserver((entries) => {
       const width = entries[0].contentRect.width;
+      // 切换 tab 页时，width 会变成 0，切换回来后，width 变化回原长度，导致会重新计算，看到页面会闪一下，以 width === 0 判断是否为切换 tab，是则不重新计算宽度
+      if (width === 0) return;
       // 根据 div 容器宽度，调整主题、事项、目标宽度占比
       let newSize;
       if (width < 960) {
