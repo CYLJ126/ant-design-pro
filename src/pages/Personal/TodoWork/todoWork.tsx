@@ -8,6 +8,7 @@ import {
   UndoOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignTopOutlined,
+  OrderedListOutlined,
 } from '@ant-design/icons';
 import todoWorkStyle from './todoWorkStyle';
 import dayjs from 'dayjs';
@@ -15,6 +16,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import { addTodoWork, deleteTodoWork, updateTodoWork } from '@/services/ant-design-pro/dailyWork';
+import { reOrder, undoSerialNo } from '@/common/textHandler';
 
 export default function TodoWork({ todoParam, postUpdate }) {
   const [todo, setTodo] = useState(todoParam);
@@ -85,6 +87,23 @@ export default function TodoWork({ todoParam, postUpdate }) {
         <ArrowRightOutlined
           className={dynamicStyle.icons}
           onClick={() => save({ ...todo, startDate: dayjs(todo.startDate).add(1, 'day') })}
+        />
+        {/* 重新排序 */}
+        <OrderedListOutlined
+          className={dynamicStyle.icons}
+          onClick={() => {
+            if (todo.content.trim() === '') {
+              return;
+            }
+            let temp;
+            if (todo.content.startsWith('1.')) {
+              temp = { ...todo, content: undoSerialNo(todo.content) };
+            } else {
+              temp = { ...todo, content: reOrder(todo.content) };
+            }
+            setTodo(temp);
+            save(temp);
+          }}
         />
         {todo.foldFlag === 'NO' ? (
           // 展开
