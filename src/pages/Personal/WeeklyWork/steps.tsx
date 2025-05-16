@@ -28,6 +28,10 @@ import { useModel } from '@@/exports';
 const useStepStyle = (color) => {
   return createStyles(({ css }) => ({
     stepStyle: css`
+      .ant-input-wrapper {
+        height: 26px;
+      }
+
       .ant-input-group-addon {
         border-color: ${color};
         background-color: ${color};
@@ -287,7 +291,7 @@ export default function Steps({ targetId }) {
               setHeight(Math.max(115, steps.length * 30));
               setStepFoldFlag(true);
             }}
-            className={styles.myIconFold}
+            className={styles.expandFold}
           />
         )}
       </Col>
