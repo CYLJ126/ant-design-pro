@@ -17,7 +17,6 @@ const TimeTraceContext = createContext({});
 export function TimeTraceProvider({ children }) {
   const currentDate = useRef(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
-  const [foldFlag, setFoldFlag] = useState(false);
   const [timeTraces, setTimeTraces] = useState([]);
 
   // 获取子级标签
@@ -84,20 +83,9 @@ export function TimeTraceProvider({ children }) {
       themeOptions,
       currentDate,
       updateDate,
-      foldFlag,
-      setFoldFlag,
       deleteOne,
     };
-  }, [
-    timeTraces,
-    fetchTraces,
-    getSubTags,
-    themeOptions,
-    currentDate,
-    updateDate,
-    foldFlag,
-    deleteOne,
-  ]);
+  }, [timeTraces, fetchTraces, getSubTags, themeOptions, currentDate, updateDate, deleteOne]);
 
   return <TimeTraceContext.Provider value={value}>{children}</TimeTraceContext.Provider>;
 }

@@ -8,6 +8,7 @@ import { useTimeTraceData } from './TimeTraceContext';
 import styles from './timeTrace.less';
 import ThumbsUp from '@/icons/ThumbsUp';
 import DeleteIcon from '@/icons/DeleteIcon';
+import { useModel } from 'umi';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -47,7 +48,8 @@ function initialData(rawTimeTrace, currentDate) {
 }
 
 export default function TimeTrace({ data }) {
-  const { getSubTags, currentDate, themeOptions, foldFlag, deleteOne } = useTimeTraceData();
+  const { getSubTags, currentDate, themeOptions, deleteOne } = useTimeTraceData();
+  const { foldFlag } = useModel('timeTraceFoldFlagModel');
   const { tempTimeTrace, tempDayRecord } = initialData(data, currentDate);
   const [timeTrace, setTimeTrace] = useState(tempTimeTrace);
   const [dayRecord, setDayRecord] = useState(tempDayRecord);

@@ -16,13 +16,14 @@ import styles from './header.less';
 import { addTrace } from '@/services/ant-design-pro/dailyWork';
 import { useTimeTraceData } from './TimeTraceContext';
 import { debounce } from 'lodash';
+import { useModel } from 'umi';
 
 const dateFormat = 'YYYY-MM-DD';
 
 export default function Header() {
   dayjs.extend(utc);
-  const { fetchTraces, getSubTags, themeOptions, updateDate, foldFlag, setFoldFlag } =
-    useTimeTraceData();
+  const { fetchTraces, getSubTags, themeOptions, updateDate } = useTimeTraceData();
+  const { foldFlag, setFoldFlag } = useModel('timeTraceFoldFlagModel');
   let tempParam = {
     themeId: null,
     workId: null,
