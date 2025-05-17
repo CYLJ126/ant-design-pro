@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   addDailyWorkBack,
   deleteDailyWork,
@@ -12,6 +12,7 @@ import 'dayjs/locale/zh-cn';
 import utc from 'dayjs/plugin/utc';
 import { message } from 'antd';
 import { useModel } from 'umi';
+import { getSubTags } from '@/services/ant-design-pro/base';
 
 dayjs.extend(utc);
 
@@ -27,6 +28,7 @@ export async function listActivities(whichDay) {
 export default () => {
   // 每日活动列表
   const [activities, setActivities] = useState({});
+  const themeOptions = useRef([]);
   const { setUpdateInfo } = useModel('activityUpdateModel');
 
   // 初始化活动列表
@@ -59,7 +61,7 @@ export default () => {
       activitiesTemp[newOne.id] = newOne;
       setActivities(activitiesTemp);
     },
-    [activities],
+    [activities, themeOptions],
   );
 
   // 删除活动
@@ -86,13 +88,15 @@ export default () => {
       param.endTimeStr || dayjs(param.endTime).utc().local().format('YYYY-MM-DD HH:mm:ss');
     let data = {
       id: param.id,
+      workId: param.workId,
+      targetId: param.targetId,
+      status: param.status,
+      proportion: param.proportion,
       startTime: startTime,
       endTime: endTime,
-      targetId: param.targetId,
       score: param.score,
       cost: param.cost,
       foldFlag: param.foldFlag,
-      proportion: param.proportion,
       content: param.content,
     };
     updateDailyWork(data).then(() => {
@@ -128,7 +132,17 @@ export default () => {
     addDailyWorkBack(newOne).then(() => message.success('推迟成功'));
   }, []);
 
+  useEffect(() => {
+    // 日课主题下拉内容，为标签“日课”的子标签
+    getSubTags({ name: '日课' }).then((rootTag) => {
+      getSubTags({ fatherId: rootTag[0].value }).then((result) => {
+        themeOptions.current = result;
+      });
+    });
+  }, []);
+
   return {
+    themeOptions,
     activities,
     initialActivities,
     addNewActivity,

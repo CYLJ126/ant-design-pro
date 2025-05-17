@@ -8,6 +8,15 @@ export async function getTags(param) {
   return jsonPost('/base/tag/listTags', param);
 }
 
+export async function getSubTags(param) {
+  const result = await getTags({ ...param, status: 'DOING' });
+  return (
+    result?.map((item) => {
+      return { value: item.id, label: item.name };
+    }) || []
+  );
+}
+
 export async function listRecursive(param) {
   return jsonPost('/base/tag/listRecursive', param);
 }

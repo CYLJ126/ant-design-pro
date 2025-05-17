@@ -15,7 +15,7 @@ import {
   getDailyWorkById,
   getTargetsForDaily,
 } from '@/services/ant-design-pro/dailyWork';
-import { getTags, saveSummary } from '@/services/ant-design-pro/base';
+import { getSubTags, saveSummary } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
@@ -24,21 +24,12 @@ import ArrowRightIcon from '@/icons/ArrowRightIcon';
 import SuccessIcon from '@/icons/SuccessIcon';
 import Time from './time';
 import { useModel } from 'umi';
-import { undoSerialNo, formatSerialNo } from '@/common/textHandler';
-
-async function getSubTags(param) {
-  const result = await getTags({ ...param, status: 'DOING' });
-  return (
-    result?.map((item) => {
-      return { value: item.id, label: item.name };
-    }) || []
-  );
-}
+import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
   const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
-  const { updateActivity, pushNextDay, markDone, deleteActivity } = useModel('activitiesModel');
-  const [themeOptions, setThemeOptions] = useState([]);
+  const { themeOptions, updateActivity, pushNextDay, markDone, deleteActivity } =
+    useModel('activitiesModel');
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
   const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
@@ -49,17 +40,11 @@ export default function Activity({ id }) {
   };
 
   useEffect(() => {
-    // 日课主题下拉内容，为标签“日课”的子标签
-    getSubTags({ name: '日课' }).then((rootTag) => {
-      getSubTags({ fatherId: rootTag[0].value }).then((result) => {
-        setThemeOptions(result);
-      });
-    });
     getDailyWorkById({ activityId: id }).then((result) => {
       if (result) {
         setDailyWork({
           id: result.id,
-          themeId: result.themeId,
+          themeId: result.themeId ?? themeOptions.current[0]?.value,
           workId: result.workId,
           targetId: result.targetId,
           status: result.status,
@@ -137,14 +122,14 @@ export default function Activity({ id }) {
                       <Select
                         value={dailyWork.themeId}
                         className={`${styles.theme} ${getStyles().theme}`}
-                        options={themeOptions}
+                        options={themeOptions.current}
                         onChange={(value) => {
-                          const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
-                          setDailyWork(temp);
-                          updateActivity(temp);
                           // 日课主题下拉变化时，获取事项下拉
                           getSubTags({ fatherId: value }).then((result) => {
                             setWorkOptions(result);
+                            setTargetOptions([]);
+                            const temp = { ...dailyWork, themeId: value, workId: '', targetId: '' };
+                            setDailyWork(temp);
                           });
                         }}
                       />
@@ -205,24 +190,32 @@ export default function Activity({ id }) {
                   </Row>
                 </Row>
                 <Select
+                  allowClear
                   value={dailyWork.workId}
                   size={'small'}
                   className={`${styles.work} ${getStyles().workAndTarget}`}
                   options={workOptions}
+                  onFocus={() => {
+                    // 点击日课事项时，获取事项下拉
+                    if (dailyWork.themeId) {
+                      getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
+                        setWorkOptions(result);
+                      });
+                    }
+                  }}
                   onChange={(value) => {
-                    const temp = { ...dailyWork, workId: value, targetId: '' };
-                    setDailyWork(temp);
-                    updateActivity(temp);
                     // 日课事项下拉变化时，获取目标下拉
                     getTargetsForDaily({
                       workId: value,
                       whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
                     }).then((result) => {
-                      setTargetOptions(
-                        result.map((item) => {
-                          return { value: item.id, label: item.target };
-                        }),
-                      );
+                      let tempTargetDropdown = result.map((item) => {
+                        return { value: item.id, label: item.target };
+                      });
+                      setTargetOptions(tempTargetDropdown);
+                      const temp = { ...dailyWork, workId: value, targetId: '' };
+                      setDailyWork(temp);
+                      updateActivity(temp);
                     });
                   }}
                 />
@@ -418,6 +411,7 @@ export default function Activity({ id }) {
           )}
           <Row>
             <Select
+              allowClear
               value={dailyWork.targetId}
               className={`${styles.target} ${getStyles().workAndTarget}`}
               options={targetOptions}
