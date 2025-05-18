@@ -85,6 +85,38 @@ export default function Activity({ id }) {
     });
   }, []);
 
+  function getWorkIdOnChange(value) {
+    // 日课事项下拉变化时，获取目标下拉
+    getTargetsForDaily({
+      workId: value,
+      whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
+    }).then((result) => {
+      let tempTargetDropdown = result.map((item) => {
+        return { value: item.id, label: item.target };
+      });
+      setTargetOptions(tempTargetDropdown);
+      const temp = { ...dailyWork, workId: value, targetId: '' };
+      setDailyWork(temp);
+      updateActivity(temp);
+    });
+  }
+
+  function focusWorkId() {
+    // 点击日课事项时，获取事项下拉
+    if (dailyWork.themeId) {
+      getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
+        setWorkOptions(result);
+      });
+    }
+  }
+
+  function targetIdOnChange(value) {
+    // 目标选择变化时，更新日课
+    const temp = { ...dailyWork, targetId: value };
+    setDailyWork(temp);
+    updateActivity(temp);
+  }
+
   return (
     <div className={`${styles.activity} ${getStyles().activity}`}>
       <Row>
@@ -195,29 +227,8 @@ export default function Activity({ id }) {
                   size={'small'}
                   className={`${styles.work} ${getStyles().workAndTarget}`}
                   options={workOptions}
-                  onFocus={() => {
-                    // 点击日课事项时，获取事项下拉
-                    if (dailyWork.themeId) {
-                      getSubTags({ fatherId: dailyWork.themeId }).then((result) => {
-                        setWorkOptions(result);
-                      });
-                    }
-                  }}
-                  onChange={(value) => {
-                    // 日课事项下拉变化时，获取目标下拉
-                    getTargetsForDaily({
-                      workId: value,
-                      whichDay: dayjs(dailyWork.startTime).utc().local().format('YYYY-MM-DD'),
-                    }).then((result) => {
-                      let tempTargetDropdown = result.map((item) => {
-                        return { value: item.id, label: item.target };
-                      });
-                      setTargetOptions(tempTargetDropdown);
-                      const temp = { ...dailyWork, workId: value, targetId: '' };
-                      setDailyWork(temp);
-                      updateActivity(temp);
-                    });
-                  }}
+                  onFocus={() => focusWorkId()}
+                  onChange={(value) => getWorkIdOnChange(value)}
                 />
               </Col>
               <Col span={12} style={{ paddingLeft: '10px' }}>
@@ -410,17 +421,39 @@ export default function Activity({ id }) {
             </Row>
           )}
           <Row>
-            <Select
-              allowClear
-              value={dailyWork.targetId}
-              className={`${styles.target} ${getStyles().workAndTarget}`}
-              options={targetOptions}
-              onChange={(value) => {
-                const temp = { ...dailyWork, targetId: value };
-                setDailyWork(temp);
-                updateActivity(temp);
-              }}
-            />
+            {dailyWork.foldFlag === 'YES' ? (
+              <Select
+                allowClear
+                value={dailyWork.targetId}
+                className={`${styles.target} ${getStyles().workAndTarget}`}
+                options={targetOptions}
+                onChange={(value) => targetIdOnChange(value)}
+              />
+            ) : (
+              <>
+                <Col span={8}>
+                  <Select
+                    allowClear
+                    value={dailyWork.workId}
+                    size={'small'}
+                    style={{ height: '26px' }}
+                    className={`${styles.work} ${getStyles().workAndTarget}`}
+                    options={workOptions}
+                    onFocus={() => focusWorkId()}
+                    onChange={(value) => getWorkIdOnChange(value)}
+                  />
+                </Col>
+                <Col span={16}>
+                  <Select
+                    allowClear
+                    value={dailyWork.targetId}
+                    className={`${styles.target} ${getStyles().workAndTarget}`}
+                    options={targetOptions}
+                    onChange={(value) => targetIdOnChange(value)}
+                  />
+                </Col>
+              </>
+            )}
           </Row>
         </Col>
         <Col span={15}>
