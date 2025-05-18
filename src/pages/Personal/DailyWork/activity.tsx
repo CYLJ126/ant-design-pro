@@ -425,6 +425,7 @@ export default function Activity({ id }) {
               <Select
                 allowClear
                 value={dailyWork.targetId}
+                style={{ margin: '0 0 5px 5px' }}
                 className={`${styles.target} ${getStyles().workAndTarget}`}
                 options={targetOptions}
                 onChange={(value) => targetIdOnChange(value)}
@@ -447,6 +448,7 @@ export default function Activity({ id }) {
                   <Select
                     allowClear
                     value={dailyWork.targetId}
+                    style={{ margin: '0 5px 5px 5px' }}
                     className={`${styles.target} ${getStyles().workAndTarget}`}
                     options={targetOptions}
                     onChange={(value) => targetIdOnChange(value)}
