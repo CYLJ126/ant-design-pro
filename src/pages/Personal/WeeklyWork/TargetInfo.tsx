@@ -197,7 +197,7 @@ export default function TargetInfo({ targetId }) {
         />
         <Row>
           {/* 目标描述 */}
-          <Input
+          <Input.TextArea
             value={current.target}
             className={
               fold
