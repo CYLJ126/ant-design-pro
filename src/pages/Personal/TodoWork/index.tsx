@@ -71,11 +71,13 @@ export default function TodoWorPane() {
         </Row>
         <PlusOutlined onClick={addTodo} className={styles.headPlus} />
       </Row>
-      <Row>
-        {todoWorks.map((item) => (
-          <TodoWork key={item.id + time} todoParam={item} postUpdate={listTodos} />
-        ))}
-      </Row>
+      <div className={styles.contentWrap}>
+        <Row>
+          {todoWorks.map((item) => (
+            <TodoWork key={item.id + time} todoParam={item} postUpdate={listTodos} />
+          ))}
+        </Row>
+      </div>
     </div>
   );
 }
