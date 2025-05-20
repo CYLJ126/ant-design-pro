@@ -122,6 +122,8 @@ export default () => {
     let endTimeStr = dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss');
     let newOne = {
       targetId: dailyWork.targetId,
+      workId: dailyWork.workId,
+      cost: dailyWork.cost,
       score: 0,
       foldFlag: 'YES',
       proportion: dailyWork.proportion,
