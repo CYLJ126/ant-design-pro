@@ -59,8 +59,8 @@ export default function Activity({ id }) {
           summary: result.summary,
         });
         if (result.summary) {
-          // 如果有总结，则显示总结，占比 30%
-          setSizes(['70%', '30%']);
+          // 如果有总结，则显示总结，占比 50%
+          setSizes(['50%', '50%']);
         }
         if (result.themeId) {
           // 获取事项下拉
