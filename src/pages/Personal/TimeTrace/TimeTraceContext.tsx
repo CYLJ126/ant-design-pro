@@ -18,6 +18,7 @@ export function TimeTraceProvider({ children }) {
   const currentDate = useRef(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
   const [timeTraces, setTimeTraces] = useState([]);
+  const headParam = useRef({});
 
   // 获取子级标签
   const getSubTags = useCallback(async (fatherId) => {
@@ -37,6 +38,7 @@ export function TimeTraceProvider({ children }) {
 
   // 刷新数据
   const fetchTraces = useCallback((param) => {
+    headParam.current = param;
     listTraces(param).then((result) => {
       setTimeTraces(result);
     });
@@ -46,7 +48,7 @@ export function TimeTraceProvider({ children }) {
   const deleteOne = useCallback(
     (id) => {
       deleteTrace({ id: id }).then((result) => {
-        fetchTraces({ currentDate: currentDate.current.format('YYYY-MM-DD') });
+        fetchTraces(headParam.current);
         if (result) {
           message.success('删除成功').then();
         } else {
