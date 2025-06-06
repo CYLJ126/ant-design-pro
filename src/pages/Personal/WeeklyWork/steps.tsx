@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Col, Input, message, Row } from 'antd';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   CheckOutlined,
-  FastBackwardOutlined,
-  FastForwardOutlined,
   FullscreenExitOutlined,
   FullscreenOutlined,
   MinusOutlined,
@@ -89,9 +86,6 @@ function Step({ step, saveCurrentSteps }) {
               style={{ marginRight: '3px' }}
             />
           )}
-
-          {/* 总结 */}
-          <SolutionOutlined />
         </div>
       }
       value={content}
@@ -103,7 +97,6 @@ function Step({ step, saveCurrentSteps }) {
 
 export default function Steps({ targetId }) {
   const [steps, setSteps] = useState([]);
-  const navigateTo = useNavigate();
   const { targets, updateTarget, deleteTarget } = useModel('targetsModel');
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
@@ -231,19 +224,8 @@ export default function Steps({ targetId }) {
       <Col span={1} className={styles.myIconCol}>
         {targetFoldFlag && (
           <>
-            <FastBackwardOutlined
-              className={styles.myIconJump}
-              onClick={() => {
-                navigateTo('/Personal/DailyWork');
-              }}
-            />
-            <br />
-            <FastForwardOutlined
-              className={styles.myIconJump}
-              onClick={() => {
-                navigateTo('/Personal/MonthlyWork');
-              }}
-            />
+            {/* 总结 */}
+            <SolutionOutlined className={styles.myIconSummary} />
             <br />
           </>
         )}

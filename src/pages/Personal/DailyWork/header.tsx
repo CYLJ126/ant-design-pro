@@ -4,7 +4,6 @@ import {
   ExportOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
-  SendOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
@@ -14,7 +13,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import { useModel } from 'umi';
 import { listActivities } from '@/models/activitiesModel';
-import { useNavigate } from 'react-router-dom';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -32,7 +30,6 @@ export default function Header() {
   const [headInfo, setHeadInfo] = useState(initialHeadInfo);
   const { initialActivities, addNewActivity } = useModel('activitiesModel');
   const { updateInfo } = useModel('activityUpdateModel');
-  const navigateTo = useNavigate();
 
   /**
    * 统计头部信息
@@ -132,13 +129,6 @@ export default function Header() {
         <PlusSquareOutlined className={styles.plusItem} onClick={() => addNewActivity(whichDay)} />
         {/* 总结 */}
         <ExportOutlined className={styles.showSummary} />
-        {/* 跳转到周计划 */}
-        <SendOutlined
-          className={styles.myIconJump}
-          onClick={() => {
-            navigateTo('/Personal/WeeklyWork');
-          }}
-        />
       </Row>
     </div>
   );

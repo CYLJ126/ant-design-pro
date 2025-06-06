@@ -16,7 +16,7 @@ export async function getSubTags(param) {
 }
 
 export default function TargetInfo({ targetId }) {
-  const [themeOptions, setThemeOptions] = useState([]);
+  const { themeOptions } = useModel('activitiesModel');
   const [workOptions, setWorkOptions] = useState([]);
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const { targets, updateTarget } = useModel('targetsModel');
@@ -44,16 +44,6 @@ export default function TargetInfo({ targetId }) {
       setFold(currentFoldFlag);
     }
   }, [updateInfo]);
-
-  useEffect(() => {
-    // 日课主题下拉内容，为标签“日课”的子标签
-    getTags({ name: '日课' }).then((rootTag) => {
-      getSubTags({ fatherId: rootTag[0].value }).then((result) => {
-        setThemeOptions(result);
-        setCurrent({ ...current, themId: result[0].value });
-      });
-    });
-  }, []);
 
   useEffect(() => {
     // 当主题变化时，获取对应的事项下拉列表
@@ -85,7 +75,7 @@ export default function TargetInfo({ targetId }) {
                   <Select
                     value={current.themeId}
                     className={styles.theme}
-                    options={themeOptions}
+                    options={themeOptions.current}
                     onSelect={(value) => {
                       getSubTags({ fatherId: value }).then((result) => {
                         setWorkOptions(result);
@@ -185,7 +175,7 @@ export default function TargetInfo({ targetId }) {
           target={current}
           onChangeFunc={(param) => {
             setCurrent(param);
-            saveCurrent(param);
+            saveCurrent({ ...param, refreshFlag: true });
             setUpdateInfo({
               targetId: targetId,
               fold: fold,
