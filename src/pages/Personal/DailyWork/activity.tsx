@@ -297,6 +297,12 @@ export default function Activity({ id }) {
                         formatted = formatSerialNo(dailyWork.content);
                       }
                       setDailyWork({ ...dailyWork, content: formatted });
+                      // 写入粘贴板
+                      navigator.clipboard.writeText(formatted).catch((e) => {
+                        if (e !== null) {
+                          console.log('写入粘贴板时发生错误，不影响操作', e);
+                        }
+                      });
                     }}
                   />
                 </Row>
