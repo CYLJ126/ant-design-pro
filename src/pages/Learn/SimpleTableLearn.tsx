@@ -11,7 +11,6 @@ const ExamplePage: React.FC = () => {
     console.log('请求参数:', params);
 
     // 模拟延迟
-    // await new Promise(resolve => setTimeout(() => resolve('操作成功'), 500));
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve('数据已准备好'); // 正确使用resolve

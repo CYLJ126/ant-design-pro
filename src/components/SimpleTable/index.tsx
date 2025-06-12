@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useImperativeHandle, useState, forwardRef } from 'react';
-import { Button, Checkbox, Col, message, Row, Space, Table, Typography } from 'antd';
+import { Button, message, Space, Table } from 'antd';
 import type { ColumnType, TableProps } from 'antd/es/table';
 import type { SorterResult } from 'antd/es/table/interface';
 
 export interface Statistics {
-  [key: string]: number | string;
+  order?: number;
+  label: string;
+  value: string | number;
 }
 
 interface Pagination {
@@ -57,6 +59,15 @@ export interface AdvancedTableProps {
   defaultPageSize?: number;
 }
 
+// 格式化统计信息
+const formatStatistics = (stats: Statistics): string => {
+  // 统计信息格式：[{order: 1, label: '总笔数', value: 85}, {order: 2, label: '总金额', value: '¥12,345.67'}]
+  return Object.entries(stats)
+    .sort((a, b) => a[1].order - b[1].order)
+    .map(([label, value]) => `${label}: ${value}`)
+    .join(' | ');
+};
+
 const SimpleTable = forwardRef((props, ref) => {
   const {
     columns,
@@ -73,7 +84,7 @@ const SimpleTable = forwardRef((props, ref) => {
     pageSize: defaultPageSize,
     total: 0,
   });
-  const [statistics, setStatistics] = useState<Statistics>({});
+  const [statistics, setStatistics] = useState<string>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [sorter, setSorter] = useState<{ field?: string; order?: 'ascend' | 'descend' }>({});
@@ -89,7 +100,7 @@ const SimpleTable = forwardRef((props, ref) => {
         sorter: col.sorter ? true : undefined,
       })),
     ];
-  }, [columns, selectedRowKeys, rowKey, pagination.current, pagination.pageSize]);
+  }, [columns]);
 
   // 加载数据
   const loadData = useCallback(async () => {
@@ -107,7 +118,7 @@ const SimpleTable = forwardRef((props, ref) => {
 
       if (response.success) {
         setData(response.data);
-        setStatistics(response.statistics || {});
+        setStatistics(formatStatistics(response.statistics));
         setPagination((prev) => ({
           ...prev,
           total: response.totalPage * pagination.pageSize,
@@ -124,6 +135,21 @@ const SimpleTable = forwardRef((props, ref) => {
       setLoading(false);
     }
   }, [fetchData, queryParams, pagination.current, pagination.pageSize, sorter.field, sorter.order]);
+
+  const getSummary = () => {
+    if (!statistics) {
+      return null;
+    }
+    return (
+      <Table.Summary fixed>
+        <Table.Summary.Row>
+          <Table.Summary.Cell index={0}>
+            <div style={{ whiteSpace: 'nowrap' }}>{statistics}</div>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+      </Table.Summary>
+    );
+  };
 
   // 处理分页变化
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -151,40 +177,6 @@ const SimpleTable = forwardRef((props, ref) => {
     } else {
       setSorter({});
     }
-  };
-
-  /*  // 处理选择变化
-    const handleSelectChange = (checked: boolean, record: any) => {
-      const key = record[rowKey];
-      const newSelectedRowKeys = checked
-        ? [...selectedRowKeys, key]
-        : selectedRowKeys.filter(k => k !== key);
-
-      const newSelectedRows = checked
-        ? [...selectedRows, record]
-        : selectedRows.filter(row => row[rowKey] !== key);
-
-      setSelectedRowKeys(newSelectedRowKeys);
-      setSelectedRows(newSelectedRows);
-    };*/
-
-  // 处理全选
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      const keys = data.map((item) => item[rowKey]);
-      setSelectedRowKeys(keys);
-      setSelectedRows(data);
-    } else {
-      setSelectedRowKeys([]);
-      setSelectedRows([]);
-    }
-  };
-
-  // 格式化统计信息
-  const formatStatistics = (stats: Statistics): string => {
-    return Object.entries(stats)
-      .map(([key, value]) => `${key}：${value}`)
-      .join('，');
   };
 
   // 当查询参数变化时重置到第一页
@@ -224,29 +216,6 @@ const SimpleTable = forwardRef((props, ref) => {
         </div>
       )}
 
-      {/* 统计行和全选 */}
-      <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
-        <Col>
-          {Object.keys(statistics).length > 0 && (
-            <Typography.Text strong>{formatStatistics(statistics)}</Typography.Text>
-          )}
-        </Col>
-        <Col>
-          {data.length > 0 && (
-            <Space>
-              <Checkbox
-                indeterminate={selectedRowKeys.length > 0 && selectedRowKeys.length < data.length}
-                checked={selectedRowKeys.length === data.length && data.length > 0}
-                onChange={handleSelectAll}
-              >
-                全选当页
-              </Checkbox>
-              <span>已选择 {selectedRowKeys.length} 项</span>
-            </Space>
-          )}
-        </Col>
-      </Row>
-
       {/* 表格 */}
       <Table
         columns={getProcessedColumns()}
@@ -277,6 +246,7 @@ const SimpleTable = forwardRef((props, ref) => {
             disabled: record.disabled,
           }),
         }}
+        summary={getSummary}
       />
     </div>
   );
