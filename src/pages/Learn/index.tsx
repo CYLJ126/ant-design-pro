@@ -3,6 +3,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import LessLearn from './LessLearn';
 import ComponentLearn from './ComponentLearn';
 import CarouselPopoverCardLearn from './CarouselPopoverCardLearn';
+import SimpleTableLearn from './SimpleTableLearn';
 
 const tabList = [
   {
@@ -19,6 +20,11 @@ const tabList = [
     tab: 'CarouselPopoverCard Learn',
     key: 'CarouselPopoverCardLearn',
     children: <CarouselPopoverCardLearn />,
+  },
+  {
+    tab: 'SimpleTable Learn',
+    key: 'SimpleTableLearn',
+    children: <SimpleTableLearn />,
   },
 ];
 export default function Learn() {
