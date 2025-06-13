@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import SimpleTable, { ActionButton, TableColumn } from '@/components/SimpleTable';
+import { SimpleTable, ActionButton, TableColumn } from '@/components';
+
 import { message } from 'antd';
 
 const ExamplePage: React.FC = () => {
