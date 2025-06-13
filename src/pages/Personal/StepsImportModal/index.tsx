@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Modal } from 'antd';
 import { SimpleTable } from '@/components';
 import { getSteps } from '@/services/ant-design-pro/dailyWork';
+import styles from './index.less';
 
 const StepsImportModal = forwardRef(
   ({ originalContent = '', id, dwType, closeAfterAction = true, setContent }, ref) => {
@@ -25,7 +26,10 @@ const StepsImportModal = forwardRef(
     const [open, setOpen] = useState(false);
 
     const importData = (action: 'cover' | 'append', steps: any[]) => {
-      let append = steps.toSorted((a, b) => a.orderId - b.orderId).join('\n');
+      let append = steps
+        .toSorted((a, b) => a.orderId - b.orderId)
+        .map((item) => item.content)
+        .join('\n');
       if (action === 'cover') {
         setContent(append);
       } else {
@@ -52,6 +56,7 @@ const StepsImportModal = forwardRef(
         onCancel={() => setOpen(false)}
         afterClose={() => Modal.destroyAll()}
         footer={null}
+        className={styles.modal}
       >
         <SimpleTable
           columns={tableColumns}

@@ -5,7 +5,6 @@ import { message } from 'antd';
 
 /**
  * jsonPost 请求后端
- * 如果是列表请求，则需要新加一个方法，以处理列表统计数据，如总数等
  *
  * @param path 请求路径
  * @param data 请求参数
@@ -23,6 +22,29 @@ export function jsonPost(path, data, options?: { [key: string]: any }) {
   }).then((resultContext) => {
     if (resultContext.success) {
       return resultContext.data;
+    }
+  });
+}
+
+/**
+ * jsonPost 请求后端返回列表，以处理列表统计数据，如总数等
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function jsonPostList(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>('/nip' + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((resultContext) => {
+    if (resultContext.success) {
+      return resultContext;
     }
   });
 }

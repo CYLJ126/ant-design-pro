@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { SimpleTable, ActionButton, TableColumn } from '@/components';
+import { ActionButton, SimpleTable, TableColumn } from '@/components';
 
 import { message } from 'antd';
 
@@ -27,7 +27,7 @@ const ExamplePage: React.FC = () => {
       success: true,
       currentPage: page,
       totalPage: 10,
-      data: Array.from({ length: pageSize }, (_, i) => ({
+      rows: Array.from({ length: pageSize }, (_, i) => ({
         id: i + (page - 1) * pageSize,
         name: `项目 ${i + (page - 1) * pageSize}`,
         amount: Math.random() * 1000,

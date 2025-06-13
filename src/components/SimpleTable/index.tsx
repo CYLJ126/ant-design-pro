@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useImperativeHandle, useState, forwardRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { Button, message, Space, Table } from 'antd';
 import type { ColumnType, TableProps } from 'antd/es/table';
 import type { SorterResult } from 'antd/es/table/interface';
@@ -123,8 +123,8 @@ const SimpleTable = forwardRef((props, ref) => {
       };
       const response = await fetchData(params);
 
-      if (response) {
-        setData(response.data);
+      if (response.success) {
+        setData(response.rows);
         setStatistics(formatStatistics(response.statistics));
         setPagination((prev) => ({
           ...prev,
@@ -134,6 +134,8 @@ const SimpleTable = forwardRef((props, ref) => {
         // 重置选中状态
         setSelectedRowKeys([]);
         setSelectedRows([]);
+      } else {
+        message.error('加载数据失败');
       }
     } catch (error) {
       message.error('加载数据失败');

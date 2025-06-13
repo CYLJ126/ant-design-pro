@@ -109,7 +109,7 @@ export default function Steps({ targetId }) {
 
   useEffect(() => {
     getSteps(targetId, 'weekly').then((result) => {
-      setSteps(result);
+      setSteps(result.rows);
     });
   }, [targetId]);
 

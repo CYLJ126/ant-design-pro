@@ -1,4 +1,4 @@
-import { jsonPost } from './api';
+import { jsonPost, jsonPostList } from './api';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
 
@@ -146,7 +146,7 @@ export async function getSteps(
   targetId?: number,
   type?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'semiannual' | 'annual',
 ) {
-  return jsonPost('/dw/steps/listSteps', { targetId: targetId, type: 'WEEKLY' || type });
+  return jsonPostList('/dw/steps/listSteps', { targetId: targetId, type: 'WEEKLY' || type });
 }
 
 /**

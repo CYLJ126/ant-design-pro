@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { Col, Input, InputNumber, Row, Select, Splitter } from 'antd';
 import {
   FullscreenExitOutlined,
@@ -29,7 +29,7 @@ import { useModel } from 'umi';
 import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
-  const importModalRef = useRef<>(null);
+  const importModalRef = useRef<ReactNode>(null);
   const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
   const { themeOptions, updateActivity, pushNextDay, markDone, deleteActivity } =
     useModel('activitiesModel');
