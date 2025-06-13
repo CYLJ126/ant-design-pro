@@ -8,10 +8,18 @@
 
   :global(.ant-btn) {
     height: 28px;
+    font-size: 15px;
     color: #ffffff;
     background-color: #81d3f8;
     border: none;
   }
+}
+
+.summary {
+  padding-left: 3px;
+  white-space: nowrap;
+  font-weight: bold;
+  background-color: #ffffff;
 }
 
 .headLine {
@@ -27,44 +35,29 @@
     background-color: #ffffff !important;
   }
 
-  :global(.ant-table-summary) {
-    padding-left: 5px;
-
-    :global(.ant-table-cell) {
-      border: none !important;
-    }
-
-    .summary {
-      white-space: nowrap;
-      font-weight: bold;
-    }
-  }
-
   :global(.ant-pagination) {
     margin: 0 !important;
-    padding-right: 5px;
+    padding: 0 5px 0 0;
     background-color: #ffffff;
 
     :global(.ant-pagination-total-text) {
       height: 25px !important;
+      margin-top: 2px;
     }
 
     :global(.ant-pagination-prev) {
-      margin-top: -3px;
-    }
-
-    :global(.ant-pagination-jump-next) {
-      margin-top: -3px;
+      margin-top: -1px;
     }
 
     :global(.ant-pagination-next) {
-      margin-top: -3px;
+      margin-top: -1px;
     }
 
     :global(.ant-pagination-item) {
       height: 25px !important;
       border: 1px solid #d9d9d9;
       border-radius: 5px;
+      margin-top: 4px;
 
       > a {
         height: 25px !important;
@@ -76,14 +69,15 @@
 
     :global(.ant-select-selector) {
       height: 25px !important;
+      margin-top: 4px;
     }
 
     :global(.ant-select-arrow) {
-      margin-top: -8px !important;
+      margin-top: -4px !important;
     }
 
     :global(.ant-pagination-options-quick-jumper) {
-      margin-top: -3px;
+      margin-top: 1px;
 
       > input {
         height: 25px !important;

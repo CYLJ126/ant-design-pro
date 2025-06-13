@@ -78,7 +78,8 @@ const SimpleTable = forwardRef((props, ref) => {
     initialParams = {},
     actionButtons = [],
     rowKey = 'id',
-    defaultPageSize = 10,
+    defaultPageSize = 20,
+    showStatistics = true,
   } = props;
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -138,21 +139,6 @@ const SimpleTable = forwardRef((props, ref) => {
       setLoading(false);
     }
   }, [fetchData, queryParams, pagination.current, pagination.pageSize, sorter.field, sorter.order]);
-
-  const getSummary = () => {
-    if (!statistics) {
-      return null;
-    }
-    return (
-      <Table.Summary fixed>
-        <Table.Summary.Row>
-          <Table.Summary.Cell index={0}>
-            <div className={styles.summary}>{statistics}</div>
-          </Table.Summary.Cell>
-        </Table.Summary.Row>
-      </Table.Summary>
-    );
-  };
 
   // 处理分页变化
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -219,6 +205,14 @@ const SimpleTable = forwardRef((props, ref) => {
           </Space>
         </div>
       )}
+
+      {/* 统计行 */}
+      {showStatistics && statistics && (
+        <div className={styles.summary}>
+          <span>{statistics}</span>
+        </div>
+      )}
+
       <hr className={styles.headLine} />
 
       {/* 表格 */}
@@ -252,7 +246,6 @@ const SimpleTable = forwardRef((props, ref) => {
             disabled: record.disabled,
           }),
         }}
-        summary={getSummary}
       />
     </div>
   );

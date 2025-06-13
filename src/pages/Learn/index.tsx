@@ -4,6 +4,7 @@ import LessLearn from './LessLearn';
 import ComponentLearn from './ComponentLearn';
 import CarouselPopoverCardLearn from './CarouselPopoverCardLearn';
 import SimpleTableLearn from './SimpleTableLearn';
+import styles from './index.less';
 
 const tabList = [
   {
@@ -30,6 +31,7 @@ const tabList = [
 export default function Learn() {
   return (
     <PageContainer
+      className={styles.container}
       tabList={tabList}
       header={{
         title: null,
