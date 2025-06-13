@@ -80,6 +80,7 @@ const SimpleTable = forwardRef((props, ref) => {
     rowKey = 'id',
     defaultPageSize = 20,
     showStatistics = true,
+    tableHeight = 750,
   } = props;
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -234,9 +235,11 @@ const SimpleTable = forwardRef((props, ref) => {
           pageSizeOptions: [10, 20, 50, 100],
         }}
         onChange={handleTableChange}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1500, y: tableHeight - 55 }}
         sticky
         rowSelection={{
+          fixed: 'left',
+          columnWidth: 50,
           selectedRowKeys,
           onChange: (selectedKeys, selectedRows) => {
             setSelectedRowKeys(selectedKeys);

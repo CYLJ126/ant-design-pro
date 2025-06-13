@@ -32,6 +32,12 @@ const ExamplePage: React.FC = () => {
         amount: Math.random() * 1000,
         date: new Date().toISOString(),
         status: i % 3 === 0 ? '成功' : '处理中',
+        creator: '张三',
+        description: '这是一条描述',
+        sex: '男',
+        age: 29,
+        city: '上海',
+        address: '上海浦东新区',
       })),
       statistics: {
         总笔数: 85,
@@ -70,7 +76,42 @@ const ExamplePage: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       width: 120,
-      fixed: 'right',
+      order: 4,
+    },
+    {
+      title: '创建人',
+      dataIndex: 'creator',
+      width: 120,
+      order: 4,
+    },
+    {
+      title: '描述',
+      dataIndex: 'description',
+      width: 800,
+      order: 4,
+    },
+    {
+      title: '性别',
+      dataIndex: 'sex',
+      width: 80,
+      order: 4,
+    },
+    {
+      title: '年龄',
+      dataIndex: 'age',
+      width: 60,
+      order: 4,
+    },
+    {
+      title: '城市',
+      dataIndex: 'city',
+      width: 120,
+      order: 4,
+    },
+    {
+      title: '地址',
+      dataIndex: 'address',
+      width: 180,
       order: 4,
     },
   ];
@@ -103,6 +144,7 @@ const ExamplePage: React.FC = () => {
         ref={tableRef}
         columns={columns}
         fetchData={fetchTableData}
+        tableHeight={760}
         actionButtons={actionButtons}
         initialParams={{ status: 'active' }}
         defaultPageSize={20}
