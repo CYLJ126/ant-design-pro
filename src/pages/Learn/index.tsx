@@ -7,6 +7,11 @@ import SimpleTableLearn from './SimpleTableLearn';
 
 const tabList = [
   {
+    tab: 'SimpleTable Learn',
+    key: 'SimpleTableLearn',
+    children: <SimpleTableLearn />,
+  },
+  {
     tab: 'Less Learn',
     key: 'lessLearn',
     children: <LessLearn />,
@@ -20,11 +25,6 @@ const tabList = [
     tab: 'CarouselPopoverCard Learn',
     key: 'CarouselPopoverCardLearn',
     children: <CarouselPopoverCardLearn />,
-  },
-  {
-    tab: 'SimpleTable Learn',
-    key: 'SimpleTableLearn',
-    children: <SimpleTableLearn />,
   },
 ];
 export default function Learn() {

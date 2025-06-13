@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useImperativeHandle, useState, forwardRe
 import { Button, message, Space, Table } from 'antd';
 import type { ColumnType, TableProps } from 'antd/es/table';
 import type { SorterResult } from 'antd/es/table/interface';
+import { generateRandomUUID } from '@/common/RandomUtil';
+import { getColorByIndex } from '@/common/colorUtil';
+import styles from './index.less';
 
 export interface Statistics {
   order?: number;
@@ -144,7 +147,7 @@ const SimpleTable = forwardRef((props, ref) => {
       <Table.Summary fixed>
         <Table.Summary.Row>
           <Table.Summary.Cell index={0}>
-            <div style={{ whiteSpace: 'nowrap' }}>{statistics}</div>
+            <div className={styles.summary}>{statistics}</div>
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </Table.Summary>
@@ -197,17 +200,18 @@ const SimpleTable = forwardRef((props, ref) => {
   }));
 
   return (
-    <div>
+    <div className={styles.tableContainer}>
       {/* 按钮行 */}
       {actionButtons.length > 0 && (
-        <div className="table-action-bar" style={{ marginBottom: 16 }}>
+        <div className={styles.buttonBar}>
           <Space>
             {actionButtons.map((btn, index) => (
               <Button
-                key={index}
+                key={generateRandomUUID(8)}
                 type="primary"
                 disabled={btn.requiresSelection && selectedRows.length === 0}
                 onClick={() => btn.handler(selectedRows)}
+                style={{ backgroundColor: getColorByIndex(index) }}
               >
                 {btn.text}
               </Button>
@@ -215,9 +219,11 @@ const SimpleTable = forwardRef((props, ref) => {
           </Space>
         </div>
       )}
+      <hr className={styles.headLine} />
 
       {/* 表格 */}
       <Table
+        className={styles.table}
         columns={getProcessedColumns()}
         dataSource={data}
         rowKey={rowKey}

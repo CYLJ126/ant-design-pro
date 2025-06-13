@@ -35,8 +35,8 @@ function charValue(char) {
  */
 export function calculateStringValue(str) {
   let totalValue = 0;
-  for (let i = 0; i < str.length; i++) {
-    totalValue += charValue(str[i]);
+  for (const element of str) {
+    totalValue += charValue(element);
   }
   return totalValue + 30;
 }
