@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Input, InputNumber, Row, Select, Splitter } from 'antd';
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
+  LoginOutlined,
   OrderedListOutlined,
   SolutionOutlined,
   UndoOutlined,
@@ -15,6 +16,7 @@ import {
   getDailyWorkById,
   getTargetsForDaily,
 } from '@/services/ant-design-pro/dailyWork';
+import StepsImportModal from '@/pages/Personal/StepsImportModal';
 import { getSubTags, saveSummary } from '@/services/ant-design-pro/base';
 import dayjs from 'dayjs';
 // 格式化时间为本地时间
@@ -27,6 +29,7 @@ import { useModel } from 'umi';
 import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
+  const importModalRef = useRef<>(null);
   const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
   const { themeOptions, updateActivity, pushNextDay, markDone, deleteActivity } =
     useModel('activitiesModel');
@@ -306,6 +309,13 @@ export default function Activity({ id }) {
                     }}
                   />
                 </Row>
+                <Row>
+                  {/* 从周内容导入 */}
+                  <LoginOutlined
+                    className={`${styles.importIcon} ${getStyles().icon}`}
+                    onClick={() => importModalRef.current.open(true)}
+                  />
+                </Row>
               </Col>
             </Row>
           ) : (
@@ -414,6 +424,7 @@ export default function Activity({ id }) {
                     />
                   </Col>
                   <Col span={4} style={{ paddingLeft: '12px', paddingTop: '3px' }}>
+                    {/* 展开 */}
                     <FullscreenOutlined
                       className={`${styles.unFoldIcon} ${getStyles().icon}`}
                       onClick={() => {
@@ -502,6 +513,13 @@ export default function Activity({ id }) {
       <Row>
         <hr className={`${styles.separator} ${getStyles().separator}`} />
       </Row>
+      <StepsImportModal
+        ref={importModalRef}
+        originalContent={dailyWork.content}
+        id={dailyWork.targetId}
+        dwType="weekly"
+        setContent={(content) => setDailyWork({ ...dailyWork, content: content })}
+      />
     </div>
   );
 }

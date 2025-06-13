@@ -108,7 +108,7 @@ export default function Steps({ targetId }) {
   const [stepFoldFlag, setStepFoldFlag] = useState(false);
 
   useEffect(() => {
-    getSteps(targetId).then((result) => {
+    getSteps(targetId, 'weekly').then((result) => {
       setSteps(result);
     });
   }, [targetId]);

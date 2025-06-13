@@ -64,6 +64,9 @@ export interface AdvancedTableProps {
 
 // 格式化统计信息
 const formatStatistics = (stats: Statistics): string => {
+  if (!stats) {
+    return '';
+  }
   // 统计信息格式：[{order: 1, label: '总笔数', value: 85}, {order: 2, label: '总金额', value: '¥12,345.67'}]
   return Object.entries(stats)
     .sort((a, b) => a[1].order - b[1].order)
@@ -118,10 +121,9 @@ const SimpleTable = forwardRef((props, ref) => {
         sortField: sorter.field,
         sortOrder: sorter.order,
       };
-
       const response = await fetchData(params);
 
-      if (response.success) {
+      if (response) {
         setData(response.data);
         setStatistics(formatStatistics(response.statistics));
         setPagination((prev) => ({

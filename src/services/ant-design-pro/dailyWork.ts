@@ -140,9 +140,13 @@ export async function updateWeeklyWorkProportion(param) {
  * 返回目标的步骤
  *
  * @param targetId 事项 id
+ * @param type 类型：daily、weekly、monthly、quarterly、semiannual、annual……见 DwStatisticsEnum 枚举
  */
-export async function getSteps(targetId?: number) {
-  return jsonPost('/dw/steps/listSteps', { targetId: targetId });
+export async function getSteps(
+  targetId?: number,
+  type?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'semiannual' | 'annual',
+) {
+  return jsonPost('/dw/steps/listSteps', { targetId: targetId, type: 'WEEKLY' || type });
 }
 
 /**
