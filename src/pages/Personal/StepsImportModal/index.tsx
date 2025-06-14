@@ -71,6 +71,8 @@ const StepsImportModal = forwardRef(
         className={styles.modal}
         width={width}
       >
+        <hr className={styles.line} />
+
         <SimpleTable
           columns={tableColumns}
           defaultPageSize={10}
