@@ -35,7 +35,7 @@ export default function Activity({ id }) {
     useModel('activitiesModel');
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
-  const [sizes, setSizes] = React.useState<(number | string)[]>(['100%', '0%']);
+  const [sizes, setSizes] = React.useState<number[]>([100, 0]);
   const color = dailyWork.status === 'DONE' ? '#5cb3cc' : '#81d3f8';
 
   const getStyles = () => {
@@ -63,7 +63,7 @@ export default function Activity({ id }) {
         });
         if (result.summary) {
           // 如果有总结，则显示总结，占比 50%
-          setSizes(['50%', '50%']);
+          setSizes([50, 50]);
         }
         if (result.themeId) {
           // 获取事项下拉
@@ -118,6 +118,17 @@ export default function Activity({ id }) {
     const temp = { ...dailyWork, targetId: value };
     setDailyWork(temp);
     updateActivity(temp);
+  }
+
+  function switchSummaryPanel() {
+    return () => {
+      // 解析成
+      if (sizes[1] > 0) {
+        setSizes([100, 0]);
+      } else {
+        setSizes([50, 50]);
+      }
+    };
   }
 
   return (
@@ -287,7 +298,7 @@ export default function Activity({ id }) {
                   {/* 总结 */}
                   <SolutionOutlined
                     className={`${styles.summaryIcon} ${getStyles().icon}`}
-                    onClick={() => setSizes(['50%', '50%'])}
+                    onClick={switchSummaryPanel()}
                   />
                   {/* 添加或撤销序号 */}
                   <OrderedListOutlined
@@ -412,6 +423,7 @@ export default function Activity({ id }) {
                     {/* 总结 */}
                     <SolutionOutlined
                       className={`${styles.summaryFoldedIcon} ${getStyles().icon}`}
+                      onClick={switchSummaryPanel()}
                     />
                   </Col>
                   <Col span={4} style={{ paddingLeft: '12px', paddingTop: '1px' }}>
@@ -477,7 +489,7 @@ export default function Activity({ id }) {
         </Col>
         <Col span={15}>
           <Splitter style={{ paddingLeft: '4px' }} onResize={setSizes}>
-            <Splitter.Panel collapsible size={sizes[0]} min="30%" max="70%">
+            <Splitter.Panel collapsible size={sizes[0] + '%'} min="30%" max="70%">
               <Input.TextArea
                 value={dailyWork.content}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
@@ -486,7 +498,7 @@ export default function Activity({ id }) {
                 onBlur={() => updateActivity(dailyWork)}
               />
             </Splitter.Panel>
-            <Splitter.Panel collapsible size={sizes[1]} min="30%" max="70%">
+            <Splitter.Panel collapsible size={sizes[1] + '%'} min="30%" max="70%">
               <Input.TextArea
                 value={dailyWork.summary}
                 style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
