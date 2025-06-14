@@ -21,14 +21,20 @@ export default function WeeklyWork() {
 
   /**
    * 切换周 ID
-   * @param type 类型：former-往前切换一周；latter-往后切换一周；
+   * @param type 类型：former-往前切换一周；latter-往后切换一周；select-选择指定周；
+   * @param weekId 指定周 ID
    */
-  function toggleWeek(type) {
-    const delta = type === 'former' ? -1 : 1;
-    let newVar = whichWeek + delta;
-    setWhichWeek(newVar);
+  function toggleWeek(type, weekId?: number) {
+    let targetWeek;
+    if (weekId) {
+      targetWeek = weekId;
+    } else {
+      const delta = type === 'former' ? -1 : 1;
+      targetWeek = whichWeek + delta;
+    }
+    setWhichWeek(targetWeek);
     // 加载本周目标列表
-    initialTargets(newVar);
+    initialTargets(targetWeek);
   }
 
   useEffect(() => {

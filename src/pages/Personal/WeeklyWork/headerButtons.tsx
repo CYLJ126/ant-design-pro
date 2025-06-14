@@ -83,7 +83,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
           options={weekOptions}
           value={'第 ' + whichWeek + ' 周'}
           onSelect={(value) => {
-            toggleWeek('former');
+            toggleWeek('select', value);
             setWeekOptions(getWeekOptions(value));
           }}
         />
