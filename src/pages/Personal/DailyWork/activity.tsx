@@ -310,7 +310,9 @@ export default function Activity({ id }) {
                       } else {
                         formatted = formatSerialNo(dailyWork.content);
                       }
-                      setDailyWork({ ...dailyWork, content: formatted });
+                      let newVar = { ...dailyWork, content: formatted };
+                      setDailyWork(newVar);
+                      updateActivity(dailyWork);
                       // 写入粘贴板
                       navigator.clipboard.writeText(formatted).catch((e) => {
                         if (e !== null) {
@@ -530,7 +532,11 @@ export default function Activity({ id }) {
         originalContent={dailyWork.content}
         id={dailyWork.targetId}
         dwType="weekly"
-        setContent={(content) => setDailyWork({ ...dailyWork, content: content })}
+        setContent={(content) => {
+          let newVar = { ...dailyWork, content: content };
+          setDailyWork(newVar);
+          updateActivity(newVar);
+        }}
       />
     </div>
   );
