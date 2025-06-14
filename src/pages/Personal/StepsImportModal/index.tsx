@@ -1,9 +1,17 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Modal } from 'antd';
+import { message, Modal } from 'antd';
 import { SimpleTable } from '@/components';
 import { getSteps } from '@/services/ant-design-pro/dailyWork';
 import styles from './index.less';
 
+const width = {
+  xs: '90%',
+  sm: '80%',
+  md: '70%',
+  lg: '60%',
+  xl: '60%',
+  xxl: '60%',
+};
 const StepsImportModal = forwardRef(
   ({ originalContent = '', id, dwType, closeAfterAction = true, setContent }, ref) => {
     const tableColumns = [
@@ -26,6 +34,10 @@ const StepsImportModal = forwardRef(
     const [open, setOpen] = useState(false);
 
     const importData = (action: 'cover' | 'append', steps: any[]) => {
+      if (steps?.length < 1) {
+        message.warning('请先选择要导入的步骤').then();
+        return;
+      }
       let append = steps
         .toSorted((a, b) => a.orderId - b.orderId)
         .map((item) => item.content)
@@ -57,6 +69,7 @@ const StepsImportModal = forwardRef(
         afterClose={() => Modal.destroyAll()}
         footer={null}
         className={styles.modal}
+        width={width}
       >
         <SimpleTable
           columns={tableColumns}
