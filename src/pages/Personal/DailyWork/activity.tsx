@@ -249,7 +249,7 @@ export default function Activity({ id }) {
                       width={20}
                       height={20}
                       color={color}
-                      margin="4px 0 0 4px"
+                      margin="3px 0 0 4px"
                       onClick={() => {
                         markDone(dailyWork.id, 'DONE').then(() => {
                           setDailyWork({ ...dailyWork, status: 'DONE' });
