@@ -45,7 +45,7 @@ const useStepStyle = (color) => {
 function Step({ step, saveCurrentSteps }) {
   const { orderId: index, status, content: initialContent } = { ...step };
   const [content, setContent] = useState(initialContent);
-  const { styles: dynamicStyle } = useStepStyle(status === 'INITIAL' ? '#81d3f8' : '#5bb1c9');
+  const { styles: dynamicStyle } = useStepStyle(status === 0 ? '#81d3f8' : '#5bb1c9');
   return (
     <Input
       size="small"
@@ -73,7 +73,7 @@ function Step({ step, saveCurrentSteps }) {
             onClick={() => saveCurrentSteps(index, 'del', '')}
             style={{ marginRight: '3px' }}
           />
-          {status === 'INITIAL' ? (
+          {status === 0 ? (
             // 标记为完成
             <CheckOutlined
               onClick={() => saveCurrentSteps(index, 'done', '')}
@@ -101,9 +101,9 @@ export default function Steps({ targetId }) {
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
   // 折叠目标时，高度为 56px，展开目标时高度为 115px
-  const [height, setHeight] = useState(target.foldFlag === 'NO' ? 56 : 115);
+  const [height, setHeight] = useState(target.foldFlag === 0 ? 56 : 115);
   // false-折叠目标，高度为 56px；true-展开目标，高度为 115px
-  const [targetFoldFlag, setTargetFoldFlag] = useState(target.foldFlag === 'YES');
+  const [targetFoldFlag, setTargetFoldFlag] = useState(target.foldFlag === 1);
   // false-折叠步骤，高度取决于目标的折叠标记；true-展开，高度为 Max(115，步骤数 * 30)；
   const [stepFoldFlag, setStepFoldFlag] = useState(false);
 
@@ -167,9 +167,9 @@ export default function Steps({ targetId }) {
           if (type === 'save') {
             steps[i - 1].content = content;
           } else if (type === 'done') {
-            steps[i - 1].status = 'DONE';
+            steps[i - 1].status = 2;
           } else if (type === 'todo') {
-            steps[i - 1].status = 'INITIAL';
+            steps[i - 1].status = 0;
           } else if (type === 'del') {
             // 如果当前操作是删除，且下标等于指定下标，则删除当前步骤，即不添加到新的容器中
             continue;
@@ -180,7 +180,7 @@ export default function Steps({ targetId }) {
           orderId: newIndex + 1,
           uuid: time + newIndex + 1,
           targetId: targetId,
-          status: steps[i - 1].status ?? 'INITIAL',
+          status: steps[i - 1].status ?? 0,
           type: 'weekly',
           summaryId: steps[i - 1].summaryId,
           progress: steps[i - 1].progress,
@@ -193,7 +193,7 @@ export default function Steps({ targetId }) {
             orderId: newIndex + 1,
             uuid: time + newIndex + 1,
             targetId: targetId,
-            status: 'INITIAL',
+            status: 0,
             type: 'weekly',
             content: '',
             progress: 0,
@@ -236,7 +236,7 @@ export default function Steps({ targetId }) {
           <FullscreenExitOutlined
             className={styles.myIconFold}
             onClick={() => {
-              updateTarget({ ...target, foldFlag: 'NO' });
+              updateTarget({ ...target, foldFlag: 0 });
               setUpdateInfo({ targetId: targetId, time: new Date(), fold: true });
               setTimeout(() => {
                 setHeight(56);
@@ -250,7 +250,7 @@ export default function Steps({ targetId }) {
             className={styles.myIconFold}
             onClick={() => {
               setUpdateInfo({ targetId: targetId, time: new Date(), fold: false });
-              updateTarget({ ...target, foldFlag: 'YES' });
+              updateTarget({ ...target, foldFlag: 1 });
               setTimeout(() => {
                 setHeight(115);
               }, 100);

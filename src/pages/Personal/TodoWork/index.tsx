@@ -35,10 +35,10 @@ export default function TodoWorPane() {
     let temp = {
       startDate: date,
       priority: 10,
-      status: 'INITIAL',
+      status: 0,
       title: '',
       content: '',
-      foldFlag: 'YES',
+      foldFlag: 1,
     };
     let newList = [];
     newList.push(temp);

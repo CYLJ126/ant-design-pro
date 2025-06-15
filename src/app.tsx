@@ -103,7 +103,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         }
         let rawMenus;
         try {
-          rawMenus = await listRecursiveMenus({ status: 'DOING' });
+          rawMenus = await listRecursiveMenus({ status: 1 });
         } catch (e) {
           rawMenus = [];
         }

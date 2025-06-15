@@ -7,7 +7,7 @@ import { useModel } from 'umi';
 import { getTarget, updateWeeklyWorkProportion } from '@/services/ant-design-pro/dailyWork';
 
 export async function getSubTags(param) {
-  const result = await getTags({ ...param, status: 'DOING' });
+  const result = await getTags({ ...param, status: 1 });
   return (
     result?.map((item) => {
       return { value: item.id, label: item.name };
@@ -21,7 +21,7 @@ export default function TargetInfo({ targetId }) {
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const { targets, updateTarget } = useModel('targetsModel');
   const [current, setCurrent] = useState(targets[targetId]);
-  const [fold, setFold] = useState(current.foldFlag === 'NO');
+  const [fold, setFold] = useState(current.foldFlag === 0);
 
   const saveCurrent = (param) => {
     if (!param.workId || !param.target) {

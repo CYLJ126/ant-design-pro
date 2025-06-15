@@ -10,7 +10,7 @@ interface Menu {
   children?: Menu[];
 }
 
-let menus = await listRecursiveMenus({ status: 'DOING' });
+let menus = await listRecursiveMenus({ status: 1 });
 let menuPathMap = {};
 
 function transfer(rawMenu) {
@@ -29,7 +29,7 @@ function transfer(rawMenu) {
 
 async function getMenus() {
   if (!menus) {
-    const result = await listRecursiveMenus({ status: 'DOING' });
+    const result = await listRecursiveMenus({ status: 1 });
     menuPathMap = {};
     menus = result.map((menu) => transfer(menu));
   }

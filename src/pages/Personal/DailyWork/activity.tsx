@@ -30,16 +30,16 @@ import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
   const importModalRef = useRef<ReactNode>(null);
-  const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 'YES' });
+  const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 1 });
   const { themeOptions, updateActivity, pushNextDay, markDone, deleteActivity } =
     useModel('activitiesModel');
   const [workOptions, setWorkOptions] = useState([]);
   const [targetOptions, setTargetOptions] = useState([]);
   const [sizes, setSizes] = React.useState<number[]>([100, 0]);
-  const color = dailyWork.status === 'DONE' ? '#5cb3cc' : '#81d3f8';
+  const color = dailyWork.status === 2 ? '#5cb3cc' : '#81d3f8';
 
   const getStyles = () => {
-    return dailyWork.status === 'DONE' ? activityDone : activityInitial;
+    return dailyWork.status === 2 ? activityDone : activityInitial;
   };
 
   useEffect(() => {
@@ -135,7 +135,7 @@ export default function Activity({ id }) {
     <div className={`${styles.activity} ${getStyles().activity}`}>
       <Row>
         <Col span={2}>
-          <Row style={{ marginBottom: dailyWork.foldFlag === 'YES' ? '64px' : '5px' }}>
+          <Row style={{ marginBottom: dailyWork.foldFlag === 1 ? '64px' : '5px' }}>
             <Time
               showLine={true}
               timeParam={dayjs(dailyWork.startTime)}
@@ -159,7 +159,7 @@ export default function Activity({ id }) {
           </Row>
         </Col>
         <Col span={7} style={{ paddingLeft: '14px' }}>
-          {dailyWork.foldFlag === 'YES' ? (
+          {dailyWork.foldFlag === 1 ? (
             <Row>
               <Col span={12}>
                 <Row>
@@ -254,7 +254,7 @@ export default function Activity({ id }) {
                       deleteActivity(dailyWork.id);
                     }}
                   />
-                  {dailyWork.status === 'INITIAL' ? (
+                  {dailyWork.status === 0 ? (
                     // 完成
                     <SuccessIcon
                       width={20}
@@ -262,8 +262,8 @@ export default function Activity({ id }) {
                       color={color}
                       margin="3px 0 0 4px"
                       onClick={() => {
-                        markDone(dailyWork.id, 'DONE').then(() => {
-                          setDailyWork({ ...dailyWork, status: 'DONE' });
+                        markDone(dailyWork.id, 2).then(() => {
+                          setDailyWork({ ...dailyWork, status: 2 });
                         });
                       }}
                     />
@@ -272,8 +272,8 @@ export default function Activity({ id }) {
                     <UndoOutlined
                       className={`${styles.todoUnfoldIcon} ${getStyles().icon}`}
                       onClick={() => {
-                        markDone(dailyWork.id, 'INITIAL').then(() => {
-                          setDailyWork({ ...dailyWork, status: 'INITIAL' });
+                        markDone(dailyWork.id, 0).then(() => {
+                          setDailyWork({ ...dailyWork, status: 0 });
                         });
                       }}
                     />
@@ -282,8 +282,8 @@ export default function Activity({ id }) {
                   <FullscreenExitOutlined
                     className={`${styles.foldIcon} ${getStyles().icon}`}
                     onClick={() => {
-                      setDailyWork({ ...dailyWork, foldFlag: 'NO' });
-                      foldActivity(dailyWork.id, 'NO').then();
+                      setDailyWork({ ...dailyWork, foldFlag: 0 });
+                      foldActivity(dailyWork.id, 0).then();
                     }}
                   />
                 </Row>
@@ -396,7 +396,7 @@ export default function Activity({ id }) {
                     />
                   </Col>
                   <Col span={4} style={{ paddingLeft: '10px', paddingTop: '3px' }}>
-                    {dailyWork.status === 'INITIAL' ? (
+                    {dailyWork.status === 0 ? (
                       // 完成
                       <SuccessIcon
                         width={20}
@@ -404,8 +404,8 @@ export default function Activity({ id }) {
                         color={color}
                         margin="0 0 0 4px"
                         onClick={() => {
-                          markDone(dailyWork.id, 'DONE').then(() => {
-                            setDailyWork({ ...dailyWork, status: 'DONE' });
+                          markDone(dailyWork.id, 2).then(() => {
+                            setDailyWork({ ...dailyWork, status: 2 });
                           });
                         }}
                       />
@@ -414,8 +414,8 @@ export default function Activity({ id }) {
                       <UndoOutlined
                         className={`${styles.todoFoldIcon} ${getStyles().icon}`}
                         onClick={() => {
-                          markDone(dailyWork.id, 'INITIAL').then(() => {
-                            setDailyWork({ ...dailyWork, status: 'INITIAL' });
+                          markDone(dailyWork.id, 0).then(() => {
+                            setDailyWork({ ...dailyWork, status: 0 });
                           });
                         }}
                       />
@@ -442,8 +442,8 @@ export default function Activity({ id }) {
                     <FullscreenOutlined
                       className={`${styles.unFoldIcon} ${getStyles().icon}`}
                       onClick={() => {
-                        setDailyWork({ ...dailyWork, foldFlag: 'YES' });
-                        foldActivity(dailyWork.id, 'YES').then();
+                        setDailyWork({ ...dailyWork, foldFlag: 1 });
+                        foldActivity(dailyWork.id, 1).then();
                       }}
                     />
                   </Col>
@@ -452,7 +452,7 @@ export default function Activity({ id }) {
             </Row>
           )}
           <Row>
-            {dailyWork.foldFlag === 'YES' ? (
+            {dailyWork.foldFlag === 1 ? (
               <Select
                 allowClear
                 value={dailyWork.targetId}
@@ -494,7 +494,7 @@ export default function Activity({ id }) {
             <Splitter.Panel collapsible size={sizes[0] + '%'} min="30%" max="70%">
               <Input.TextArea
                 value={dailyWork.content}
-                style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
+                style={{ height: dailyWork.foldFlag === 1 ? '114px' : '55px' }}
                 className={`${styles.content} ${getStyles().content}`}
                 onChange={(e) => setDailyWork({ ...dailyWork, content: e.target.value })}
                 onBlur={() => updateActivity(dailyWork)}
@@ -503,7 +503,7 @@ export default function Activity({ id }) {
             <Splitter.Panel collapsible size={sizes[1] + '%'} min="30%" max="70%">
               <Input.TextArea
                 value={dailyWork.summary}
-                style={{ height: dailyWork.foldFlag === 'YES' ? '114px' : '55px' }}
+                style={{ height: dailyWork.foldFlag === 1 ? '114px' : '55px' }}
                 className={`${styles.content} ${getStyles().content}`}
                 onChange={(e) =>
                   setDailyWork({

@@ -5,10 +5,10 @@ import {
   ArrowRightOutlined,
   CheckOutlined,
   CloseOutlined,
+  OrderedListOutlined,
   UndoOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignTopOutlined,
-  OrderedListOutlined,
 } from '@ant-design/icons';
 import todoWorkStyle from './todoWorkStyle';
 import dayjs from 'dayjs';
@@ -60,15 +60,15 @@ export default function TodoWork({ todoParam, postUpdate }) {
           onBlur={() => save(todo)}
         />
         {/* 标记为完成或待办 */}
-        {todo.status === 'INITIAL' ? (
+        {todo.status === 0 ? (
           <CheckOutlined
             className={dynamicStyle.icons}
-            onClick={() => save({ ...todo, status: 'DONE' })}
+            onClick={() => save({ ...todo, status: 2 })}
           />
         ) : (
           <UndoOutlined
             className={dynamicStyle.icons}
-            onClick={() => save({ ...todo, status: 'INITIAL' })}
+            onClick={() => save({ ...todo, status: 0 })}
           />
         )}
         {/* 删除 */}
@@ -105,17 +105,17 @@ export default function TodoWork({ todoParam, postUpdate }) {
             save(temp);
           }}
         />
-        {todo.foldFlag === 'NO' ? (
+        {todo.foldFlag === 0 ? (
           // 展开
           <VerticalAlignBottomOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => save({ ...todo, foldFlag: 'YES' })}
+            onClick={() => save({ ...todo, foldFlag: 1 })}
           />
         ) : (
           // 收起
           <VerticalAlignTopOutlined
             className={`${dynamicStyle.icons} ${dynamicStyle.fold}`}
-            onClick={() => save({ ...todo, foldFlag: 'NO' })}
+            onClick={() => save({ ...todo, foldFlag: 0 })}
           />
         )}
         <DatePicker
@@ -135,7 +135,7 @@ export default function TodoWork({ todoParam, postUpdate }) {
           onBlur={() => save(todo)}
         />
       </Row>
-      {todo.foldFlag === 'YES' && (
+      {todo.foldFlag === 1 && (
         <Row>
           <Input.TextArea
             autoSize

@@ -22,7 +22,7 @@ export function TimeTraceProvider({ children }) {
 
   // 获取子级标签
   const getSubTags = useCallback(async (fatherId) => {
-    const result = await getTags({ fatherId: fatherId, status: 'DOING' });
+    const result = await getTags({ fatherId: fatherId, status: 1 });
     return result.map((item) => {
       return {
         value: item.id,
@@ -62,7 +62,7 @@ export function TimeTraceProvider({ children }) {
   useEffect(() => {
     // 加载主题下拉
     getTags({ name: '时刻留痕' }).then((rootTag) => {
-      getTags({ fatherId: rootTag[0].id, status: 'DOING' }).then((result) => {
+      getTags({ fatherId: rootTag[0].id, status: 1 }).then((result) => {
         const temp = result.map((item) => {
           return {
             value: item.id,

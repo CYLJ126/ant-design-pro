@@ -38,7 +38,7 @@ export default function Header() {
     const result = await listActivities(date);
     let temp = { ...initialHeadInfo };
     result.forEach((activity) => {
-      if (activity.status === 'DONE') {
+      if (activity.status === 2) {
         temp.completedWork++;
       } else {
         temp.todoWork++;

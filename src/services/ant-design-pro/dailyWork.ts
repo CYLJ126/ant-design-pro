@@ -146,7 +146,7 @@ export async function getSteps(
   targetId?: number,
   type?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'semiannual' | 'annual',
 ) {
-  return jsonPostList('/dw/steps/listSteps', { targetId: targetId, type: 'WEEKLY' || type });
+  return jsonPostList('/dw/steps/listSteps', { targetId: targetId, type: type });
 }
 
 /**
@@ -218,7 +218,7 @@ export async function markDoneBack(id?: number, status?: string) {
  * @param id 要处理的活动 ID
  * @param status 折叠状态 0-折叠；1-展开；
  */
-export async function foldActivity(id?: number, status?: string) {
+export async function foldActivity(id?: number, status?: number) {
   return jsonPost('/dw/dailyWork/foldActivity', { id: id, foldFlag: status });
 }
 

@@ -1,9 +1,9 @@
 import { createStyles } from 'antd-style';
 
 export default function todoWorkStyle(todo) {
-  let color = todo.status === 'DONE' ? '#63bd89' : '#6294a5';
-  let contentColor = todo.status === 'DONE' ? '#92d1b4' : '#8bbbcc';
-  let headRadius = todo.foldFlag === 'YES' ? '0' : '0 0 5px 5px';
+  let color = todo.status === 2 ? '#63bd89' : '#6294a5';
+  let contentColor = todo.status === 2 ? '#92d1b4' : '#8bbbcc';
+  let headRadius = todo.foldFlag === 1 ? '0' : '0 0 5px 5px';
   return createStyles(({ css }) => ({
     todoWrap: css`
       margin-top: 5px;

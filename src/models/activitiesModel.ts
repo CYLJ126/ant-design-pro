@@ -47,13 +47,13 @@ export default () => {
       let date = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
       const dateStr = dayjs(date).utc().local().format('YYYY-MM-DD HH:mm:ss');
       const blankOne = {
-        status: 'INITIAL',
+        status: 0,
         proportion: 0,
         startTime: dateStr,
         endTime: dateStr,
         score: 0,
         cost: 0,
-        foldFlag: 'YES',
+        foldFlag: 1,
         content: '',
       };
       const newOne = await addDailyWorkBack(blankOne);
@@ -125,7 +125,7 @@ export default () => {
       workId: dailyWork.workId,
       cost: dailyWork.cost,
       score: 0,
-      foldFlag: 'YES',
+      foldFlag: 1,
       proportion: dailyWork.proportion,
       content: dailyWork.content,
       startTime: startTimeStr,

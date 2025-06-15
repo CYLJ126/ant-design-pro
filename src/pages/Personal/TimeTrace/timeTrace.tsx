@@ -13,13 +13,13 @@ import { useModel } from 'umi';
 const dateFormat = 'YYYY-MM-DD';
 
 const thumbsColor = (isUp, status) => {
-  if (status === 'INITIAL') {
+  if (status === 0) {
     return '#81d3f8';
   }
   if (isUp) {
-    return status === 'DONE' ? '#65be8a' : '#c6c6c6';
+    return status === 2 ? '#65be8a' : '#c6c6c6';
   } else {
-    return status === 'CLOSED' ? '#f88a22' : '#c6c6c6';
+    return status === 3 ? '#f88a22' : '#c6c6c6';
   }
 };
 
@@ -38,7 +38,7 @@ function initialData(rawTimeTrace, currentDate) {
     tempDayRecord = {
       traceId: rawTimeTrace.id,
       recordDate: currentDate.current?.format(dateFormat),
-      completionStatus: 'INITIAL', // 0-INITIAL-初始；2-DONE-完成；3-CLOSED-没做；
+      completionStatus: 0, // 0-INITIAL-初始；2-DONE-完成；3-CLOSED-没做；
       score: 0,
       recordValue: '',
       summary: '',
@@ -205,8 +205,8 @@ export default function TimeTrace({ data }) {
             margin={'2.5px 5px 0 0'}
             color={thumbsColor(true, dayRecord.completionStatus)}
             onClick={() => {
-              if (dayRecord.completionStatus !== 'DONE') {
-                markDay({ ...dayRecord, completionStatus: 'DONE' }).then(() => {
+              if (dayRecord.completionStatus !== 2) {
+                markDay({ ...dayRecord, completionStatus: 2 }).then(() => {
                   listTraces({
                     id: timeTrace.id,
                     currentDate: currentDate.current.format('YYYY-MM-DD'),
@@ -226,8 +226,8 @@ export default function TimeTrace({ data }) {
             margin={'2.5px 5px 0 0'}
             color={thumbsColor(false, dayRecord.completionStatus)}
             onClick={() => {
-              if (dayRecord.completionStatus !== 'CLOSED') {
-                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then(() => {
+              if (dayRecord.completionStatus !== 3) {
+                markDay({ ...dayRecord, completionStatus: 3 }).then(() => {
                   listTraces({
                     id: timeTrace.id,
                     currentDate: currentDate.current.format('YYYY-MM-DD'),
