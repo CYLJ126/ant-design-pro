@@ -254,7 +254,7 @@ export default function TimeTrace({ data }) {
           <Input
             className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
             value="设值"
-            style={{ width: '40px', top: '-4px' }}
+            style={{ width: '40px', top: '-4px', marginLeft: '1px' }}
           />
           <Input
             className={`${styles.inputItem}`}
@@ -289,12 +289,12 @@ export default function TimeTrace({ data }) {
                 <Input
                   className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
                   value="结束"
-                  style={{ width: '40px' }}
+                  style={{ width: '40px', top: '-1px' }}
                 />
                 <DatePicker
                   value={timeTrace.endDate}
                   className={styles.datePicker}
-                  style={{ width: '90px' }}
+                  style={{ width: '90px', top: '-1px' }}
                   format={dateFormat}
                   onChange={(date) => {
                     setTimeTrace({ ...timeTrace, endDate: date });
@@ -308,7 +308,12 @@ export default function TimeTrace({ data }) {
                 <Input
                   className={styles.spanLabel}
                   value="消耗"
-                  style={{ width: '40px', borderColor: '#5bb1c9', backgroundColor: '#5bb1c9' }}
+                  style={{
+                    width: '40px',
+                    top: '-1px',
+                    borderColor: '#5bb1c9',
+                    backgroundColor: '#5bb1c9',
+                  }}
                 />
                 <Input
                   className={styles.inputItem}
@@ -318,7 +323,12 @@ export default function TimeTrace({ data }) {
                 <Input
                   className={styles.spanLabel}
                   value="连续"
-                  style={{ width: '40px', borderColor: '#2585b7', backgroundColor: '#2585b7' }}
+                  style={{
+                    width: '40px',
+                    top: '-1px',
+                    borderColor: '#2585b7',
+                    backgroundColor: '#2585b7',
+                  }}
                 />
                 <Input
                   className={styles.inputItem}
@@ -328,7 +338,12 @@ export default function TimeTrace({ data }) {
                 <Input
                   className={styles.spanLabel}
                   value="最大连续"
-                  style={{ width: '68px', borderColor: '#7e3b82', backgroundColor: '#7e3b82' }}
+                  style={{
+                    width: '68px',
+                    top: '-1px',
+                    borderColor: '#7e3b82',
+                    backgroundColor: '#7e3b82',
+                  }}
                 />
                 <Input
                   className={styles.inputItem}
@@ -345,17 +360,17 @@ export default function TimeTrace({ data }) {
             <Input
               className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
               value="今日数据"
-              style={{ width: '86px' }}
+              style={{ width: '83px', top: '-1px' }}
             />
             <Input
               className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
               value="总结"
-              style={{ width: '40px', top: '-5px' }}
+              style={{ width: '40px', top: '-1px' }}
             />
             <Input
               value={dayRecord.summary}
               className={styles.inputItem}
-              style={{ width: 'calc(100% - 146px)', top: '-5px' }}
+              style={{ width: 'calc(100% - 146px)', height: '27px' }}
               onChange={(e) => setDayRecord({ ...dayRecord, summary: e.target.value })}
               onBlur={() => markDay(dayRecord)}
             />
