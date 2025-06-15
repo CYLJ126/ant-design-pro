@@ -50,7 +50,6 @@ export default function TargetInfo({ targetId }) {
     if (current?.themeId) {
       getSubTags({ fatherId: current.themeId }).then((result) => {
         setWorkOptions(result);
-        setCurrent({ ...current, workId: result[0].value });
       });
     }
   }, [current.themeId]);
