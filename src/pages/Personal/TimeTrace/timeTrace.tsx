@@ -95,7 +95,7 @@ export default function TimeTrace({ data }) {
 
   return (
     <div ref={containerRef}>
-      <Row>
+      <Row style={{ height: '32px' }}>
         <Col span={colSpan}>
           <Row wrap={false}>
             <Col flex={'auto'}>
@@ -254,7 +254,7 @@ export default function TimeTrace({ data }) {
           <Input
             className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
             value="设值"
-            style={{ width: '40px', top: '-4px', marginLeft: '1px' }}
+            style={{ width: '45px', top: '-4px', marginLeft: '1px' }}
           />
           <Input
             className={`${styles.inputItem}`}
@@ -365,7 +365,7 @@ export default function TimeTrace({ data }) {
             <Input
               className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
               value="总结"
-              style={{ width: '40px', top: '-1px' }}
+              style={{ width: '44px', top: '-1px' }}
             />
             <Input
               value={dayRecord.summary}
