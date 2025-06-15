@@ -181,6 +181,7 @@ export default function Steps({ targetId }) {
           uuid: time + newIndex + 1,
           targetId: targetId,
           status: steps[i - 1].status ?? 'INITIAL',
+          type: 'weekly',
           summaryId: steps[i - 1].summaryId,
           progress: steps[i - 1].progress,
           content: steps[i - 1].content,
@@ -193,6 +194,7 @@ export default function Steps({ targetId }) {
             uuid: time + newIndex + 1,
             targetId: targetId,
             status: 'INITIAL',
+            type: 'weekly',
             content: '',
             progress: 0,
           });
