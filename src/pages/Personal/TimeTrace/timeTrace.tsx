@@ -130,11 +130,11 @@ export default function TimeTrace({ data }) {
               <Input
                 value="开始"
                 className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
-                style={{ width: '40px' }}
+                style={{ width: '40px', top: '-1px' }}
               />
               <DatePicker
                 className={styles.datePicker}
-                style={{ width: '90px' }}
+                style={{ width: '90px', top: '-1px' }}
                 value={timeTrace.startDate}
                 format={dateFormat}
                 onChange={(date) => {
@@ -149,7 +149,12 @@ export default function TimeTrace({ data }) {
               <Input
                 className={styles.spanLabel}
                 value="累积"
-                style={{ width: '40px', borderColor: '#65be8a', backgroundColor: '#65be8a' }}
+                style={{
+                  width: '40px',
+                  top: '-1px',
+                  borderColor: '#65be8a',
+                  backgroundColor: '#65be8a',
+                }}
               />
               <Input
                 className={styles.inputItem}
@@ -159,7 +164,12 @@ export default function TimeTrace({ data }) {
               <Input
                 className={styles.spanLabel}
                 value="缺失"
-                style={{ width: '40px', borderColor: '#f88a22', backgroundColor: '#f88a22' }}
+                style={{
+                  width: '40px',
+                  top: '-1px',
+                  borderColor: '#f88a22',
+                  backgroundColor: '#f88a22',
+                }}
               />
               <Input
                 className={styles.inputItem}
@@ -169,7 +179,12 @@ export default function TimeTrace({ data }) {
               <Input
                 className={styles.spanLabel}
                 value="比率"
-                style={{ width: '40px', borderColor: '#f7c115', backgroundColor: '#f7c115' }}
+                style={{
+                  width: '40px',
+                  top: '-1px',
+                  borderColor: '#f7c115',
+                  backgroundColor: '#f7c115',
+                }}
               />
               <Input
                 className={styles.inputItem}
@@ -183,20 +198,68 @@ export default function TimeTrace({ data }) {
           </Row>
         </Col>
         <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
-          <Input
-            className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
-            value="今日数据"
-            style={{ width: '86px' }}
+          <ThumbsUp
+            isUp={true}
+            width={22}
+            height={22}
+            margin={'2.5px 5px 0 0'}
+            color={thumbsColor(true, dayRecord.completionStatus)}
+            onClick={() => {
+              if (dayRecord.completionStatus !== 'DONE') {
+                markDay({ ...dayRecord, completionStatus: 'DONE' }).then(() => {
+                  listTraces({
+                    id: timeTrace.id,
+                    currentDate: currentDate.current.format('YYYY-MM-DD'),
+                  }).then((result) => {
+                    const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
+                    setTimeTrace(tempTimeTrace);
+                    setDayRecord(tempDayRecord);
+                  });
+                });
+              }
+            }}
+          />
+          <ThumbsUp
+            isUp={false}
+            width={22}
+            height={22}
+            margin={'2.5px 5px 0 0'}
+            color={thumbsColor(false, dayRecord.completionStatus)}
+            onClick={() => {
+              if (dayRecord.completionStatus !== 'CLOSED') {
+                markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then(() => {
+                  listTraces({
+                    id: timeTrace.id,
+                    currentDate: currentDate.current.format('YYYY-MM-DD'),
+                  }).then((result) => {
+                    const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
+                    setTimeTrace(tempTimeTrace);
+                    setDayRecord(tempDayRecord);
+                  });
+                });
+              }
+            }}
+          />
+          <InputNumber
+            style={{ width: '30px', top: '-5px' }}
+            className={styles.inputNumberItem}
+            step={1}
+            min={0}
+            max={10}
+            changeOnWheel={true}
+            value={dayRecord.score}
+            onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
+            onBlur={() => markDay(dayRecord)}
           />
           <Input
             className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
             value="设值"
-            style={{ width: '40px' }}
+            style={{ width: '40px', top: '-4px' }}
           />
           <Input
-            className={styles.inputItem}
+            className={`${styles.inputItem}`}
             value={dayRecord.recordValue}
-            style={{ width: 'calc(100% - 146px)' }}
+            style={{ width: 'calc(100% - 146px)', height: '28px', top: '-3.5px' }}
             onChange={(e) => setDayRecord({ ...dayRecord, recordValue: e.target.value })}
             onBlur={() => {
               markDay(dayRecord).then();
@@ -279,58 +342,10 @@ export default function TimeTrace({ data }) {
             </Row>
           </Col>
           <Col span={24 - colSpan} style={{ paddingLeft: '8px' }}>
-            <ThumbsUp
-              isUp={true}
-              width={22}
-              height={22}
-              margin={'2px 5px 0 2px'}
-              color={thumbsColor(true, dayRecord.completionStatus)}
-              onClick={() => {
-                if (dayRecord.completionStatus !== 'DONE') {
-                  markDay({ ...dayRecord, completionStatus: 'DONE' }).then(() => {
-                    listTraces({
-                      id: timeTrace.id,
-                      currentDate: currentDate.current.format('YYYY-MM-DD'),
-                    }).then((result) => {
-                      const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
-                      setTimeTrace(tempTimeTrace);
-                      setDayRecord(tempDayRecord);
-                    });
-                  });
-                }
-              }}
-            />
-            <ThumbsUp
-              isUp={false}
-              width={22}
-              height={22}
-              margin={'2px 5px 0 2px'}
-              color={thumbsColor(false, dayRecord.completionStatus)}
-              onClick={() => {
-                if (dayRecord.completionStatus !== 'CLOSED') {
-                  markDay({ ...dayRecord, completionStatus: 'CLOSED' }).then(() => {
-                    listTraces({
-                      id: timeTrace.id,
-                      currentDate: currentDate.current.format('YYYY-MM-DD'),
-                    }).then((result) => {
-                      const { tempTimeTrace, tempDayRecord } = initialData(result[0], currentDate);
-                      setTimeTrace(tempTimeTrace);
-                      setDayRecord(tempDayRecord);
-                    });
-                  });
-                }
-              }}
-            />
-            <InputNumber
-              style={{ width: '30px', top: '-5px' }}
-              className={styles.inputNumberItem}
-              step={1}
-              min={0}
-              max={10}
-              changeOnWheel={true}
-              value={dayRecord.score}
-              onChange={(value) => setDayRecord({ ...dayRecord, score: value })}
-              onBlur={() => markDay(dayRecord)}
+            <Input
+              className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
+              value="今日数据"
+              style={{ width: '86px' }}
             />
             <Input
               className={`${styles.spanLabel} ${styles.blueSpanLabel}`}
