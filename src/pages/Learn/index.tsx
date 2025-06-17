@@ -5,12 +5,18 @@ import ComponentLearn from './ComponentLearn';
 import CarouselPopoverCardLearn from './CarouselPopoverCardLearn';
 import SimpleTableLearn from './SimpleTableLearn';
 import styles from './index.less';
+import AILearn from './AILearn';
 
 const tabList = [
   {
     tab: 'SimpleTable Learn',
     key: 'SimpleTableLearn',
     children: <SimpleTableLearn />,
+  },
+  {
+    tab: 'AI Learn',
+    key: 'AILearn',
+    children: <AILearn />,
   },
   {
     tab: 'Less Learn',
