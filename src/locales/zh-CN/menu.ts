@@ -59,5 +59,6 @@ export default {
   'menu.Personal.Summary': '个人总结',
   'menu.Personal.BadHabit': '坏习惯',
   'menu.Personal.GeneralManagement': '综合管理',
+  'menu.Personal.StickyNote': '便笺',
   'menu.Learn': '学习',
 };

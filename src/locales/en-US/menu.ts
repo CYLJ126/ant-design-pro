@@ -58,6 +58,7 @@ export default {
   'menu.Personal.AnnualWork': 'Annual Work',
   'menu.Personal.Summary': 'Summary',
   'menu.Personal.BadHabit': 'Bad Habit',
-  'menu.Personal.GeneralManagement': 'GeneralManagement',
+  'menu.Personal.GeneralManagement': 'General Management',
+  'menu.Personal.StickyNote': 'Sticky Note',
   'menu.Learn': 'Learn',
 };
