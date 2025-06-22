@@ -302,3 +302,71 @@ export async function markDay(param) {
 }
 
 /**  ----------------- TimeTraceController end ----------------- */
+
+/**  ----------------- StickyController start ----------------- */
+
+/**
+ * 根据条件查询便笺 ID 列表
+ * @param param 请求参数
+ */
+export async function listStickyIds(param) {
+  return jsonPost('/dw/sticky/listStickyIds', param);
+}
+
+/**
+ * 获取便笺详情
+ * @param param 请求参数
+ */
+export async function getStickyById(param) {
+  return jsonPost('/dw/sticky/getStickyById', param);
+}
+
+/**
+ * 添加便笺
+ * @param param 请求参数
+ */
+export async function addSticky(param) {
+  return jsonPost('/dw/sticky/addSticky', param);
+}
+
+/**
+ * 更新便笺标题、 内容
+ * @param param 请求参数
+ */
+export async function updateSticky(param) {
+  return jsonPost('/dw/sticky/updateSticky', param);
+}
+
+/**
+ * 更新便笺宽度、高度
+ * @param param 请求参数
+ */
+export async function resizeSticky(param) {
+  return jsonPost('/dw/sticky/resizeSticky', param);
+}
+
+/**
+ * 排序便笺
+ * @param param 请求参数
+ */
+export async function orderSticky(param) {
+  return jsonPost('/dw/sticky/orderSticky', param);
+}
+
+/**
+ * 折叠或展开便笺
+ * @param param 请求参数
+ */
+export async function foldSticky(param) {
+  return jsonPost('/dw/sticky/foldSticky', param);
+}
+
+/**
+ * 更新便笺标签 ID 列表
+ * @param param 请求参数
+ */
+export async function updateStickyTag(param) {
+  return jsonPost('/dw/sticky/updateStickyTag', param);
+}
+
+/**  ----------------- StickyController end ----------------- */

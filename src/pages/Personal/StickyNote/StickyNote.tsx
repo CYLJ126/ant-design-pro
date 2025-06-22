@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import Draggable, { ControlPosition } from 'react-draggable';
 import { getNextZIndex } from './zIndexManager';
 
-export default function Note({ initialPosition }) {
+export default function StickyNote({ initialPosition }) {
   const [zIndex, setZIndex] = useState(1);
   const [position, setPosition] = useState<ControlPosition>(initialPosition);
 
