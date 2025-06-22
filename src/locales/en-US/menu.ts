@@ -59,6 +59,6 @@ export default {
   'menu.Personal.Summary': 'Summary',
   'menu.Personal.BadHabit': 'Bad Habit',
   'menu.Personal.GeneralManagement': 'General Management',
-  'menu.Personal.StickyNote': 'Sticky StickyNote',
+  'menu.Personal.StickyNote': 'Sticky Note',
   'menu.Learn': 'Learn',
 };
