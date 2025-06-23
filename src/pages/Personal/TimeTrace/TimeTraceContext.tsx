@@ -17,7 +17,7 @@ const TimeTraceContext = createContext({});
 export function TimeTraceProvider({ children }) {
   const currentDate = useRef(dayjs());
   const [themeOptions, setThemeOptions] = useState([]);
-  const [timeTraces, setTimeTraces] = useState([]);
+  const [timeTraces, setTimeTraces] = useState([1]);
   const headParam = useRef({});
 
   // 获取子级标签

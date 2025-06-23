@@ -310,15 +310,15 @@ export async function markDay(param) {
  * @param param 请求参数
  */
 export async function listStickyIds(param) {
-  return jsonPost('/dw/sticky/listStickyIds', param);
+  return jsonPostList('/dw/sticky/listStickyIds', param);
 }
 
 /**
  * 获取便笺详情
- * @param param 请求参数
+ * @param id 请求参数
  */
-export async function getStickyById(param) {
-  return jsonPost('/dw/sticky/getStickyById', param);
+export async function getStickyById(id) {
+  return jsonPost('/dw/sticky/getStickyById', { id: id });
 }
 
 /**

@@ -1,15 +1,26 @@
 import React from 'react';
 import HeaderButtons from './HeaderButtons';
 import StickyNote from './StickyNote';
+import { StickyNoteProvider, useStickyNoteData } from './StickyNoteContext';
 
-export default function Summary() {
+function StickyWrap() {
+  const { ids } = useStickyNoteData();
+
+  const time = new Date().getTime();
   return (
-    <div>
+    <>
       <HeaderButtons />
       <div style={{ width: 1350, height: 1000 }}>
-        <StickyNote initialPosition={{ x: 0, y: 0 }} />
-        <StickyNote initialPosition={{ x: 310, y: 0 }} />
+        {ids?.map((id) => <StickyNote key={id + time} id={id} />)}
       </div>
-    </div>
+    </>
+  );
+}
+
+export default function StickyNotes() {
+  return (
+    <StickyNoteProvider>
+      <StickyWrap />
+    </StickyNoteProvider>
   );
 }
