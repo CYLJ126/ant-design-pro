@@ -219,5 +219,32 @@ export default function WebsiteInfos() {
     });
   }, []);
 
-  return <Tabs animated items={newsTab} className={styles.newsTabs} />;
+  /**
+   * 动态设置每个标签宽度，使其占满一行
+   */
+  useEffect(() => {
+    if (newsTab.length === 0) return;
+    // 使用setTimeout确保DOM已经更新
+    const timer = setTimeout(() => {
+      const navWrap = document.querySelector('.ant-tabs-nav-wrap');
+      const tabs = document.querySelectorAll('#website-news-tabs .ant-tabs-tab');
+
+      if (navWrap && tabs.length > 0) {
+        let navWrapWidth = navWrap.offsetWidth;
+        navWrapWidth = navWrapWidth < 200 ? 200 : navWrapWidth;
+        const tabCount = tabs.length;
+        const tabWidth = navWrapWidth / tabCount;
+
+        // 设置每个tab的宽度
+        tabs.forEach((tab) => {
+          tab.style.width = `${tabWidth}px`;
+          tab.style.textAlign = 'center'; // 使文字居中
+        });
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [newsTab]);
+
+  return <Tabs id={'website-news-tabs'} animated items={newsTab} className={styles.newsTabs} />;
 }
