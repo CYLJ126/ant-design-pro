@@ -45,6 +45,14 @@ export default function StickyNote({ initData, px, py }) {
     }
   }, []);
 
+  function saveSticky() {
+    updateSticky(sticky).then((res) => {
+      if (!res) {
+        message.error('id：' + sticky.id + '保存失败').then();
+      }
+    });
+  }
+
   return (
     <Draggable position={position} onDrag={handleDrag} onStart={bringToFront}>
       <div
@@ -56,17 +64,19 @@ export default function StickyNote({ initData, px, py }) {
         }}
         onClick={bringToFront}
       >
-        <Card title={sticky.title} extra={<a href="#">More</a>} style={{ width: 300 }}>
+        <Card
+          title={
+            <Input
+              value={sticky.title}
+              onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
+              onBlur={saveSticky}
+            />
+          }
+        >
           <Input.TextArea
             value={sticky.content}
             onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
-            onBlur={() => {
-              updateSticky(sticky).then((res) => {
-                if (!res) {
-                  message.error('id：' + sticky.id + '保存失败').then();
-                }
-              });
-            }}
+            onBlur={saveSticky}
           />
         </Card>
       </div>

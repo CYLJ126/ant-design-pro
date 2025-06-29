@@ -1,0 +1,37 @@
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background-color: #1890ff;
+  cursor: nwse-resize;
+  z-index: 100;
+
+  &:hover {
+    background-color: #40a9ff;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+// 确保卡片内容区域正确显示
+.ant-card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 !important;
+}
+
+.ant-card {
+  height: 100%;
+}
