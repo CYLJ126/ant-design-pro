@@ -1,37 +1,151 @@
-.resize-handle {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 16px;
-  height: 16px;
-  background-color: #1890ff;
-  cursor: nwse-resize;
-  z-index: 100;
-
-  &:hover {
-    background-color: #40a9ff;
+.card {
+  :global(.ant-card-head) {
+    padding: 3px;
+    height: 35px;
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
-    bottom: 3px;
-    right: 3px;
+  :global(.ant-card-body) {
+    padding: 3px;
   }
 }
 
-// 确保卡片内容区域正确显示
-.ant-card-body {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 0 !important;
+.title {
+  height: 30px;
+  color: #ffffff;
+  background-color: #81d3f8;
+  border: none;
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-.ant-card {
-  height: 100%;
+// hover 时的样式
+.title:hover {
+  background-color: #81d3f8;
+}
+
+// focus 时的样式
+.title:focus {
+  background-color: #81d3f8;
+}
+
+.colorPicker {
+  width: 19px !important;
+  height: 19px !important;
+  min-width: 19px !important;
+  min-height: 19px !important;
+
+  :global(.ant-color-picker-color-block) {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}
+
+.buttonBar {
+  padding: 2px;
+  background-color: #ffffff;
+  border-radius: 0;
+  overflow: hidden; /* 清除浮动 */
+}
+
+.foldIcon {
+  margin-left: 5px;
+  color: #81d3f8;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.listIcon {
+  margin-left: 5px;
+  color: #81d3f8;
+
+  svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+.textIcon {
+  margin-left: 5px;
+  color: #81d3f8;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.deleteIcon {
+  margin-left: 5px;
+  color: #81d3f8;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.endDate {
+  float: right;
+  padding: 0;
+  width: 78px;
+  border: none;
+  background-color: #ffffff;
+
+  :global(.ant-picker-input) {
+    input {
+      color: #81d3f8;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    input:hover {
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+  }
+
+  :global(.anticon) {
+    display: none;
+  }
+}
+
+.tagBar {
+  height: 23px;
+  border-radius: 0;
+  background-color: #f0f0f0;
+}
+
+.tagAdd {
+  margin: 2px 0 0 2px;
+
+  svg {
+    width: 19px;
+    height: 19px;
+    color: #81d3f8;
+  }
+}
+
+.content {
+  height: 150px !important;
+  border-radius: 0 0 5px 5px;
+  border: none;
+  color: #ffffff;
+  background-color: #81d3f8;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+// hover 时的样式
+.content:hover {
+  background-color: #81d3f8;
+}
+
+// focus 时的样式
+.content:focus {
+  background-color: #81d3f8;
 }

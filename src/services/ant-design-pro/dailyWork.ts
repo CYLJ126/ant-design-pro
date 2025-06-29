@@ -362,11 +362,27 @@ export async function foldSticky(param) {
 }
 
 /**
+ * 更新主题色
+ * @param param 请求参数
+ */
+export async function switchThemeColor(param) {
+  return jsonPost('/dw/sticky/switchThemeColor', param);
+}
+
+/**
  * 更新便笺标签 ID 列表
  * @param param 请求参数
  */
 export async function updateStickyTag(param) {
   return jsonPost('/dw/sticky/updateStickyTag', param);
+}
+
+/**
+ * 逻辑删除
+ * @param param 请求参数
+ */
+export async function deleteSticky(param) {
+  return jsonPost('/dw/sticky/deleteSticky', param);
 }
 
 /**  ----------------- StickyController end ----------------- */

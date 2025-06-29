@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Input, message } from 'antd';
+import { ColorPicker, DatePicker, Input, message } from 'antd';
 import Draggable, { ControlPosition } from 'react-draggable';
 import { getNextZIndex } from './zIndexManager';
-import { updateSticky } from '@/services/ant-design-pro/dailyWork';
+import styles from './StickyNote.less';
+import {
+  deleteSticky,
+  foldSticky,
+  switchThemeColor,
+  updateSticky,
+} from '@/services/ant-design-pro/dailyWork';
+import {
+  CloseOutlined,
+  FileWordOutlined,
+  OrderedListOutlined,
+  PlusSquareOutlined,
+  VerticalAlignBottomOutlined,
+  VerticalAlignTopOutlined,
+} from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { useStickyNoteData } from './StickyNoteContext';
 
 export default function StickyNote({ initData, px, py }) {
+  const { list } = useStickyNoteData();
   const [zIndex, setZIndex] = useState(1);
   const [position, setPosition] = useState<ControlPosition>({ x: px, y: py });
-  const [size, setSize] = useState({ width: 300, height: 200 });
+  const [size, setSize] = useState({ width: 300, height: 220 });
   const [sticky, setSticky] = useState({
     id: initData.id,
     title: initData.title,
     content: initData.content,
     startDate: initData.startDate,
     endDate: initData.endDate,
-    showType: initData.showType,
-    foldFlag: initData.foldFlag,
   });
+  const [foldFlag, setFoldFlag] = useState(initData.foldFlag);
+  const [themeColor, setThemeColor] = useState(initData.themeColor || '#81d3f8');
+  // text - 文本；list - 列表；
+  const [showType, setShowType] = useState(initData.showType);
   const [tags, setTags] = useState([]);
 
   const bringToFront = () => {
@@ -45,10 +64,20 @@ export default function StickyNote({ initData, px, py }) {
     }
   }, []);
 
-  function saveSticky() {
-    updateSticky(sticky).then((res) => {
+  function saveSticky(param) {
+    updateSticky(param).then((res) => {
       if (!res) {
-        message.error('id：' + sticky.id + '保存失败').then();
+        message.error('id：' + param.id + '保存失败').then();
+      }
+    });
+  }
+
+  function deleteLogical() {
+    deleteSticky({ id: sticky.id }).then((res) => {
+      if (res) {
+        list();
+      } else {
+        message.warning('id：' + sticky.id + '删除失败');
       }
     });
   }
@@ -64,21 +93,81 @@ export default function StickyNote({ initData, px, py }) {
         }}
         onClick={bringToFront}
       >
-        <Card
-          title={
-            <Input
-              value={sticky.title}
-              onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
-              onBlur={saveSticky}
-            />
-          }
-        >
-          <Input.TextArea
-            value={sticky.content}
-            onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
-            onBlur={saveSticky}
+        <Input
+          value={sticky.title}
+          className={styles.title}
+          onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
+          onBlur={() => saveSticky(sticky)}
+        />
+        <div className={styles.buttonBar}>
+          {/* 主题色选择 */}
+          <ColorPicker
+            className={styles.colorPicker}
+            defaultValue={themeColor}
+            onChange={(color) => {
+              setThemeColor(color.toHexString());
+              switchThemeColor({ id: sticky.id, themeColor: color.toHexString() }).then();
+            }}
           />
-        </Card>
+          {showType === 'text' ? (
+            // 点击切换到列表形式
+            <OrderedListOutlined
+              className={styles.listIcon}
+              onClick={() => {
+                setShowType('list');
+              }}
+            />
+          ) : (
+            // 点击切换到文本形式
+            <FileWordOutlined
+              className={styles.textIcon}
+              onClick={() => {
+                setShowType('text');
+              }}
+            />
+          )}
+          {foldFlag === 0 ? (
+            // 展开
+            <VerticalAlignBottomOutlined
+              className={styles.foldIcon}
+              onClick={() => {
+                setFoldFlag(1);
+                foldSticky({ id: sticky.id, foldFlag: 1 }).then();
+              }}
+            />
+          ) : (
+            // 收起
+            <VerticalAlignTopOutlined
+              className={styles.foldIcon}
+              onClick={() => {
+                setFoldFlag(0);
+                foldSticky({ id: sticky.id, foldFlag: 0 }).then();
+              }}
+            />
+          )}
+          {/* 逻辑删除 */}
+          <CloseOutlined className={styles.deleteIcon} onClick={deleteLogical} />
+          <DatePicker
+            className={styles.endDate}
+            size={'small'}
+            value={dayjs(sticky.endDate)}
+            format="YYYY-MM-DD"
+            onChange={(date) => {
+              let newVar = { ...sticky, endDate: date.format('YYYY-MM-DD') };
+              setSticky(newVar);
+              saveSticky(newVar);
+            }}
+          />
+        </div>
+        <div className={styles.tagBar}>
+          <PlusSquareOutlined className={styles.tagAdd} />
+        </div>
+        <Input.TextArea
+          className={styles.content}
+          value={sticky.content}
+          onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
+          onBlur={() => saveSticky(sticky)}
+        />
       </div>
     </Draggable>
   );

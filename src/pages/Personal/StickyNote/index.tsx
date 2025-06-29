@@ -13,13 +13,13 @@ function StickyWrap() {
   return (
     <>
       <HeaderButtons />
-      <div style={{ width: windowsWidth, height: 800 }}>
+      <div style={{ width: windowsWidth, height: 800, padding: '2px 5px 5px 5px' }}>
         {stickies?.map((sticky) => {
           const node = <StickyNote key={sticky.id + time} initData={sticky} px={px} py={py} />;
           px += 10 + sticky.width;
           if (px > 1350) {
             px = 0;
-            py += 210;
+            py += 240;
           }
           return node;
         })}
