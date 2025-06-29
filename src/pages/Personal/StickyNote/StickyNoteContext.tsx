@@ -1,15 +1,15 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { addSticky, listStickyIds } from '@/services/ant-design-pro/dailyWork';
+import { addSticky, listStickies } from '@/services/ant-design-pro/dailyWork';
 
 const StickyNoteContext = createContext({});
 
 export function StickyNoteProvider({ children }) {
   const [queryParam, setQueryParam] = useState({});
-  const [ids, setIds] = useState([]);
+  const [stickies, setStickies] = useState([]);
 
-  const listIds = useCallback(async () => {
-    listStickyIds(queryParam).then((res) => {
-      setIds(res.rows);
+  const list = useCallback(async () => {
+    listStickies(queryParam).then((res) => {
+      setStickies(res.rows);
     });
   }, [queryParam]);
 
@@ -23,22 +23,22 @@ export function StickyNoteProvider({ children }) {
       y: 0,
     };
     const result = await addSticky(stickyNote);
-    setIds([result.id, ...ids]);
-  }, [ids]);
+    setStickies([result.id, ...stickies]);
+  }, [stickies]);
 
   const value = useMemo(
     () => ({
       queryParam,
       setQueryParam,
-      ids,
-      listIds,
+      stickies,
+      list,
       addBlankOne,
     }),
-    [queryParam, ids, addBlankOne, listIds],
+    [queryParam, stickies, addBlankOne, list],
   );
 
   useEffect(() => {
-    listIds().then();
+    list().then();
   }, [queryParam]);
 
   return <StickyNoteContext.Provider value={value}>{children}</StickyNoteContext.Provider>;

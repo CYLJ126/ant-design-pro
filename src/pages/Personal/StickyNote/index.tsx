@@ -4,14 +4,25 @@ import StickyNote from './StickyNote';
 import { StickyNoteProvider, useStickyNoteData } from './StickyNoteContext';
 
 function StickyWrap() {
-  const { ids } = useStickyNoteData();
+  const { stickies } = useStickyNoteData();
 
   const time = new Date().getTime();
+  let px = 0;
+  let py = 0;
+  const windowsWidth = 1350;
   return (
     <>
       <HeaderButtons />
-      <div style={{ width: 1350, height: 1000 }}>
-        {ids?.map((id) => <StickyNote key={id + time} id={id} />)}
+      <div style={{ width: windowsWidth, height: 800 }}>
+        {stickies?.map((sticky) => {
+          const node = <StickyNote key={sticky.id + time} initData={sticky} px={px} py={py} />;
+          px += 10 + sticky.width;
+          if (px > 1350) {
+            px = 0;
+            py += 210;
+          }
+          return node;
+        })}
       </div>
     </>
   );

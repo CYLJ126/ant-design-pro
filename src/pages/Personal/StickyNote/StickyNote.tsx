@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from 'antd';
+import { Card, Input, message } from 'antd';
 import Draggable, { ControlPosition } from 'react-draggable';
 import { getNextZIndex } from './zIndexManager';
-import { getStickyById } from '@/services/ant-design-pro/dailyWork';
+import { updateSticky } from '@/services/ant-design-pro/dailyWork';
 
-export default function StickyNote({ id }) {
+export default function StickyNote({ initData, px, py }) {
   const [zIndex, setZIndex] = useState(1);
-  const [position, setPosition] = useState<ControlPosition>(null);
+  const [position, setPosition] = useState<ControlPosition>({ x: px, y: py });
   const [size, setSize] = useState({ width: 300, height: 200 });
-  const [sticky, setSticky] = useState({ id: id, title: '', content: '' });
+  const [sticky, setSticky] = useState({
+    id: initData.id,
+    title: initData.title,
+    content: initData.content,
+    startDate: initData.startDate,
+    endDate: initData.endDate,
+    showType: initData.showType,
+    foldFlag: initData.foldFlag,
+  });
   const [tags, setTags] = useState([]);
 
   const bringToFront = () => {
@@ -25,20 +33,16 @@ export default function StickyNote({ id }) {
   };
 
   useEffect(() => {
-    if (!id) {
+    if (!initData) {
       return;
     }
-    getStickyById(id).then((res) => {
-      if (res.width && res.height) {
-        setSize({ width: res.width, height: res.height });
-      }
-      setSticky({ id: id, title: res.title, content: res.content });
-      setPosition({ x: 0, y: 0 });
-      if (res?.tags?.length > 0) {
-        setTags(res.tags);
-        console.log(tags);
-      }
-    });
+    if (initData.width && initData.height) {
+      setSize({ width: initData.width, height: initData.height });
+    }
+    if (initData?.tags?.length > 0) {
+      setTags(initData.tags);
+      console.log(tags);
+    }
   }, []);
 
   return (
@@ -53,7 +57,17 @@ export default function StickyNote({ id }) {
         onClick={bringToFront}
       >
         <Card title={sticky.title} extra={<a href="#">More</a>} style={{ width: 300 }}>
-          <p>{sticky.content}</p>
+          <Input.TextArea
+            value={sticky.content}
+            onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
+            onBlur={() => {
+              updateSticky(sticky).then((res) => {
+                if (!res) {
+                  message.error('id：' + sticky.id + '保存失败').then();
+                }
+              });
+            }}
+          />
         </Card>
       </div>
     </Draggable>

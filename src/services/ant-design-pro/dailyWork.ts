@@ -309,8 +309,8 @@ export async function markDay(param) {
  * 根据条件查询便笺 ID 列表
  * @param param 请求参数
  */
-export async function listStickyIds(param) {
-  return jsonPostList('/dw/sticky/listStickyIds', param);
+export async function listStickies(param) {
+  return jsonPostList('/dw/sticky/listStickies', param);
 }
 
 /**
