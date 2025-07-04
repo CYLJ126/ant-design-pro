@@ -45,13 +45,13 @@ export default () => {
   // 添加新活动
   const addNewActivity = useCallback(
     async (whichDay) => {
-      let date = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
-      const dateStr = dayjs(date).utc().local().format('YYYY-MM-DD HH:mm:ss');
+      let date = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate());
+      const dateStr = dayjs(date).utc().local().format('YYYY-MM-DD');
       const blankOne = {
         status: 0,
         proportion: 0,
-        startTime: dateStr,
-        endTime: dateStr,
+        startTime: dateStr + ' 09:00:00',
+        endTime: dateStr + ' 18:00:00',
         score: 0,
         cost: 0,
         foldFlag: 1,
