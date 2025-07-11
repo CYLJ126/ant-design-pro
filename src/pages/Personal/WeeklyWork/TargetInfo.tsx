@@ -23,12 +23,22 @@ export default function TargetInfo({ targetId }) {
   const [current, setCurrent] = useState(targets[targetId]);
   const [fold, setFold] = useState(current.foldFlag === 0);
 
-  const saveCurrent = (param) => {
-    if (!param.workId || !param.target) {
+  const saveCurrent = (param, refresh = false) => {
+    if (!param.workId && !param.target) {
       console.log('事项 ID 或目标描述为空');
       return;
     }
-    updateTarget(param);
+    updateTarget(param).then(() => {
+      if (refresh) {
+        setUpdateInfo({
+          targetId: targetId,
+          fold: fold,
+          startDate: param.startDate,
+          endDate: param.endDate,
+          time: new Date(),
+        });
+      }
+    });
   };
 
   const updateProportion = (param) => {
@@ -174,14 +184,7 @@ export default function TargetInfo({ targetId }) {
           target={current}
           onChangeFunc={(param) => {
             setCurrent(param);
-            saveCurrent({ ...param, refreshFlag: true });
-            setUpdateInfo({
-              targetId: targetId,
-              fold: fold,
-              startDate: param.startDate,
-              endDate: param.endDate,
-              time: new Date(),
-            });
+            saveCurrent({ ...param, refreshFlag: true }, true);
           }}
         />
         <Row>
