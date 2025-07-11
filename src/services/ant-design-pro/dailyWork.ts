@@ -150,12 +150,22 @@ export async function getSteps(
 }
 
 /**
- * 返回目标的步骤
+ * 更新整体步骤
  *
  * @param steps 步骤列表
  */
 export async function saveSteps(steps) {
   return jsonPost('/dw/steps/saveSteps', steps);
+}
+
+/**
+ * 更新单个步骤的内容
+ *
+ * @param id id
+ * @param content 内容
+ */
+export async function updateStep(id, content) {
+  return jsonPost('/dw/steps/updateStep', { id: id, content: content });
 }
 
 /**  ----------------- StepsController end ----------------- */

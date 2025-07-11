@@ -14,7 +14,7 @@ import {
   VerticalAlignTopOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
-import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
+import { getSteps, saveSteps, updateStep } from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
 import { useModel } from '@@/exports';
 
@@ -46,6 +46,7 @@ function Step({ step, saveCurrentSteps }) {
   const { orderId: index, status, content: initialContent } = { ...step };
   const [content, setContent] = useState(initialContent);
   const { styles: dynamicStyle } = useStepStyle(status === 0 ? '#81d3f8' : '#5bb1c9');
+
   return (
     <Input
       size="small"
@@ -90,7 +91,7 @@ function Step({ step, saveCurrentSteps }) {
       }
       value={content}
       onChange={(e) => setContent(e.target.value)}
-      onBlur={(e) => saveCurrentSteps(index, 'save', e.target.value)}
+      onBlur={() => updateStep(step.id, content).then()}
     />
   );
 }
