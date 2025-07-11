@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import 'dayjs/locale/zh-cn';
 import { useModel } from 'umi';
+import RegularItems from '@/pages/Personal/WeeklyWork/RegularItems';
 
 export default function WeeklyWork() {
   const [whichWeek, setWhichWeek] = useState(0);
@@ -60,6 +61,7 @@ export default function WeeklyWork() {
         </Col>
       </Row>
       <hr className={styles.headerLine} />
+      <RegularItems />
       <div style={{ height: targetsHeight }}>
         {Object.keys(targets).length !== 0 &&
           Object.keys(targets).map((field) => {

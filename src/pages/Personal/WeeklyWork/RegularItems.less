@@ -1,0 +1,67 @@
+.wrapper {
+  height: 35px;
+  width: 100%;
+  overflow: hidden; // 防止内容溢出
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0; // 防止缩小
+  margin-right: 5px;
+}
+
+.tagsContainer {
+  display: flex;
+  overflow-x: auto; // 如果内容太多可以横向滚动
+  scrollbar-width: none;
+  white-space: nowrap;
+  flex-grow: 1;
+  min-width: 0; // 修复 flex 布局中的最小宽度问题
+}
+
+.plusItem {
+  svg {
+    width: 30px;
+    height: 30px;
+    color: #81d3f8;
+    margin-right: 5px;
+  }
+}
+
+.importIcon {
+  transform: scaleX(-1);
+
+  svg {
+    width: 30px;
+    height: 30px;
+    color: #81d3f8;
+  }
+}
+
+.aimIcon {
+  margin-left: 5px;
+
+  svg {
+    width: 30px;
+    height: 30px;
+    color: #81d3f8;
+  }
+}
+
+.closeIcon {
+  color: #ffffff;
+  width: 10px;
+  height: 10px;
+  top: 7px !important;
+  right: 7px !important;
+}
+
+.button {
+  height: 28px;
+  white-space: nowrap;
+  border: none;
+  color: #ffffff;
+  background-color: #81d3f8;
+}
