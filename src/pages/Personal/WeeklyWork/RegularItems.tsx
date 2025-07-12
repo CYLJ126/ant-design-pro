@@ -154,7 +154,7 @@ function Bars({ regularActivities }) {
             {day.map((color, barIndex) => (
               <div
                 key={barIndex}
-                style={{ width: '7px', height: '30px', backgroundColor: getColorByIndex(barIndex) }}
+                style={{ width: '7px', height: '30px', backgroundColor: color }}
               />
             ))}
           </div>
