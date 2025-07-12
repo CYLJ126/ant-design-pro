@@ -27,7 +27,7 @@ import {
   listWeeklyRegularActivities,
   updateWeeklyRegularActivity,
 } from '@/services/ant-design-pro/dailyWork';
-import { getWeekDayByLabel, weekDays } from '@/common/calendarUtil';
+import { getWeekDayByLabel, getWeekDayByValue, weekDays } from '@/common/calendarUtil';
 
 /**
  * 每周常规活动
@@ -49,6 +49,19 @@ function Tag({ regularActivity, index, singleView, removeTag, setActivityBars })
     });
     setActivityBars(regularActivity, JSON.stringify(checked));
   };
+  useEffect(() => {
+    if (regularActivity.checked) {
+      const shotArr = JSON.parse(regularActivity.checked);
+      let temp = [];
+      shotArr.forEach((item, index) => {
+        if (item === 1) {
+          temp.push(getWeekDayByValue(index + 1)?.label);
+        }
+      });
+      setCheckedList(temp);
+    }
+  }, [regularActivity]);
+
   return (
     <Badge
       count={
@@ -111,19 +124,42 @@ const TagsSelector: React.FC = ({ addTag, options }) => {
   );
 };
 
-function Bar({ tags }) {
+function Bars({ regularActivities }) {
+  const [dayBars, setDayBars] = useState([]);
+
+  useEffect(() => {
+    let tempArr = [[], [], [], [], [], [], []];
+    regularActivities.forEach((item, activityIndex) => {
+      if (item.checked) {
+        let checked = JSON.parse(item.checked);
+        checked.forEach((dayShot, dayIndex) => {
+          if (dayShot === 1) {
+            tempArr[dayIndex].push(getColorByIndex(activityIndex));
+          }
+        });
+      }
+    });
+    console.log('regularActivities: ', tempArr);
+    setDayBars(tempArr);
+  }, [regularActivities]);
+
   return (
-    <div style={{ height: '30px', display: 'flex', flexDirection: 'row' }}>
-      {tags.map((tag, index) => (
-        <div
-          key={index}
-          style={{
-            width: '7px',
-            height: '30px',
-            backgroundColor: getColorByIndex(index),
-          }}
-        />
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      {dayBars.map((day, dayIndex) => {
+        return (
+          <div
+            key={dayIndex}
+            style={{ width: '55px', height: '30px', display: 'flex', flexDirection: 'row' }}
+          >
+            {day.map((color, barIndex) => (
+              <div
+                key={barIndex}
+                style={{ width: '7px', height: '30px', backgroundColor: getColorByIndex(barIndex) }}
+              />
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -185,7 +221,15 @@ export default function RegularItems({ whichWeek }) {
   };
 
   const setActivityBars = (tag, list) => {
-    updateWeeklyRegularActivity(tag.id, list).then();
+    updateWeeklyRegularActivity(tag.id, list).then(() => {
+      let temp = regularActivities.map((item) => {
+        if (item.id === tag.id) {
+          item.checked = list;
+        }
+        return item;
+      });
+      setRegularActivities(temp);
+    });
   };
 
   return (
@@ -226,7 +270,7 @@ export default function RegularItems({ whichWeek }) {
         </Col>
         <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
           {/* 右侧活动条 */}
-          <Bar tags={regularActivities} />
+          <Bars regularActivities={regularActivities} />
         </Col>
       </Row>
     </div>
