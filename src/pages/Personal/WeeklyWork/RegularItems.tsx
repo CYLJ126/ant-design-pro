@@ -124,24 +124,24 @@ const TagsSelector: React.FC = ({ addTag, options }) => {
   );
 };
 
-function Bars({ regularActivities }) {
+function Bars({ visibleActivities }) {
   const [dayBars, setDayBars] = useState([]);
 
   useEffect(() => {
     let tempArr = [[], [], [], [], [], [], []];
-    regularActivities.forEach((item, activityIndex) => {
+    visibleActivities.forEach((item) => {
       if (item.checked) {
         let checked = JSON.parse(item.checked);
         checked.forEach((dayShot, dayIndex) => {
           if (dayShot === 1) {
-            tempArr[dayIndex].push(getColorByIndex(activityIndex));
+            tempArr[dayIndex].push(getColorByIndex(item.colorIndex));
           }
         });
       }
     });
     console.log('regularActivities: ', tempArr);
     setDayBars(tempArr);
-  }, [regularActivities]);
+  }, [visibleActivities]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -166,6 +166,7 @@ function Bars({ regularActivities }) {
 
 export default function RegularItems({ whichWeek }) {
   const [regularActivities, setRegularActivities] = useState([]);
+  const [visibleActivities, setVisibleActivities] = useState([]);
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -177,7 +178,12 @@ export default function RegularItems({ whichWeek }) {
   useEffect(() => {
     if (whichWeek !== 0) {
       listWeeklyRegularActivities(whichWeek).then((res) => {
-        setRegularActivities(res.rows);
+        let activities = res.rows.map((item, index) => {
+          item.colorIndex = index;
+          return item;
+        });
+        setRegularActivities(activities);
+        setVisibleActivities(activities);
       });
     }
   }, [whichWeek]);
@@ -214,10 +220,21 @@ export default function RegularItems({ whichWeek }) {
   /**
    * 控制标签活动条的显示
    * @param type 显示类型：all-显示所有；none-所有不显示；single-显示指定标签活动条；
-   * @param tag 标签对象，可选
+   * @param regularActivity 标签对象，可选
    */
-  const handleTagView = (type, tag?) => {
-    console.log('查看标签：', tag);
+  const handleTagView = (type, regularActivity?) => {
+    if (type === 'all') {
+      setVisibleActivities(regularActivities);
+    } else if (type === 'none') {
+      setVisibleActivities([]);
+    } else {
+      if (!regularActivity) {
+        return;
+      }
+      setVisibleActivities(
+        regularActivities.filter((item) => item.tagId === regularActivity.tagId),
+      );
+    }
   };
 
   const setActivityBars = (tag, list) => {
@@ -270,7 +287,7 @@ export default function RegularItems({ whichWeek }) {
         </Col>
         <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
           {/* 右侧活动条 */}
-          <Bars regularActivities={regularActivities} />
+          <Bars visibleActivities={visibleActivities} />
         </Col>
       </Row>
     </div>
