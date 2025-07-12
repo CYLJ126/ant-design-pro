@@ -84,7 +84,7 @@ export default function WeeklyWork() {
                   <Steps targetId={id} />
                 </Col>
                 <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
-                  <DayRecords targetId={id} weekId={whichWeek} />
+                  <DayRecords targetId={id} whichWeek={whichWeek} />
                 </Col>
               </Row>
             );

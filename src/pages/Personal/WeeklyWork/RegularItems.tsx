@@ -22,6 +22,7 @@ import { getColorByIndex } from '@/common/colorUtil';
 import { listRecursive } from '@/services/ant-design-pro/base';
 import { Option } from 'commander';
 import {
+  addFromRegularActivities,
   addWeeklyRegularActivity,
   deleteWeeklyRegularActivity,
   listWeeklyRegularActivities,
@@ -139,7 +140,6 @@ function Bars({ visibleActivities }) {
         });
       }
     });
-    console.log('regularActivities: ', tempArr);
     setDayBars(tempArr);
   }, [visibleActivities]);
 
@@ -160,6 +160,36 @@ function Bars({ visibleActivities }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * 导入到当日活动
+ * @param activities 待导入的事项
+ * @constructor
+ */
+function ImportActivities({ activities }) {
+  const [selectedTags, setSelectedTags] = useState<[]>([]);
+
+  return (
+    <div>
+      <Checkbox.Group
+        options={activities.map((item) => ({
+          label: item.tagName, // 显示 tagName
+          value: item.tagId, // 使用 tagId 作为值
+        }))}
+        onChange={(checkedValues) =>
+          setSelectedTags(activities.filter((item) => checkedValues.includes(item.tagId)))
+        }
+      />
+      <Button
+        onClick={() =>
+          addFromRegularActivities(selectedTags).then(() => message.success('添加成功'))
+        }
+      >
+        确定
+      </Button>
     </div>
   );
 }
@@ -290,8 +320,15 @@ export default function RegularItems({ whichWeek }) {
               {/* 添加标签 */}
               <PlusSquareOutlined className={styles.plusItem} />
             </Popover>
-            {/* 导入到当天 */}
-            <LoginOutlined className={styles.importIcon} />
+            <Popover
+              autoAdjustOverflow
+              placement={'bottomRight'}
+              destroyOnHidden
+              content={<ImportActivities activities={regularActivities} />}
+            >
+              {/* 导入到当天 */}
+              <LoginOutlined className={styles.importIcon} />
+            </Popover>
             {/* 全部显示或不显示活动条 */}
             <KeyOutlined
               className={styles.aimIcon}

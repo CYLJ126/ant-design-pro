@@ -232,6 +232,15 @@ export async function foldActivity(id?: number, status?: number) {
   return jsonPost('/dw/dailyWork/foldActivity', { id: id, foldFlag: status });
 }
 
+/**
+ * 将指定的本周常规事项添加为当日的活动
+ *
+ * @param regularActivities 待添加为活动的常规事项
+ */
+export async function addFromRegularActivities(regularActivities) {
+  return jsonPost('/dw/dailyWork/addFromRegularActivities', regularActivities);
+}
+
 /**  ----------------- DailyWorkController end ----------------- */
 
 /**  ----------------- TodoWorkController start ----------------- */
