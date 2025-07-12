@@ -168,6 +168,7 @@ export default function RegularItems({ whichWeek }) {
   const [regularActivities, setRegularActivities] = useState([]);
   const [visibleActivities, setVisibleActivities] = useState([]);
   const [options, setOptions] = useState([]);
+  const [showAllBars, setShowAllBars] = useState(true);
 
   useEffect(() => {
     listRecursive({ name: '日课' }).then((data) => {
@@ -292,7 +293,18 @@ export default function RegularItems({ whichWeek }) {
             {/* 导入到当天 */}
             <LoginOutlined className={styles.importIcon} />
             {/* 全部显示或不显示活动条 */}
-            <KeyOutlined className={styles.aimIcon} />
+            <KeyOutlined
+              className={styles.aimIcon}
+              onClick={() => {
+                if (showAllBars) {
+                  setShowAllBars(false);
+                  setVisibleActivities([]);
+                } else {
+                  setShowAllBars(true);
+                  setVisibleActivities([...regularActivities]);
+                }
+              }}
+            />
           </div>
           {/* 标签容器 */}
           <div className={styles.tagsContainer}>
