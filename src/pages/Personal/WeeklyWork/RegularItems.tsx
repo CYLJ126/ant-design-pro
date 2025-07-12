@@ -231,9 +231,28 @@ export default function RegularItems({ whichWeek }) {
       if (!regularActivity) {
         return;
       }
-      setVisibleActivities(
-        regularActivities.filter((item) => item.tagId === regularActivity.tagId),
-      );
+      const exist = visibleActivities.some((item) => item.tagId === regularActivity.tagId);
+      if (exist) {
+        setVisibleActivities(
+          regularActivities.filter((item) => item.tagId !== regularActivity.tagId),
+        );
+      } else {
+        const current = regularActivities.filter(
+          (item) => item.tagId === regularActivity.tagId,
+        )?.[0];
+        if (current) {
+          let temp = [];
+          let added = false;
+          for (let i = 0; i < visibleActivities.length; i++) {
+            if (!added && current.colorIndex < visibleActivities[i].colorIndex) {
+              temp.push(current);
+              added = true;
+            }
+            temp.push(visibleActivities[i]);
+          }
+          setVisibleActivities(temp);
+        }
+      }
     }
   };
 
