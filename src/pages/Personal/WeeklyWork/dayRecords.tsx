@@ -119,14 +119,16 @@ function Day({ recordParam, targetId }) {
   );
 }
 
-export default function DayRecordsFold({ targetId, weekId }) {
+export default function DayRecords({ targetId, whichWeek }) {
   const [dayRecords, setDayRecords] = useState([]);
 
   useEffect(() => {
-    listWeekDays(targetId, weekId).then((result) => {
-      setDayRecords(result);
-    });
-  }, [targetId, weekId]);
+    if (whichWeek !== 0) {
+      listWeekDays(targetId, whichWeek).then((result) => {
+        setDayRecords(result);
+      });
+    }
+  }, [targetId, whichWeek]);
 
   // 要每次的 ID 都不一样，才能重新渲染，比如调整了目标的开始、截止日期，想要 <Day> 组件显示不同的颜色，则 key 必须加个时间戳
   const timestamp = new Date().getTime();
@@ -136,7 +138,7 @@ export default function DayRecordsFold({ targetId, weekId }) {
         <Day
           key={day.dayOfMonth + timestamp}
           targetId={targetId}
-          recordParam={{ ...day, weekId: weekId }}
+          recordParam={{ ...day, weekId: whichWeek }}
         />
       ))}
     </Row>

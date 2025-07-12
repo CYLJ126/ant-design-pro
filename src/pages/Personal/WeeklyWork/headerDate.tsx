@@ -20,7 +20,9 @@ export default function HeaderDate({ whichWeek }) {
 
   useEffect(() => {
     // 加载表头——本周每天对应的日期
-    getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
+    if (whichWeek !== 0) {
+      getWeekDaysHeader(whichWeek).then((result) => setWeekDays(result));
+    }
   }, [whichWeek]);
 
   const time = new Date().getTime();
