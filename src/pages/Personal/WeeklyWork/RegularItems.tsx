@@ -188,6 +188,14 @@ export default function RegularItems({ whichWeek }) {
     }
   }, [whichWeek]);
 
+  // 重新设置可见的活动条
+  const changeVisibleActivities = (param, included, excluded) => {
+    const existIds = visibleActivities.map((item) => item.id).filter((id) => id !== excluded);
+    existIds.push(included);
+    let filter = param.filter((item) => existIds.includes(item.id));
+    setVisibleActivities(filter);
+  };
+
   /**
    * 添加一个每周常规活动
    * @param tag 每周常规活动对象
@@ -202,7 +210,10 @@ export default function RegularItems({ whichWeek }) {
       addWeeklyRegularActivity(param).then((result) => {
         param['id'] = result.id;
         param['tagName'] = tag.name;
-        setRegularActivities([...regularActivities, param]);
+        param['colorIndex'] = regularActivities.length === 0 ? 0 : regularActivities.length;
+        let temp = [...regularActivities, param];
+        setRegularActivities(temp);
+        changeVisibleActivities(temp, result.id, null);
       });
     }
   };
@@ -212,9 +223,15 @@ export default function RegularItems({ whichWeek }) {
    * @param regularActivity 每周常规活动对象
    */
   const removeTag = (regularActivity) => {
-    deleteWeeklyRegularActivity(regularActivity.id).then(() =>
-      setRegularActivities(regularActivities.filter((item) => item.id !== regularActivity.id)),
-    );
+    deleteWeeklyRegularActivity(regularActivity.id).then(() => {
+      let rest = regularActivities.filter((item) => item.id !== regularActivity.id);
+      // 对活动条颜色进行重新设置
+      rest.forEach((item, index) => {
+        item.colorIndex = index;
+      });
+      setRegularActivities(rest);
+      changeVisibleActivities(rest, null, regularActivity.id);
+    });
   };
 
   /**
@@ -224,7 +241,7 @@ export default function RegularItems({ whichWeek }) {
    */
   const handleTagView = (type, regularActivity?) => {
     if (type === 'all') {
-      setVisibleActivities(regularActivities);
+      changeVisibleActivities(regularActivities, null, null);
     } else if (type === 'none') {
       setVisibleActivities([]);
     } else {
@@ -233,31 +250,18 @@ export default function RegularItems({ whichWeek }) {
       }
       const exist = visibleActivities.some((item) => item.tagId === regularActivity.tagId);
       if (exist) {
-        setVisibleActivities(
-          regularActivities.filter((item) => item.tagId !== regularActivity.tagId),
-        );
+        // 去除当前点击的标签的活动条
+        changeVisibleActivities(regularActivities, null, regularActivity.id);
       } else {
-        const current = regularActivities.filter(
-          (item) => item.tagId === regularActivity.tagId,
-        )?.[0];
-        if (current) {
-          let temp = [];
-          let added = false;
-          for (let i = 0; i < visibleActivities.length; i++) {
-            if (!added && current.colorIndex < visibleActivities[i].colorIndex) {
-              temp.push(current);
-              added = true;
-            }
-            temp.push(visibleActivities[i]);
-          }
-          setVisibleActivities(temp);
-        }
+        // 添加当前点击的标签的活动条
+        changeVisibleActivities(regularActivities, regularActivity.id, null);
       }
     }
   };
 
   const setActivityBars = (tag, list) => {
     updateWeeklyRegularActivity(tag.id, list).then(() => {
+      // 重新设置本周所有标签
       let temp = regularActivities.map((item) => {
         if (item.id === tag.id) {
           item.checked = list;
@@ -265,6 +269,8 @@ export default function RegularItems({ whichWeek }) {
         return item;
       });
       setRegularActivities(temp);
+      // 重新设置显示的活动条
+      changeVisibleActivities(temp, null, null);
     });
   };
 
