@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Cascader, CascaderProps, Col, message, Popover, Row, Space } from 'antd';
+import {
+  Badge,
+  Button,
+  Cascader,
+  CascaderProps,
+  Checkbox,
+  Col,
+  message,
+  Popover,
+  Row,
+  Space,
+} from 'antd';
 import {
   KeyOutlined,
   LoginOutlined,
@@ -10,37 +21,66 @@ import styles from './RegularItems.less';
 import { getColorByIndex } from '@/common/colorUtil';
 import { listRecursive } from '@/services/ant-design-pro/base';
 import { Option } from 'commander';
+import {
+  addWeeklyRegularActivity,
+  deleteWeeklyRegularActivity,
+  listWeeklyRegularActivities,
+} from '@/services/ant-design-pro/dailyWork';
+import { getWeekDayByLabel, weekDays } from '@/common/calendarUtil';
 
 /**
- * 标签
- * @param tag 标签内容对象
- * @param index 标签索引
- * @param singleView 点击标签，只显示当前标签的活动条
- * @param iremoveTagndex 删除当前标签
+ * 每周常规活动
+ * @param regularActivity 每周常规活动对象
+ * @param index 每周常规活动索引
+ * @param singleView 点击每周常规活动标签，只显示当前每周常规活动标签的活动条
+ * @param removeTag 删除当前每周常规活动
+ * @param setActivityBars 设置活动条
  * @constructor  Tag
  */
-function Tag({ tag, index, singleView, removeTag }) {
+function Tag({ regularActivity, index, singleView, removeTag, setActivityBars }) {
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+  let color = getColorByIndex(index);
+  const onChange = (list) => {
+    setCheckedList(list);
+    let checked = [0, 0, 0, 0, 0, 0, 0];
+    list.forEach((item) => {
+      checked[getWeekDayByLabel(item)] = 1;
+    });
+    setActivityBars(regularActivity, JSON.stringify(checked));
+  };
   return (
     <Badge
       count={
         <MinusCircleOutlined
           className={styles.closeIcon}
           onClick={(e) => {
-            removeTag(tag);
+            removeTag(regularActivity);
             e.stopPropagation();
           }}
         />
       }
     >
-      <Button
-        className={styles.button}
-        onClick={() => singleView('single', tag)}
-        style={{
-          backgroundColor: getColorByIndex(index),
-        }}
+      <Popover
+        autoAdjustOverflow
+        placement={'bottomRight'}
+        content={
+          <Checkbox.Group
+            value={checkedList}
+            options={weekDays.map((item) => item.label)}
+            onChange={onChange}
+          />
+        }
       >
-        {tag.name}
-      </Button>
+        <Button
+          className={styles.button}
+          onClick={() => singleView('single', regularActivity)}
+          style={{
+            backgroundColor: color,
+          }}
+        >
+          {regularActivity.tagName}
+        </Button>
+      </Popover>
     </Badge>
   );
 }
@@ -87,8 +127,8 @@ function Bar({ tags }) {
   );
 }
 
-export default function RegularItems({}) {
-  const [tags, setTags] = useState([]);
+export default function RegularItems({ whichWeek }) {
+  const [regularActivities, setRegularActivities] = useState([]);
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
@@ -97,27 +137,41 @@ export default function RegularItems({}) {
     });
   }, []);
 
+  useEffect(() => {
+    if (whichWeek !== 0) {
+      listWeeklyRegularActivities(whichWeek).then((res) => {
+        setRegularActivities(res.rows);
+      });
+    }
+  }, [whichWeek]);
+
   /**
-   * 添加一个新标签
-   * @param tag 标签对象
+   * 添加一个每周常规活动
+   * @param tag 每周常规活动对象
    */
-  const addTag = (tag) => {
-    if (tags.length >= 7) {
+  const addRegularActivity = (tag) => {
+    if (regularActivities.length >= 7) {
       message.warning('最多添加 7 个标签').then();
       return;
     }
-    if (!tags.some((item) => item.id === tag.id)) {
-      setTags([...tags, tag]);
+    if (!regularActivities.some((item) => item.tagId === tag.id)) {
+      let param = { tagId: tag.id, weekId: whichWeek, checked: '[0,0,0,0,0,0,0]' };
+      addWeeklyRegularActivity(param).then((result) => {
+        param['id'] = result.id;
+        param['tagName'] = tag.name;
+        setRegularActivities([...regularActivities, param]);
+      });
     }
   };
 
   /**
-   * 删除一个标签
-   * @param tag 标签对象
+   * 删除一个每周常规活动
+   * @param regularActivity 每周常规活动对象
    */
-  const removeTag = (tag) => {
-    setTags(tags.filter((item) => item.id !== tag.id));
-    // TODO 调用后端删除
+  const removeTag = (regularActivity) => {
+    deleteWeeklyRegularActivity(regularActivity.id).then(() =>
+      setRegularActivities(regularActivities.filter((item) => item.id !== regularActivity.id)),
+    );
   };
 
   /**
@@ -127,6 +181,10 @@ export default function RegularItems({}) {
    */
   const handleTagView = (type, tag?) => {
     console.log('查看标签：', tag);
+  };
+
+  const setActivityBars = (tag, list) => {
+    console.log('设置活动条：', list);
   };
 
   return (
@@ -139,7 +197,7 @@ export default function RegularItems({}) {
               autoAdjustOverflow
               placement={'bottomRight'}
               destroyOnHidden
-              content={<TagsSelector addTag={addTag} options={options} />}
+              content={<TagsSelector addTag={addRegularActivity} options={options} />}
             >
               {/* 添加标签 */}
               <PlusSquareOutlined className={styles.plusItem} />
@@ -152,13 +210,14 @@ export default function RegularItems({}) {
           {/* 标签容器 */}
           <div className={styles.tagsContainer}>
             <Space size={[8, 0]} wrap={false}>
-              {tags.map((tag, index) => (
+              {regularActivities.map((regularActivity, index) => (
                 <Tag
-                  tag={tag}
+                  regularActivity={regularActivity}
                   key={index}
                   index={index}
                   singleView={handleTagView}
                   removeTag={removeTag}
+                  setActivityBars={setActivityBars}
                 />
               ))}
             </Space>
@@ -166,7 +225,7 @@ export default function RegularItems({}) {
         </Col>
         <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
           {/* 右侧活动条 */}
-          <Bar tags={tags} />
+          <Bar tags={regularActivities} />
         </Col>
       </Row>
     </div>

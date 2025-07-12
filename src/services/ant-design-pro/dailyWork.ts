@@ -396,3 +396,42 @@ export async function deleteSticky(param) {
 }
 
 /**  ----------------- StickyController end ----------------- */
+
+/**  ----------------- WeeklyRegularActivityController start ----------------- */
+/**
+ * 添加每周常规活动
+ * @param param 待添加的每周常规活动
+ */
+export async function addWeeklyRegularActivity(param) {
+  return jsonPost('/dw/weeklyRegularActivity/addWeeklyRegularActivity', param);
+}
+
+/**
+ * 更新每周常规活动
+ * @param id 待更新的每周常规活动 ID
+ * @param checked 已选择的天数列表
+ */
+export async function updateWeeklyRegularActivity(id, checked) {
+  return jsonPost('/dw/weeklyRegularActivity/updateWeeklyRegularActivity', {
+    id: id,
+    checked: checked,
+  });
+}
+
+/**
+ * 删除每周常规活动
+ * @param id 待删除的每周常规活动 ID
+ */
+export async function deleteWeeklyRegularActivity(id) {
+  return jsonPost('/dw/weeklyRegularActivity/deleteWeeklyRegularActivity', { id: id });
+}
+
+/**
+ * 查询对应周的常规活动
+ * @param weekId 周 ID
+ */
+export async function listWeeklyRegularActivities(weekId) {
+  return jsonPostList('/dw/weeklyRegularActivity/listWeeklyRegularActivities', { weekId: weekId });
+}
+
+/**  ----------------- WeeklyRegularActivityController end ----------------- */

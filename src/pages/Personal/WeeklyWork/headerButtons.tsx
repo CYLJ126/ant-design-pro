@@ -52,8 +52,10 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
 
   useEffect(() => {
     // 加载表头——周统计信息
-    getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
-    setWeekOptions(getWeekOptions(whichWeek));
+    if (whichWeek !== 0) {
+      getWeekStatistics(whichWeek).then((result) => setWeekInfo({ ...result, aimId: whichWeek }));
+      setWeekOptions(getWeekOptions(whichWeek));
+    }
   }, [whichWeek, targetChangeTip]);
 
   useEffect(() => {

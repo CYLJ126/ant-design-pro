@@ -61,7 +61,7 @@ export default function WeeklyWork() {
         </Col>
       </Row>
       <hr className={styles.headerLine} />
-      <RegularItems />
+      <RegularItems whichWeek={whichWeek} />
       <div style={{ height: targetsHeight }}>
         {Object.keys(targets).length !== 0 &&
           Object.keys(targets).map((field) => {
