@@ -25,6 +25,7 @@ import {
   addWeeklyRegularActivity,
   deleteWeeklyRegularActivity,
   listWeeklyRegularActivities,
+  updateWeeklyRegularActivity,
 } from '@/services/ant-design-pro/dailyWork';
 import { getWeekDayByLabel, weekDays } from '@/common/calendarUtil';
 
@@ -184,7 +185,7 @@ export default function RegularItems({ whichWeek }) {
   };
 
   const setActivityBars = (tag, list) => {
-    console.log('设置活动条：', list);
+    updateWeeklyRegularActivity(tag.id, list).then();
   };
 
   return (
