@@ -26,9 +26,8 @@ const initialHeadInfo = {
 
 export default function Header() {
   dayjs.extend(utc);
-  const [whichDay, setWhichDay] = useState(new Date());
   const [headInfo, setHeadInfo] = useState(initialHeadInfo);
-  const { initialActivities, addNewActivity } = useModel('activitiesModel');
+  const { whichDay, setWhichDay, initialActivities, addNewActivity } = useModel('activitiesModel');
   const { updateInfo } = useModel('activityUpdateModel');
 
   /**

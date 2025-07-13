@@ -29,6 +29,7 @@ import {
   updateWeeklyRegularActivity,
 } from '@/services/ant-design-pro/dailyWork';
 import { getWeekDayByLabel, getWeekDayByValue, weekDays } from '@/common/calendarUtil';
+import { useModel } from 'umi';
 
 /**
  * 每周常规活动
@@ -171,6 +172,7 @@ function Bars({ visibleActivities }) {
  */
 function ImportActivities({ activities }) {
   const [selectedTags, setSelectedTags] = useState<[]>([]);
+  const { whichDay, initialActivities } = useModel('activitiesModel');
 
   return (
     <div>
@@ -185,7 +187,10 @@ function ImportActivities({ activities }) {
       />
       <Button
         onClick={() =>
-          addFromRegularActivities(selectedTags).then(() => message.success('添加成功'))
+          addFromRegularActivities(selectedTags).then(() => {
+            message.success('添加成功').then();
+            initialActivities(whichDay);
+          })
         }
       >
         确定

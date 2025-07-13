@@ -26,14 +26,15 @@ export async function listActivities(whichDay) {
 }
 
 export default () => {
+  const [whichDay, setWhichDay] = useState(new Date());
   // 每日活动列表
   const [activities, setActivities] = useState({});
   const themeOptions = useRef([]);
   const { setUpdateInfo } = useModel('activityUpdateModel');
 
   // 初始化活动列表
-  const initialActivities = useCallback(async (whichDay) => {
-    const result = await listActivities(whichDay);
+  const initialActivities = useCallback(async (day) => {
+    const result = await listActivities(day);
     let activitiesTemp = {};
     result.forEach((item) => {
       activitiesTemp[item.id] = item;
@@ -152,5 +153,7 @@ export default () => {
     updateActivity,
     pushNextDay,
     markDone,
+    whichDay,
+    setWhichDay,
   };
 };
