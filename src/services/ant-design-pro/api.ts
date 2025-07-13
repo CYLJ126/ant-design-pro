@@ -50,6 +50,29 @@ export function jsonPostList(path, data, options?: { [key: string]: any }) {
 }
 
 /**
+ * batchPost 请求后端，返回 statistics 节点，批量操作结果
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function batchPost(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>('/nip' + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((resultContext) => {
+    if (resultContext.success) {
+      return resultContext.statistics;
+    }
+  });
+}
+
+/**
  * 请求 Blob 数据
  *
  * @param path 请求路径

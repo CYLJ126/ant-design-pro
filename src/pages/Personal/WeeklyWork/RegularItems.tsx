@@ -187,9 +187,13 @@ function ImportActivities({ activities }) {
       />
       <Button
         onClick={() =>
-          addFromRegularActivities(selectedTags).then(() => {
-            message.success('添加成功').then();
+          addFromRegularActivities(selectedTags).then((res) => {
             initialActivities(whichDay);
+            message
+              .success(
+                '总 ' + res.total + ' 条，成功 ' + res.success + ' 条，失败 ' + res.fail + ' 条',
+              )
+              .then();
           })
         }
       >

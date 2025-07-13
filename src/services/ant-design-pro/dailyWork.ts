@@ -1,4 +1,4 @@
-import { jsonPost, jsonPostList } from './api';
+import { batchPost, jsonPost, jsonPostList } from './api';
 // 格式化时间为本地时间
 import 'dayjs/locale/zh-cn';
 
@@ -238,7 +238,7 @@ export async function foldActivity(id?: number, status?: number) {
  * @param regularActivities 待添加为活动的常规事项
  */
 export async function addFromRegularActivities(regularActivities) {
-  return jsonPost('/dw/dailyWork/addFromRegularActivities', regularActivities);
+  return batchPost('/dw/dailyWork/addFromRegularActivities', regularActivities);
 }
 
 /**  ----------------- DailyWorkController end ----------------- */
