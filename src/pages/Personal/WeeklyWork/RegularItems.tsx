@@ -186,7 +186,10 @@ function ImportActivities({ activities }) {
         }
       />
       <Button
-        onClick={() =>
+        onClick={() => {
+          if (selectedTags.length === 0) {
+            return;
+          }
           addFromRegularActivities(selectedTags).then((res) => {
             initialActivities(whichDay);
             message
@@ -194,8 +197,8 @@ function ImportActivities({ activities }) {
                 '总 ' + res.total + ' 条，成功 ' + res.success + ' 条，失败 ' + res.fail + ' 条',
               )
               .then();
-          })
-        }
+          });
+        }}
       >
         确定
       </Button>
