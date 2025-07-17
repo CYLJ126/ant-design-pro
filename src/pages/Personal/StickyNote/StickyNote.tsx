@@ -104,20 +104,7 @@ export default function StickyNote({ initData, px, py }) {
         onClick={bringToFront}
       >
         {/* 添加拖拽句柄区域 */}
-        <div
-          ref={dragHandleRef}
-          className={`${styles.dragHandle} drag-handle`}
-          style={{
-            cursor: 'move',
-            width: 30,
-            height: 30,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: '2px',
-            zIndex: 10,
-          }}
-        />
+        <div ref={dragHandleRef} className={`${styles.dragHandle} drag-handle`} style={{}} />
         <div className={styles.header}>
           <Input
             value={sticky.title}
