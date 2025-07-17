@@ -1,6 +1,12 @@
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .dragHandle {
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0);
   }
 }
 
@@ -37,9 +43,15 @@
 }
 
 .dragIcon {
-  width: 20px;
-  height: 20px;
   color: #ffffff;
+  position: absolute;
+  left: 3px;
+  pointer-events: none; /* 确保点击图标不会阻止input获得焦点 */
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .colorPicker {

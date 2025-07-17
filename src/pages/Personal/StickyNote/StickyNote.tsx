@@ -14,6 +14,7 @@ import {
   FileWordOutlined,
   OrderedListOutlined,
   PlusSquareOutlined,
+  TagsOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignTopOutlined,
 } from '@ant-design/icons';
@@ -108,23 +109,26 @@ export default function StickyNote({ initData, px, py }) {
           className={`${styles.dragHandle} drag-handle`}
           style={{
             cursor: 'move',
-            width: 100,
-            height: 24,
+            width: 30,
+            height: 30,
             position: 'absolute',
             top: 0,
             left: 0,
-            right: 0,
+            right: '2px',
             zIndex: 10,
           }}
         />
-        <Input
-          value={sticky.title}
-          className={styles.title}
-          onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
-          onBlur={() => saveSticky(sticky)}
-          // 允许文本选择
-          onMouseDown={(e) => e.stopPropagation()}
-        />
+        <div className={styles.header}>
+          <Input
+            value={sticky.title}
+            className={styles.title}
+            onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
+            onBlur={() => saveSticky(sticky)}
+            // 允许文本选择
+            onMouseDown={(e) => e.stopPropagation()}
+          />
+          <TagsOutlined className={styles.dragIcon} />
+        </div>
         <div className={styles.buttonBar}>
           {/* 主题色选择 */}
           <ColorPicker
