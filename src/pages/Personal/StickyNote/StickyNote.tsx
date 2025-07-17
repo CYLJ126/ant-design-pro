@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ColorPicker, DatePicker, Input, message } from 'antd';
 import Draggable, { ControlPosition } from 'react-draggable';
 import { getNextZIndex } from './zIndexManager';
@@ -37,6 +37,9 @@ export default function StickyNote({ initData, px, py }) {
   // text - 文本；list - 列表；
   const [showType, setShowType] = useState(initData.showType);
   const [tags, setTags] = useState([]);
+
+  // 创建拖拽句柄引用
+  const dragHandleRef = useRef<HTMLDivElement>(null);
 
   const bringToFront = () => {
     const newZIndex = getNextZIndex();
@@ -77,13 +80,19 @@ export default function StickyNote({ initData, px, py }) {
       if (res) {
         list();
       } else {
-        message.warning('id：' + sticky.id + '删除失败');
+        message.warning('id：' + sticky.id + '删除失败').then();
       }
     });
   }
 
   return (
-    <Draggable position={position} onDrag={handleDrag} onStart={bringToFront}>
+    <Draggable
+      position={position}
+      onDrag={handleDrag}
+      onStart={bringToFront}
+      // 关键修改：指定拖拽句柄
+      handle=".drag-handle"
+    >
       <div
         style={{
           position: 'absolute',
@@ -93,11 +102,28 @@ export default function StickyNote({ initData, px, py }) {
         }}
         onClick={bringToFront}
       >
+        {/* 添加拖拽句柄区域 */}
+        <div
+          ref={dragHandleRef}
+          className={`${styles.dragHandle} drag-handle`}
+          style={{
+            cursor: 'move',
+            width: 100,
+            height: 24,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 10,
+          }}
+        />
         <Input
           value={sticky.title}
           className={styles.title}
           onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
           onBlur={() => saveSticky(sticky)}
+          // 允许文本选择
+          onMouseDown={(e) => e.stopPropagation()}
         />
         <div className={styles.buttonBar}>
           {/* 主题色选择 */}
@@ -111,20 +137,10 @@ export default function StickyNote({ initData, px, py }) {
           />
           {showType === 'text' ? (
             // 点击切换到列表形式
-            <OrderedListOutlined
-              className={styles.listIcon}
-              onClick={() => {
-                setShowType('list');
-              }}
-            />
+            <OrderedListOutlined className={styles.listIcon} onClick={() => setShowType('list')} />
           ) : (
             // 点击切换到文本形式
-            <FileWordOutlined
-              className={styles.textIcon}
-              onClick={() => {
-                setShowType('text');
-              }}
-            />
+            <FileWordOutlined className={styles.textIcon} onClick={() => setShowType('text')} />
           )}
           {foldFlag === 0 ? (
             // 展开
@@ -167,6 +183,8 @@ export default function StickyNote({ initData, px, py }) {
           value={sticky.content}
           onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
           onBlur={() => saveSticky(sticky)}
+          // 允许文本选择
+          onMouseDown={(e) => e.stopPropagation()}
         />
       </div>
     </Draggable>
