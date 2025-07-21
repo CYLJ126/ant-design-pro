@@ -153,7 +153,9 @@ export default function Activity({ id }) {
               mark="endTime"
               colorStyles={getStyles()}
               save={(time) => {
-                updateActivity({ ...dailyWork, endTime: time });
+                let newVar = { ...dailyWork, endTime: time };
+                // 修改开始时间会刷新页面，数据和后端保持一致，但修改结束时间，不希望刷新页面，所以这里要同步一下结束时间到对象中
+                updateActivity(newVar).then(() => setDailyWork(newVar));
               }}
             />
           </Row>
