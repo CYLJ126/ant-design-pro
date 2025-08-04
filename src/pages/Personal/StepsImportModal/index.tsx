@@ -42,10 +42,14 @@ const StepsImportModal = forwardRef(
         .toSorted((a, b) => a.orderId - b.orderId)
         .map((item) => item.content)
         .join('\n');
-      if (action === 'cover') {
+      if (action === 'cover' || !originalContent) {
         setContent(append);
       } else {
-        setContent(originalContent + '\n' + append);
+        if (originalContent.endsWith('\n')) {
+          setContent(originalContent + append);
+        } else {
+          setContent(originalContent + '\n' + append);
+        }
       }
       if (closeAfterAction) {
         setOpen(false);
