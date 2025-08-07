@@ -23,7 +23,7 @@ function Day({ recordParam, targetId }) {
   const { targets } = useModel('targetsModel');
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
   const target = targets[targetId];
-  const [fold, setFold] = useState(target.foldFlag === 'NO');
+  const [fold, setFold] = useState(target.foldFlag === 0);
   const [colorStyle, setColorStyle] = useState(
     getColorStyle(curDate, target.startDate, target.endDate),
   );
