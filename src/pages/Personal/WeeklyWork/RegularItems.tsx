@@ -23,6 +23,7 @@ import { listRecursive } from '@/services/ant-design-pro/base';
 import { Option } from 'commander';
 import {
   addFromRegularActivities,
+  addFromRegularActivity,
   addWeeklyRegularActivity,
   deleteWeeklyRegularActivity,
   listWeeklyRegularActivities,
@@ -126,17 +127,20 @@ const TagsSelector: React.FC = ({ addTag, options }) => {
   );
 };
 
-function Bars({ visibleActivities }) {
+function Bars({ visibleActivities, whichWeek }) {
   const [dayBars, setDayBars] = useState([]);
+  const { whichDay, initialActivities } = useModel('activitiesModel');
 
   useEffect(() => {
     let tempArr = [[], [], [], [], [], [], []];
     visibleActivities.forEach((item) => {
+      // item 形如 {checked: "[0,0,0,0,0,0,1]"，colorIndex: 0createBy: "zhangsc"，createTime: "2025-08-03T22:49:50"，id: 41，tagId: 101，tagName: "总结计划"，updateBy: "zhangsc"，updateTime: "2025-08-03T22:49:50"，weekId: 2532}
+      // checked: "[0,0,0,0,0,0,1]" 表示在周天有此常规事项
       if (item.checked) {
         let checked = JSON.parse(item.checked);
         checked.forEach((dayShot, dayIndex) => {
           if (dayShot === 1) {
-            tempArr[dayIndex].push(getColorByIndex(item.colorIndex));
+            tempArr[dayIndex].push({ tagId: item.tagId, color: getColorByIndex(item.colorIndex) });
           }
         });
       }
@@ -152,10 +156,27 @@ function Bars({ visibleActivities }) {
             key={dayIndex}
             style={{ width: '55px', height: '30px', display: 'flex', flexDirection: 'row' }}
           >
-            {day.map((color, barIndex) => (
+            {day.map((tagInfo, barIndex) => (
               <div
                 key={barIndex}
-                style={{ width: '7px', height: '30px', backgroundColor: color }}
+                style={{
+                  width: '7px',
+                  height: '30px',
+                  backgroundColor: tagInfo.color,
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  // dayOfWeek 0 表示周一，6 表示周日
+                  console.log('tagId: ', tagInfo.tagId, ', dayOfWeek: ', dayIndex);
+                  addFromRegularActivity(tagInfo.tagId, whichWeek, dayIndex).then((res) => {
+                    if (res) {
+                      initialActivities(whichDay);
+                      message.success('添加成功').then();
+                    } else {
+                      message.error('添加失败').then();
+                    }
+                  });
+                }}
               />
             ))}
           </div>
@@ -373,7 +394,7 @@ export default function RegularItems({ whichWeek }) {
         </Col>
         <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
           {/* 右侧活动条 */}
-          <Bars visibleActivities={visibleActivities} />
+          <Bars visibleActivities={visibleActivities} whichWeek={whichWeek} />
         </Col>
       </Row>
     </div>

@@ -241,6 +241,21 @@ export async function addFromRegularActivities(regularActivities) {
   return batchPost('/dw/dailyWork/addFromRegularActivities', regularActivities);
 }
 
+/**
+ * 将指定的本周常规事项添加为当日的活动
+ *
+ * @param tagId 标签 ID
+ * @param weekId 周 ID
+ * @param weekDay 周几（0 表示周一）
+ */
+export async function addFromRegularActivity(tagId, weekId, weekDay) {
+  return jsonPost('/dw/dailyWork/addFromRegularActivity', {
+    tagId: tagId,
+    weekId: weekId,
+    weekDay: weekDay,
+  });
+}
+
 /**  ----------------- DailyWorkController end ----------------- */
 
 /**  ----------------- TodoWorkController start ----------------- */
