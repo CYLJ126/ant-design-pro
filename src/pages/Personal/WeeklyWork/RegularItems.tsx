@@ -110,8 +110,11 @@ function Tag({ regularActivity, index, singleView, removeTag, setActivityBars })
  */
 const TagsSelector: React.FC = ({ addTag, options }) => {
   const onChange: CascaderProps<Option, 'value', true>['onChange'] = (value, selectedOptions) => {
-    console.log('value值：', value);
     const selectedCascader = selectedOptions[selectedOptions.length - 1];
+    if (!selectedCascader) {
+      // 取消选择时也会触发，这时什么也不做
+      return;
+    }
     const currentSelected = selectedCascader[selectedCascader.length - 1];
     addTag({ id: currentSelected.id, name: currentSelected.name });
   };
@@ -347,7 +350,8 @@ export default function RegularItems({ whichWeek }) {
             <Popover
               autoAdjustOverflow
               placement={'bottomRight'}
-              destroyOnHidden
+              destroyOnHidden={true}
+              fresh={true}
               content={<TagsSelector addTag={addRegularActivity} options={options} />}
             >
               {/* 添加标签 */}
