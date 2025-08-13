@@ -223,7 +223,7 @@ export default function Activity({ id }) {
                         className={`${styles.number} ${getStyles().number}`}
                         step={0.5}
                         min={0}
-                        max={10}
+                        max={24}
                         size={'small'}
                         changeOnWheel={true}
                         controls={false}
