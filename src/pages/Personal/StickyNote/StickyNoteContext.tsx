@@ -22,9 +22,9 @@ export function StickyNoteProvider({ children }) {
       x: 0,
       y: 0,
     };
-    const result = await addSticky(stickyNote);
-    setStickies([result.id, ...stickies]);
-  }, [stickies]);
+    await addSticky(stickyNote);
+    list().then();
+  }, [list]);
 
   const value = useMemo(
     () => ({
