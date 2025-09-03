@@ -1,3 +1,47 @@
+.switchDay {
+  svg {
+    width: 30px;
+    height: 30px;
+    color: #81d3f8;
+  }
+}
+
+.date {
+  height: 30px;
+  width: 135px;
+  border: none;
+  background-color: #81d3f8;
+
+  :global(.ant-picker-input) {
+    input {
+      color: white;
+      font-size: 19px;
+      font-weight: bold;
+      text-align: center;
+      margin-left: 2px;
+    }
+
+    input:hover {
+      color: white;
+      background-color: #81d3f8;
+      cursor: pointer;
+    }
+  }
+
+  :global(.anticon) {
+    display: none;
+  }
+}
+
+.date:hover {
+  background-color: #81d3f8;
+}
+
+.date:focus-within {
+  // focus 且鼠标不在输入框上时的样式
+  background-color: #81d3f8;
+}
+
 .refresh {
   svg {
     width: 28px;

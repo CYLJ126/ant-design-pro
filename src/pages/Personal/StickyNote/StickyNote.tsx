@@ -154,6 +154,7 @@ export default function StickyNote({ initData, px, py }) {
           )}
           {/* 逻辑删除 */}
           <CloseOutlined className={styles.deleteIcon} onClick={deleteLogical} />
+          {/* 截止日期 */}
           <DatePicker
             className={styles.endDate}
             size={'small'}

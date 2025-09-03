@@ -4,14 +4,18 @@ import { addSticky, listStickies } from '@/services/ant-design-pro/dailyWork';
 const StickyNoteContext = createContext({});
 
 export function StickyNoteProvider({ children }) {
+  const [whichDay, setWhichDay] = useState(new Date());
   const [queryParam, setQueryParam] = useState({});
   const [stickies, setStickies] = useState([]);
 
-  const list = useCallback(async () => {
-    listStickies(queryParam).then((res) => {
-      setStickies(res.rows);
-    });
-  }, [queryParam]);
+  const list = useCallback(
+    async (param) => {
+      listStickies({ ...queryParam, ...param }).then((res) => {
+        setStickies(res.rows);
+      });
+    },
+    [queryParam],
+  );
 
   const addBlankOne = useCallback(async () => {
     const stickyNote = {
@@ -33,12 +37,16 @@ export function StickyNoteProvider({ children }) {
       stickies,
       list,
       addBlankOne,
+      whichDay,
+      setWhichDay,
     }),
-    [queryParam, stickies, addBlankOne, list],
+    [queryParam, stickies, addBlankOne, list, whichDay],
   );
 
   useEffect(() => {
-    list().then();
+    const today = new Date();
+    setWhichDay(today);
+    list({ endDate: today }).then();
   }, [queryParam]);
 
   return <StickyNoteContext.Provider value={value}>{children}</StickyNoteContext.Provider>;
