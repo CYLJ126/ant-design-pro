@@ -11,6 +11,7 @@ import {
 } from '@/services/ant-design-pro/dailyWork';
 import {
   CloseOutlined,
+  DoubleRightOutlined,
   FileWordOutlined,
   OrderedListOutlined,
   PlusSquareOutlined,
@@ -154,6 +155,12 @@ export default function StickyNote({ initData, px, py }) {
           )}
           {/* 逻辑删除 */}
           <CloseOutlined className={styles.deleteIcon} onClick={deleteLogical} />
+          {/* 增加宽度 */}
+          <DoubleRightOutlined
+            onClick={() => {
+              setSize({ width: size.width + 50, height: size.height });
+            }}
+          />
           {/* 截止日期 */}
           <DatePicker
             className={styles.endDate}
