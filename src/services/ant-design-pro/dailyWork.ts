@@ -256,6 +256,21 @@ export async function addFromRegularActivity(tagId, weekId, weekDay) {
   });
 }
 
+/**
+ * 点击按钮，为当前目标添加当日活动
+ *
+ * @param weekId 周 ID
+ * @param workId 事项 ID
+ * @param targetId 目标 ID
+ */
+export async function addActivityFromWeeklyWork(weekId, workId, targetId) {
+  return jsonPost('/dw/dailyWork/addActivityFromWeeklyWork', {
+    weekId: weekId,
+    workId: workId,
+    id: targetId,
+  });
+}
+
 /**  ----------------- DailyWorkController end ----------------- */
 
 /**  ----------------- TodoWorkController start ----------------- */

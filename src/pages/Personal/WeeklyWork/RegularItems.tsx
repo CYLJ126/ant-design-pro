@@ -170,7 +170,6 @@ function Bars({ visibleActivities, whichWeek }) {
                 }}
                 onClick={() => {
                   // dayOfWeek 0 表示周一，6 表示周日
-                  console.log('tagId: ', tagInfo.tagId, ', dayOfWeek: ', dayIndex);
                   addFromRegularActivity(tagInfo.tagId, whichWeek, dayIndex).then((res) => {
                     if (res) {
                       initialActivities(whichDay);

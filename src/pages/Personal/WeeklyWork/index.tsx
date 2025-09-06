@@ -81,7 +81,7 @@ export default function WeeklyWork() {
                   />
                 </Col>
                 <Col flex="2" className={styles.stepCol}>
-                  <Steps targetId={id} />
+                  <Steps targetId={id} whichWeek={whichWeek} />
                 </Col>
                 <Col style={{ width: 385, flex: '0 0 auto', minWidth: 385 }}>
                   <DayRecords targetId={id} whichWeek={whichWeek} />
