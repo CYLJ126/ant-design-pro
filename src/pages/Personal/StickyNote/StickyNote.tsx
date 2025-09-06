@@ -31,9 +31,8 @@ export default function StickyNote({ initData, px, py }) {
     id: initData.id,
     title: initData.title,
     content: initData.content,
-    startDate: initData.startDate,
-    endDate: initData.endDate,
   });
+  const [endDate, setEndDate] = useState(dayjs(initData.endDate));
   const [foldFlag, setFoldFlag] = useState(initData.foldFlag);
   const [themeColor, setThemeColor] = useState(initData.themeColor || '#81d3f8');
   // text - 文本；list - 列表；
@@ -111,7 +110,7 @@ export default function StickyNote({ initData, px, py }) {
             value={sticky.title}
             className={styles.title}
             onChange={(e) => setSticky({ ...sticky, title: e.target.value })}
-            onBlur={() => saveSticky(sticky)}
+            onBlur={() => saveSticky({ ...sticky, endDate: endDate.format('YYYY-MM-DD') })}
             // 允许文本选择
             onMouseDown={(e) => e.stopPropagation()}
           />
@@ -166,11 +165,11 @@ export default function StickyNote({ initData, px, py }) {
           <DatePicker
             className={styles.endDate}
             size={'small'}
-            value={dayjs(sticky.endDate)}
+            value={endDate}
             format="YYYY-MM-DD"
             onChange={(date) => {
+              setEndDate(date);
               let newVar = { ...sticky, endDate: date.format('YYYY-MM-DD') };
-              setSticky(newVar);
               saveSticky(newVar);
             }}
           />
@@ -182,7 +181,7 @@ export default function StickyNote({ initData, px, py }) {
           className={styles.content}
           value={sticky.content}
           onChange={(e) => setSticky({ ...sticky, content: e.target.value })}
-          onBlur={() => saveSticky(sticky)}
+          onBlur={() => saveSticky({ ...sticky, endDate: endDate.format('YYYY-MM-DD') })}
           // 允许文本选择
           onMouseDown={(e) => e.stopPropagation()}
         />
