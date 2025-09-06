@@ -6,6 +6,7 @@ import {
   CheckOutlined,
   FullscreenExitOutlined,
   FullscreenOutlined,
+  LoginOutlined,
   MinusOutlined,
   PlusSquareOutlined,
   SolutionOutlined,
@@ -14,7 +15,11 @@ import {
   VerticalAlignTopOutlined,
 } from '@ant-design/icons';
 import styles from './steps.less';
-import { getSteps, saveSteps } from '@/services/ant-design-pro/dailyWork';
+import {
+  addActivityFromWeeklyWork,
+  getSteps,
+  saveSteps,
+} from '@/services/ant-design-pro/dailyWork';
 import { createStyles } from 'antd-style';
 import { useModel } from '@@/exports';
 
@@ -95,10 +100,11 @@ function Step({ step, saveCurrentSteps }) {
   );
 }
 
-export default function Steps({ targetId }) {
+export default function Steps({ targetId, whichWeek }) {
   const [steps, setSteps] = useState([]);
   const { targets, updateTarget, deleteTarget } = useModel('targetsModel');
   const { updateInfo, setUpdateInfo } = useModel('targetUpdateModel');
+  const { whichDay, initialActivities } = useModel('activitiesModel');
   const target = targets[targetId];
   // 折叠目标时，高度为 56px，展开目标时高度为 115px
   const [height, setHeight] = useState(target.foldFlag === 0 ? 56 : 115);
@@ -229,6 +235,21 @@ export default function Steps({ targetId }) {
             {/* 总结 */}
             <SolutionOutlined className={styles.myIconSummary} />
             <br />
+            {/* 添加到当天 */}
+            <LoginOutlined
+              className={styles.myIconAddActivity}
+              onClick={() => {
+                // dayOfWeek 0 表示周一，6 表示周日
+                addActivityFromWeeklyWork(whichWeek, target.workId, targetId).then((res) => {
+                  if (res) {
+                    initialActivities(whichDay);
+                    message.success('添加成功').then();
+                  } else {
+                    message.error('添加失败').then();
+                  }
+                });
+              }}
+            />
           </>
         )}
         {targetFoldFlag ? (
