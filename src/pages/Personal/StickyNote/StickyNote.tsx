@@ -157,6 +157,7 @@ export default function StickyNote({ initData, px, py }) {
           <CloseOutlined className={styles.deleteIcon} onClick={deleteLogical} />
           {/* 增加宽度 */}
           <DoubleRightOutlined
+            className={styles.addWidthIcon}
             onClick={() => {
               setSize({ width: size.width + 50, height: size.height });
             }}
