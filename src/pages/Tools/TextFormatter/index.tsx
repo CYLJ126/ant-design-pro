@@ -12,6 +12,7 @@ interface CustomProperty {
   clearBreakLine: boolean; // true-消除换行；false-不消除换行；
   compressSpace: boolean; // true-压缩空格；false-不压缩空格；
   withSpace: boolean; // true-英文、数字前后带空格；false-英文、数字前后不带空格；
+  pasteFromClipboard: boolean; // true-从粘贴板复制内容到文本框中；false-不从粘贴板复制内容到文本框中；
   rewriteClipboard: boolean; // true-处理后复制到粘贴板；false-处理后不复制到粘贴板；
   isHandleClipboard: boolean; // true-从粘贴板复制内容到文本框中；false-不从粘贴板复制内容到文本框中；
   handleList: boolean; // true-处理成列表内容；false-默认，正常文本处理；
@@ -241,6 +242,7 @@ const initialProp: CustomProperty = {
   clearBreakLine: true,
   compressSpace: true,
   withSpace: true,
+  pasteFromClipboard: true,
   rewriteClipboard: true,
   isHandleClipboard: true,
   handleList: false,
@@ -284,8 +286,8 @@ function TextFormatter() {
 
   function handleWindowFocus() {
     // 判断当前激活路由，如果是 /tools/TextFormatter，才处理粘贴板，使用 RouteContext 无法监听到变化，只能使用 localStorage
-    if (localStorage.getItem('active-key') === '/Tools/TextFormatter') {
-      const { prop, listProp } = { ...config.current };
+    const { prop, listProp } = { ...config.current };
+    if (localStorage.getItem('active-key') === '/Tools/TextFormatter' && prop.pasteFromClipboard) {
       handleClipboard(prop, listProp, setTextObj).then();
     }
   }
@@ -332,8 +334,11 @@ function TextFormatter() {
         <Checkbox defaultChecked onChange={(e) => change({ withSpace: e.target.checked })}>
           英文数字前后空格
         </Checkbox>
+        <Checkbox defaultChecked onChange={(e) => change({ pasteFromClipboard: e.target.checked })}>
+          从剪切板填充
+        </Checkbox>
         <Checkbox defaultChecked onChange={(e) => change({ rewriteClipboard: e.target.checked })}>
-          复制到粘贴板
+          复制到剪切板
         </Checkbox>
       </div>
       <div style={{ marginTop: '10px' }}>
