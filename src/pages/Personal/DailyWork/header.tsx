@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { DatePicker, Row } from 'antd';
+import { DatePicker, message, Row } from 'antd';
 import {
-  ExportOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
+  SolutionOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import { useModel } from 'umi';
 import { listActivities } from '@/models/activitiesModel';
+import { summaryForToday } from '@/services/ant-design-pro/dailyWork';
 
 const dateFormat = 'YYYY-MM-DD';
 
@@ -76,6 +77,24 @@ export default function Header() {
     statisticsHeadInfo(newDay).then();
   }
 
+  // 复制为总结内容
+  function summary() {
+    let start = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 0, 0, 0);
+    let end = new Date(whichDay.getFullYear(), whichDay.getMonth(), whichDay.getDate(), 23, 59, 59);
+    const param = {
+      startDateTimeCeil: dayjs(start).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+      startDateTimeFloor: dayjs(end).utc().local().format('YYYY-MM-DD HH:mm:ss'),
+    };
+    summaryForToday(param).then((result) => {
+      // 写入粘贴板
+      navigator.clipboard.writeText(result).catch((e) => {
+        if (e !== null) {
+          message.success(result).then();
+        }
+      });
+    });
+  }
+
   useEffect(() => {
     initialActivities(whichDay);
   }, []);
@@ -127,7 +146,7 @@ export default function Header() {
         {/* 新增 */}
         <PlusSquareOutlined className={styles.plusItem} onClick={() => addNewActivity(whichDay)} />
         {/* 总结 */}
-        <ExportOutlined className={styles.showSummary} />
+        <SolutionOutlined className={styles.showSummary} onClick={() => summary()} />
       </Row>
     </div>
   );

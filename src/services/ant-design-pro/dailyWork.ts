@@ -271,6 +271,16 @@ export async function addActivityFromWeeklyWork(weekId, workId, targetId) {
   });
 }
 
+/**
+ * 生成当日总结格式
+ *
+ * @param param 指定日期范围
+ * @return 总结内容
+ */
+export async function summaryForToday(param) {
+  return jsonPost('/dw/dailyWork/summaryForToday', param);
+}
+
 /**  ----------------- DailyWorkController end ----------------- */
 
 /**  ----------------- TodoWorkController start ----------------- */
