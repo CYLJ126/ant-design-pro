@@ -26,7 +26,7 @@ import ArrowRightIcon from '@/icons/ArrowRightIcon';
 import SuccessIcon from '@/icons/SuccessIcon';
 import Time from './time';
 import { useModel } from 'umi';
-import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
+import { undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
   const importModalRef = useRef<ReactNode>(null);
@@ -129,6 +129,24 @@ export default function Activity({ id }) {
         setSizes([50, 50]);
       }
     };
+  }
+
+  function formatSerialNo() {
+    let formatted;
+    if (dailyWork?.content.startsWith('1.')) {
+      formatted = undoSerialNo(dailyWork.content);
+    } else {
+      formatted = formatSerialNo(dailyWork.content);
+    }
+    let newVar = { ...dailyWork, content: formatted };
+    setDailyWork(newVar);
+    updateActivity(dailyWork);
+    // 写入粘贴板
+    navigator.clipboard.writeText(formatted).catch((e) => {
+      if (e !== null) {
+        console.log('写入粘贴板时发生错误，不影响操作', e);
+      }
+    });
   }
 
   return (
@@ -306,21 +324,7 @@ export default function Activity({ id }) {
                   <OrderedListOutlined
                     className={`${styles.orderListIcon} ${getStyles().icon}`}
                     onClick={() => {
-                      let formatted;
-                      if (dailyWork?.content.startsWith('1.')) {
-                        formatted = undoSerialNo(dailyWork.content);
-                      } else {
-                        formatted = formatSerialNo(dailyWork.content);
-                      }
-                      let newVar = { ...dailyWork, content: formatted };
-                      setDailyWork(newVar);
-                      updateActivity(dailyWork);
-                      // 写入粘贴板
-                      navigator.clipboard.writeText(formatted).catch((e) => {
-                        if (e !== null) {
-                          console.log('写入粘贴板时发生错误，不影响操作', e);
-                        }
-                      });
+                      formatSerialNo();
                     }}
                   />
                 </Row>
@@ -389,11 +393,11 @@ export default function Activity({ id }) {
               <Col span={12}>
                 <Row style={{ marginBottom: '-1px' }}>
                   <Col span={4}>
-                    {/* 删除 */}
-                    <DeleteIcon
-                      className={`${styles.deleteFoldIcon} ${getStyles().icon}`}
+                    {/* 添加或撤销序号 */}
+                    <OrderedListOutlined
+                      className={`${styles.spreadOrderListIcon} ${getStyles().icon}`}
                       onClick={() => {
-                        deleteActivity(dailyWork.id);
+                        formatSerialNo();
                       }}
                     />
                   </Col>
