@@ -103,7 +103,7 @@ export default function TimeTrace({ data }) {
               <Select
                 value={timeTrace.themeId}
                 className={styles.selectItem}
-                style={{ width: 'calc(50% - 5px)' }}
+                style={{ width: timeTrace.workId ? 'calc(50% - 5px)' : 'calc(70% - 5px)' }}
                 options={themeOptions}
                 onSelect={(value) => {
                   let newVar = { ...timeTrace, themeId: value, workId: null, targetId: null };
@@ -116,7 +116,7 @@ export default function TimeTrace({ data }) {
               <Select
                 value={timeTrace.workId}
                 className={styles.selectItem}
-                style={{ width: 'calc(50% - 5px)' }}
+                style={{ width: timeTrace.workId ? 'calc(50% - 5px)' : 'calc(30% - 5px)' }}
                 options={workOptions}
                 onSelect={(value) => {
                   let newVar = { ...timeTrace, workId: value, targetId: null };
