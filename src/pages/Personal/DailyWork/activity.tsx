@@ -30,6 +30,7 @@ import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
   const importModalRef = useRef<ReactNode>(null);
+  // 0-折叠；1-不折叠；
   const [dailyWork, setDailyWork] = useState<any>({ id: id, foldFlag: 1 });
   const { themeOptions, updateActivity, pushNextDay, markDone, deleteActivity } =
     useModel('activitiesModel');
@@ -472,7 +473,7 @@ export default function Activity({ id }) {
               />
             ) : (
               <>
-                <Col span={8}>
+                <Col span={dailyWork.targetId ? 8 : 16}>
                   <Select
                     allowClear
                     value={dailyWork.workId}
@@ -484,7 +485,7 @@ export default function Activity({ id }) {
                     onChange={(value) => getWorkIdOnChange(value)}
                   />
                 </Col>
-                <Col span={16}>
+                <Col span={dailyWork.targetId ? 16 : 8}>
                   <Select
                     allowClear
                     value={dailyWork.targetId}
