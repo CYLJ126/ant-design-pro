@@ -26,7 +26,7 @@ import ArrowRightIcon from '@/icons/ArrowRightIcon';
 import SuccessIcon from '@/icons/SuccessIcon';
 import Time from './time';
 import { useModel } from 'umi';
-import { undoSerialNo } from '@/common/textHandler';
+import { formatSerialNo, undoSerialNo } from '@/common/textHandler';
 
 export default function Activity({ id }) {
   const importModalRef = useRef<ReactNode>(null);
@@ -131,7 +131,10 @@ export default function Activity({ id }) {
     };
   }
 
-  function formatSerialNo() {
+  /**
+   * 添加序号或去除序号，并复制到粘贴板
+   */
+  function handleSerialNo() {
     let formatted;
     if (dailyWork?.content.startsWith('1.')) {
       formatted = undoSerialNo(dailyWork.content);
@@ -324,7 +327,7 @@ export default function Activity({ id }) {
                   <OrderedListOutlined
                     className={`${styles.orderListIcon} ${getStyles().icon}`}
                     onClick={() => {
-                      formatSerialNo();
+                      handleSerialNo();
                     }}
                   />
                 </Row>
@@ -397,7 +400,7 @@ export default function Activity({ id }) {
                     <OrderedListOutlined
                       className={`${styles.spreadOrderListIcon} ${getStyles().icon}`}
                       onClick={() => {
-                        formatSerialNo();
+                        handleSerialNo();
                       }}
                     />
                   </Col>
