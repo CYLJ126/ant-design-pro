@@ -132,6 +132,15 @@ export async function updateWeeklyWorkProportion(param) {
   });
 }
 
+/**
+ * 根据周 ID 获取指定周所有活动，并按主题或事项进行汇总、格式化，加总工时，返回总结内容
+ *
+ * @param weekId 请求参数
+ */
+export async function summaryForWeek(weekId) {
+  return jsonPost('/dw/weeklyWork/summaryForWeek', { weekId: weekId });
+}
+
 /**  ----------------- WeeklyWorkController end ----------------- */
 
 /**  ----------------- StepsController start ----------------- */

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Select } from 'antd';
+import { message, Row, Select } from 'antd';
 import {
   BarChartOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
+  SolutionOutlined,
   VerticalLeftOutlined,
   VerticalRightOutlined,
 } from '@ant-design/icons';
 import styles from './headerButtons.less';
-import { getWeekStatistics, updateWeeklyStatistics } from '@/services/ant-design-pro/dailyWork';
+import {
+  getWeekStatistics,
+  summaryForWeek,
+  updateWeeklyStatistics,
+} from '@/services/ant-design-pro/dailyWork';
 import { useModel } from 'umi';
 
 function getWeekOptions(currentWeek) {
@@ -48,6 +53,20 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   function refreshStatistics(whichWeek) {
     updateWeeklyStatistics(whichWeek).then((result) => setWeekInfo(result));
     initialTargets(whichWeek).then();
+  }
+
+  /**
+   * 复制为总结内容
+   */
+  function summary() {
+    summaryForWeek(whichWeek).then((result) => {
+      // 写入粘贴板
+      navigator.clipboard.writeText(result).catch((e) => {
+        if (e !== null) {
+          message.success(result).then();
+        }
+      });
+    });
   }
 
   useEffect(() => {
@@ -121,6 +140,8 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
         />
         {/* 刷新数据 */}
         <ReloadOutlined onClick={() => refreshStatistics(whichWeek)} className={styles.refresh} />
+        {/* 总结 */}
+        <SolutionOutlined className={styles.showSummary} onClick={() => summary()} />
       </Row>
     </div>
   );
