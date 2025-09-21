@@ -55,7 +55,7 @@ export default function Summary() {
       {/* 添加新便笺 */}
       <PlusSquareOutlined className={styles.plusItem} onClick={addBlankOne} />
       {/* 刷新便笺列表 */}
-      <ReloadOutlined className={styles.refresh} onClick={list} />
+      <ReloadOutlined className={styles.refresh} onClick={() => list({ endDate: whichDay })} />
       <hr className={styles.headerLine} />
     </div>
   );
