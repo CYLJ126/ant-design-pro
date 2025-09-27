@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { message, Row, Select } from 'antd';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { Row, Select } from 'antd';
 import {
   BarChartOutlined,
   PlusSquareOutlined,
@@ -15,6 +15,7 @@ import {
   updateWeeklyStatistics,
 } from '@/services/ant-design-pro/dailyWork';
 import { useModel } from 'umi';
+import ContentPanel from '@/pages/Personal/Summary/contentPanel';
 
 function getWeekOptions(currentWeek) {
   if (currentWeek === 0) {
@@ -39,6 +40,9 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
   const { addNewTarget, initialTargets } = useModel('targetsModel');
   const { updateInfo: targetChangeTip } = useModel('targetUpdateModel');
   const [weekOptions, setWeekOptions] = useState([]);
+  // 总结弹窗
+  const summaryModalRef = useRef<ReactNode>(null);
+  const [summaryContent, setSummaryContent] = useState('');
 
   /**
    * 显示周统计和周总结
@@ -60,12 +64,9 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
    */
   function summary() {
     summaryForWeek(whichWeek).then((result) => {
-      // 写入粘贴板
-      navigator.clipboard.writeText(result).catch((e) => {
-        if (e !== null) {
-          message.success(result).then();
-        }
-      });
+      setSummaryContent(result);
+      summaryModalRef.current.setOpen(true);
+      summaryModalRef.current.setContent(result);
     });
   }
 
@@ -143,6 +144,7 @@ export default function HeaderButtons({ whichWeek, toggleWeek }) {
         {/* 总结 */}
         <SolutionOutlined className={styles.showSummary} onClick={() => summary()} />
       </Row>
+      <ContentPanel ref={summaryModalRef} content={summaryContent} />
     </div>
   );
 }

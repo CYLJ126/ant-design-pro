@@ -111,4 +111,17 @@ export async function saveSummary(data) {
   return jsonPost('/base/summary/saveSummary', data);
 }
 
+/**
+ * 格式化总结内容
+ *
+ * @param content 总结内容
+ * @param operationType 操作类型：formatSerialNo-格式化序号；removeTime-移除工时；
+ */
+export async function formatContent(content, operationType) {
+  return jsonPost('/base/summary/formatContent', {
+    content: content,
+    operationType: operationType,
+  });
+}
+
 /**  ----------------- SummaryController end ----------------- */
