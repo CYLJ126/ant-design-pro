@@ -1,6 +1,8 @@
+// app.tsx
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { AliveScope } from 'react-activation';
+import TabsLayout from '@/components/TabsLayout';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import dayjs from 'dayjs';
@@ -148,29 +150,16 @@ export const layout: RunTimeLayoutConfig = ({
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
+    childrenRender: (children: React.ReactNode, props: any) => {
+      // 在登录页面不使用 AliveScope
+      if (props?.location?.pathname?.startsWith('/user/')) {
+        return children;
+      }
+
       return (
         <>
+          <TabsLayout />
           {children}
-          <SettingDrawer
-            disableUrlParams
-            enableDarkTheme
-            collapse={initialState?.settingDrawerOpen}
-            onCollapseChange={(open) => {
-              setInitialState((s) => ({
-                ...s,
-                settingDrawerOpen: open,
-              }));
-            }}
-            settings={initialState?.settings}
-            onSettingChange={(settings) => {
-              setInitialState((s) => ({
-                ...s,
-                settings,
-              }));
-            }}
-          />
         </>
       );
     },
@@ -190,9 +179,9 @@ export const request: RequestConfig = {
 
 export function rootContainer(container: React.ReactNode) {
   return (
-    <>
+    <AliveScope>
       <OfflineBanner />
       <ErrorBoundary>{container}</ErrorBoundary>
-    </>
+    </AliveScope>
   );
 }

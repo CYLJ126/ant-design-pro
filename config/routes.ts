@@ -50,6 +50,12 @@ export default [
     component: './Welcome',
   },
   {
+    path: '/cache-test', // KeepAlive 页面缓存测试
+    name: 'cache-test',
+    icon: 'experiment',
+    component: './CacheTest',
+  },
+  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',

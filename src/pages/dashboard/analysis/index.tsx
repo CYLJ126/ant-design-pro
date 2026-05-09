@@ -1,22 +1,23 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import { GridContent } from '@ant-design/pro-components';
-import { useQuery } from '@tanstack/react-query';
-import { Col, Dropdown, Row } from 'antd';
-import type { RangePickerProps } from 'antd/es/date-picker';
-import type { Dayjs } from 'dayjs';
-import type { FC } from 'react';
-import { Suspense, useState } from 'react';
+import {EllipsisOutlined} from '@ant-design/icons';
+import {GridContent} from '@ant-design/pro-components';
+import {useQuery} from '@tanstack/react-query';
+import {Col, Dropdown, Row} from 'antd';
+import type {RangePickerProps} from 'antd/es/date-picker';
+import type {Dayjs} from 'dayjs';
+import type {FC} from 'react';
+import {Suspense, useState} from 'react';
 import IntroduceRow from './components/IntroduceRow';
 import OfflineData from './components/OfflineData';
 import PageLoading from './components/PageLoading';
 import ProportionSales from './components/ProportionSales';
-import type { TimeType } from './components/SalesCard';
+import type {TimeType} from './components/SalesCard';
 import SalesCard from './components/SalesCard';
 import TopSearch from './components/TopSearch';
-import type { AnalysisData } from './data.d';
-import { fakeChartData } from './service';
+import type {AnalysisData} from './data.d';
+import {fakeChartData} from './service';
 import useStyles from './style.style';
-import { getTimeDistance } from './utils/utils';
+import {getTimeDistance} from './utils/utils';
+import PageWrapper from "@/components/PageWrapper";
 
 type RangePickerValue = RangePickerProps['value'];
 type AnalysisProps = {
@@ -25,13 +26,13 @@ type AnalysisProps = {
 };
 type SalesType = 'all' | 'online' | 'stores';
 const Analysis: FC<AnalysisProps> = () => {
-  const { styles } = useStyles();
+  const {styles} = useStyles();
   const [salesType, setSalesType] = useState<SalesType>('all');
   const [currentTabKey, setCurrentTabKey] = useState<string>('');
   const [rangePickerValue, setRangePickerValue] = useState<RangePickerValue>(
     getTimeDistance('year'),
   );
-  const { isLoading: loading, data } = useQuery({
+  const {isLoading: loading, data} = useQuery({
     queryKey: ['dashboard-analysis'],
     queryFn: () => fakeChartData().then((res) => res.data),
   });
@@ -88,7 +89,7 @@ const Analysis: FC<AnalysisProps> = () => {
         }}
         placement="bottomRight"
       >
-        <EllipsisOutlined />
+        <EllipsisOutlined/>
       </Dropdown>
     </span>
   );
@@ -100,61 +101,63 @@ const Analysis: FC<AnalysisProps> = () => {
   };
   const activeKey = currentTabKey || data?.offlineData[0]?.name || '';
   return (
-    <GridContent>
-      <Suspense fallback={<PageLoading />}>
-        <IntroduceRow loading={loading} visitData={data?.visitData || []} />
-      </Suspense>
+    <PageWrapper>
+      <GridContent>
+        <Suspense fallback={<PageLoading/>}>
+          <IntroduceRow loading={loading} visitData={data?.visitData || []}/>
+        </Suspense>
 
-      <Suspense fallback={null}>
-        <SalesCard
-          rangePickerValue={rangePickerValue}
-          salesData={data?.salesData || []}
-          isActive={isActive}
-          handleRangePickerChange={handleRangePickerChange}
-          loading={loading}
-          selectDate={selectDate}
-        />
-      </Suspense>
+        <Suspense fallback={null}>
+          <SalesCard
+            rangePickerValue={rangePickerValue}
+            salesData={data?.salesData || []}
+            isActive={isActive}
+            handleRangePickerChange={handleRangePickerChange}
+            loading={loading}
+            selectDate={selectDate}
+          />
+        </Suspense>
 
-      <Row
-        gutter={24}
-        style={{
-          marginTop: 24,
-        }}
-      >
-        <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-          <Suspense fallback={null}>
-            <TopSearch
-              loading={loading}
-              visitData2={data?.visitData2 || []}
-              searchData={data?.searchData || []}
-              dropdownGroup={dropdownGroup}
-            />
-          </Suspense>
-        </Col>
-        <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-          <Suspense fallback={null}>
-            <ProportionSales
-              dropdownGroup={dropdownGroup}
-              salesType={salesType}
-              loading={loading}
-              salesPieData={salesPieData || []}
-              handleChangeSalesType={handleChangeSalesType}
-            />
-          </Suspense>
-        </Col>
-      </Row>
+        <Row
+          gutter={24}
+          style={{
+            marginTop: 24,
+          }}
+        >
+          <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            <Suspense fallback={null}>
+              <TopSearch
+                loading={loading}
+                visitData2={data?.visitData2 || []}
+                searchData={data?.searchData || []}
+                dropdownGroup={dropdownGroup}
+              />
+            </Suspense>
+          </Col>
+          <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            <Suspense fallback={null}>
+              <ProportionSales
+                dropdownGroup={dropdownGroup}
+                salesType={salesType}
+                loading={loading}
+                salesPieData={salesPieData || []}
+                handleChangeSalesType={handleChangeSalesType}
+              />
+            </Suspense>
+          </Col>
+        </Row>
 
-      <Suspense fallback={null}>
-        <OfflineData
-          activeKey={activeKey}
-          loading={loading}
-          offlineData={data?.offlineData || []}
-          offlineChartData={data?.offlineChartData || []}
-          handleTabChange={handleTabChange}
-        />
-      </Suspense>
-    </GridContent>
+        <Suspense fallback={null}>
+          <OfflineData
+            activeKey={activeKey}
+            loading={loading}
+            offlineData={data?.offlineData || []}
+            offlineChartData={data?.offlineChartData || []}
+            handleTabChange={handleTabChange}
+          />
+        </Suspense>
+      </GridContent>
+    </PageWrapper>
   );
 };
 export default Analysis;
