@@ -49,4 +49,6 @@ export default {
   'menu.editor.flow': 'ফ্লো এডিটর',
   'menu.editor.mind': 'মাইন্ড এডিটর',
   'menu.editor.koni': 'কোনি সম্পাদক',
+  'menu.chatbot': 'AI সম্পাদক',
+  'menu.cache-test': 'কাইচে টেস্ট',
 };

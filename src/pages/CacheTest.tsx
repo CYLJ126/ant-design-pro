@@ -1,5 +1,3 @@
-// src/pages/CacheTest.tsx
-
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Alert,
