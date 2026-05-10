@@ -102,7 +102,7 @@ const CacheTestContent: React.FC = () => {
   return (
     <PageContainer>
       <Alert
-        message={
+        title={
           <div>
             <Tag color="blue">组件ID: {componentId.current}</Tag>
             <Tag color="green">渲染时间: {renderTime.current}</Tag>
