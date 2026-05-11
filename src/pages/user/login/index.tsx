@@ -23,9 +23,11 @@ import { Alert, App, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { startTransition, useState } from 'react';
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+import { getPubKey, login } from '@/services/ant-design-pro/base';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { GMCrypto } from '@/utils/crypto/gmCrypto';
 import Settings from '../../../../config/defaultSettings';
+import { initialUserTags } from './initialBaseInfo';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -152,15 +154,38 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
+      let pubkey = localStorage.getItem('platform-public-key');
+      if (!pubkey) {
+        pubkey = await getPubKey();
+        if (pubkey !== null) {
+          localStorage.setItem('platform-public-key', pubkey);
+        } else {
+          message.error('获取公钥失败，请联系管理员').then();
+          return;
+        }
+      }
+      if (!values.password) {
+        message.warning('请输入密码').then();
+        return;
+      }
+      // 密码加密
+      const encryptPassword = GMCrypto.sm2Encrypt(values.password, pubkey);
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+      const msg = await login({
+        userName: values.username,
+        password: encryptPassword,
+        autoLogin: values.autoLogin,
+      });
+      if (msg.success) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+        localStorage.setItem('user_token', msg.data);
         message.success(defaultLoginSuccessMessage);
+        // 设置用户信息
         await fetchUserInfo();
+        await initialUserTags();
         const urlParams = new URL(window.location.href).searchParams;
         const redirectUrl = getSafeRedirectUrl(urlParams.get('redirect'));
         window.location.href = redirectUrl;
@@ -203,11 +228,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={intl.formatMessage({
-            id: 'pages.layouts.userLayout.title',
-          })}
+          logo={<img alt="logo" src="/balloon-flat.svg" />}
+          title="Nobody Is Perfect"
+          subTitle={'Better late than never.'}
           initialValues={{
             autoLogin: true,
           }}

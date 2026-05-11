@@ -1,13 +1,15 @@
-// app.tsx
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { AliveScope } from 'react-activation';
-import TabsLayout from '@/components/TabsLayout';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import React from 'react';
+import { AliveScope } from 'react-activation';
+import TabsLayout from '@/components/TabsLayout';
+import IconMap from '@/icons/IconMap';
+import { queryCurrentUser } from '@/services/ant-design-pro/base';
+import { listRecursiveMenus } from '@/services/ant-design-pro/rbac';
 
 // Initialize dayjs plugins globally
 dayjs.extend(relativeTime);
@@ -21,12 +23,46 @@ import {
   OfflineBanner,
   VersionDropdown,
 } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
+const loginRoute = {
+  path: '/user',
+  layout: false,
+  routes: [
+    {
+      name: 'login',
+      path: '/user/login',
+    },
+  ],
+};
+
+/**
+ * 菜单转换
+ * 由于 ant design pro 项目中，图标不支持从后端获取配置后直接转换，所以需要前端加一个映射
+ * @param rawMenu 后端的菜单配置信息
+ * @param userMenuCodes 前端支持的菜单集合
+ */
+function transfer(rawMenu: any, userMenuCodes: string[]) {
+  if (!userMenuCodes.includes(rawMenu.menuCode)) {
+    return null;
+  }
+  const one = {
+    id: rawMenu.id,
+    name: rawMenu.menuCode,
+    path: rawMenu.menuUrl,
+    icon: IconMap[rawMenu.icon] || '',
+  };
+  if (rawMenu.children && rawMenu.children.length > 0) {
+    one.routes = rawMenu.children
+      .map((subRawMenu: any) => transfer(subRawMenu, userMenuCodes))
+      .filter((one: any) => one);
+  }
+  return one;
+}
 
 /**
  * @see https://umijs.org/docs/api/runtime-config#getinitialstate
@@ -40,10 +76,20 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
+      if (!localStorage.getItem('user_token')) {
+        // 还未登录时，刷新页面，此时，不去获取用户信息
+        return undefined;
+      }
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      const user = msg.data;
+      // 权限，前后端字段兼容
+      user.access = user.authorities;
+      user.userid = user.id;
+      // TODO 处理主题配置
+
+      return user;
     } catch (_error) {
       const { pathname, search, hash } = history.location;
       history.replace(
@@ -80,6 +126,7 @@ export const layout: RunTimeLayoutConfig = ({
   setInitialState,
 }) => {
   return {
+    // TODO 菜单、RightContent
     menuItemRender: (item, dom) => {
       if (item.path) {
         return (
@@ -95,6 +142,8 @@ export const layout: RunTimeLayoutConfig = ({
       <VersionDropdown key="version" />,
       <LangDropdown key="lang" />,
     ],
+    // defaultCollapsed: true, // 菜单默认折叠
+    breakpoint: false, // 用于控制在屏幕小于指定尺寸时，自动收起菜单栏，若需要 defaultCollapsed 配置为 true 使页面默认收起菜单栏的话，必须要设置该值为 false
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: 'ProUser',
@@ -103,6 +152,7 @@ export const layout: RunTimeLayoutConfig = ({
       ),
     },
     // waterMarkProps: {
+    // 水印
     //   content: initialState?.currentUser?.name,
     // },
     footerRender: () => <Footer />,

@@ -7,7 +7,7 @@ import { history, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
 import React, { startTransition } from 'react';
-import { outLogin } from '@/services/ant-design-pro/api';
+import { logout } from '@/services/ant-design-pro/base';
 import HeaderDropdown from '../HeaderDropdown';
 
 type GlobalHeaderRightProps = {
@@ -18,7 +18,8 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   children,
 }) => {
   const loginOut = async () => {
-    await outLogin();
+    await logout();
+    localStorage.removeItem('user_token');
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
     const searchParams = new URLSearchParams({
@@ -40,7 +41,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       startTransition(() => {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
       });
-      loginOut();
+      loginOut().then();
       return;
     }
     if (key === 'theme') {
