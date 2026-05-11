@@ -207,7 +207,19 @@ export default defineConfig({
       mock: false,
     },
   ],
-
+  // 新增：自定义 webpack 规则，处理 swagger-ui-dist 的 CSS
+  chainWebpack(memo) {
+    memo.module
+      .rule('swagger-css')
+      .test(/swagger-ui-dist\/.*\.css$/) // 只匹配 swagger-ui-dist 下的 .css 文件
+      .use('style-loader') // 需要安装 style-loader 和 css-loader
+      .loader(require.resolve('style-loader'))
+      .end()
+      .use('css-loader')
+      .loader(require.resolve('css-loader'))
+      .end();
+    return memo;
+  },
   mock: {
     include: ['src/pages/**/_mock.ts'],
     exclude: ['mock/requestRecord.mock.js'],
