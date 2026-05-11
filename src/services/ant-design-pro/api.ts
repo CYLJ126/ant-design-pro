@@ -1,6 +1,111 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import {message} from "antd";
+
+const PATH_PREFIX = '/nip'
+
+/******************************************** 公共方法 ********************************************/
+/**
+ * jsonPost 请求后端
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function jsonPost(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>(PATH_PREFIX + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((resultContext) => {
+    if (resultContext.success) {
+      return resultContext.data;
+    }
+  });
+}
+
+/**
+ * jsonPost 请求后端返回列表，以处理列表统计数据，如总数等
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function jsonPostList(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>(PATH_PREFIX + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((pageView) => {
+    if (pageView.success) {
+      if (!pageView.records || pageView.records.length === 0) {
+        pageView.records = [];
+      }
+      return pageView;
+    }
+  });
+}
+
+/**
+ * batchPost 请求后端，返回 statistics 节点，批量操作结果
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求时的选项
+ * @return ResultContext 类型
+ */
+export function batchPost(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>(PATH_PREFIX + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+  }).then((resultContext) => {
+    if (resultContext.success) {
+      return resultContext.statistics;
+    }
+  });
+}
+
+/**
+ * 请求 Blob 数据
+ *
+ * @param path 请求路径
+ * @param data 请求参数
+ * @param options 请求配置项
+ */
+export function jsonBlob(path, data, options?: { [key: string]: any }) {
+  return request<API.ResultContext>(PATH_PREFIX + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+    ...(options ?? {}),
+    responseType: 'blob',
+  }).then((resp) => {
+    if (resp) {
+      return resp;
+    } else {
+      message.error(`Blob 请求出错`).then((r) => {
+      });
+    }
+  });
+}
+
+/******************************************** 公共方法 ********************************************/
+
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {

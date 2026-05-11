@@ -14,13 +14,18 @@ declare namespace API {
     notifyCount?: number;
     unreadCount?: number;
     country?: string;
-    access?: string;
+    access?: string[];
     geographic?: {
       province?: { label?: string; key?: string };
       city?: { label?: string; key?: string };
     };
     address?: string;
     phone?: string;
+    menus?: Array<string>;
+    menuOperations?: Array<string>;
+    roles?: Array<string>;
+    groups?: Array<string>;
+    departments?: Array<string>;
   };
 
   type LoginResult = {
@@ -97,5 +102,15 @@ declare namespace API {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
+  };
+
+  type ResultContext = {
+    records?: Array<any> | undefined;
+    data?: any;
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+    desc?: string;
+    code?: string;
   };
 }
