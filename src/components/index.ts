@@ -5,17 +5,21 @@
 /**
  * 布局组件
  */
+
+import DynamicForm from './DynamicForm';
+import { FormFieldConfig } from './DynamicForm/FormField';
 import Footer from './Footer';
+import MyColorPicker from './MyColorPicker';
 import { DocLink, LangDropdown, VersionDropdown } from './RightContent';
 import { AvatarDropdown } from './RightContent/AvatarDropdown';
-import type {ActionButton, TableColumn} from './SimpleTable';
-import SimpleTable from './SimpleTable';
 import SearchForm from './SearchForm';
-import DynamicForm from './DynamicForm';
+import type { ActionButton, TableColumn } from './SimpleTable';
+import SimpleTable from './SimpleTable';
 import TimeHeader from './TimeHeader';
-import MyColorPicker from './MyColorPicker';
-// import { FormFieldConfig } from './DynamicForm/FormField';
+
 // import TagsSelector from './TagsSelector';
+// TagsSelector 添加后页面变成空白
+// export { default as TagsSelector } from './TagsSelector';
 
 /**
  * 业务组件
@@ -28,17 +32,17 @@ export { default as StandardFormRow } from './StandardFormRow';
 export { default as TagSelect } from './TagSelect';
 
 export {
-    AvatarDropdown,
-    DocLink,
-    Footer,
-    LangDropdown,
-    VersionDropdown,
-    ActionButton,
-    TableColumn,
-    SimpleTable,
-    SearchForm,
-    DynamicForm,
-    TimeHeader,
-    MyColorPicker,
+  type ActionButton,
+  AvatarDropdown,
+  DocLink,
+  DynamicForm,
+  Footer,
+  FormFieldConfig,
+  LangDropdown,
+  MyColorPicker,
+  SearchForm,
+  SimpleTable,
+  type TableColumn,
+  TimeHeader,
+  VersionDropdown,
 };
-// export { AvatarDropdown, DocLink, Footer, LangDropdown, VersionDropdown, SimpleTable, ActionButton, TableColumn, TimeHeader, MyColorPicker, TagsSelector, SearchForm, DynamicForm, FormFieldConfig,};
