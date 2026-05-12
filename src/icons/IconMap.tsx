@@ -8,6 +8,7 @@ import {
   HomeOutlined,
   LoadingOutlined,
   ReadOutlined,
+  RobotOutlined,
   SettingOutlined,
   SmileOutlined,
   TagOutlined,
@@ -27,6 +28,7 @@ const IconMap = {
   alert: <AlertOutlined />,
   appstore: <AppstoreOutlined />,
   homePage: <HomeOutlined />,
+  robot: <RobotOutlined />,
 };
 
 export default IconMap;

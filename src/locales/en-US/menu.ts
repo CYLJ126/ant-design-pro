@@ -50,7 +50,7 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
-  'menu.chatbot': 'AI Assistant',
+  'menu.Chatbot': 'AI Assistant',
   'menu.cache-test': 'Cache Test',
   'menu.Tools': 'Tool',
   'menu.Tools.TextFormatter': 'Text Formatter',

@@ -50,7 +50,7 @@ export default {
   'menu.editor.flow': '流程編輯器',
   'menu.editor.mind': '腦圖編輯器',
   'menu.editor.koni': '拓撲編輯器',
-  'menu.chatbot': 'AI 助手',
+  'menu.Chatbot': 'AI 助手',
   'menu.cache-test': '緩存測試',
   'menu.Tools': '工具',
   'menu.Tools.TextFormatter': '文本格式化',

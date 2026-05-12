@@ -50,7 +50,7 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
-  'menu.chatbot': 'AI 助手',
+  'menu.Chatbot': 'AI 助手',
   'menu.cache-test': '缓存测试',
   'menu.Tools': '工具',
   'menu.Tools.TextFormatter': '文本格式化',
@@ -59,7 +59,6 @@ export default {
   'menu.Personal': '个人管理',
   'menu.Personal.TimeTrace': '时刻留痕',
   'menu.Personal.DailyWork': '每日计划',
-
   'menu.Personal.WeeklyWork': '每周计划',
   'menu.Personal.MonthlyWork': '每月计划',
   'menu.Personal.QuarterlyWork': '季度规划',
