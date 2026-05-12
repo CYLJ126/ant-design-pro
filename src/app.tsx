@@ -29,6 +29,12 @@ import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+/** 首页路径 */
+const homePath = '/Homepage';
+
+/** 根路径集合 */
+const rootPaths = ['/', ''];
+
 const loginRoute = {
   path: '/user',
   layout: false,
@@ -101,21 +107,30 @@ export async function getInitialState(): Promise<{
   };
   // 如果不是登录页面，执行
   const { location } = history;
+
+  // 如果是登录页面等，不获取用户信息，直接返回
   if (
-    ![loginPath, '/user/register', '/user/register-result'].includes(
+    [loginPath, '/user/register', '/user/register-result'].includes(
       location.pathname,
     )
   ) {
-    const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
-      currentUser,
       settings: defaultSettings as Partial<LayoutSettings>,
       settingDrawerOpen: false,
     };
   }
+
+  const currentUser = await fetchUserInfo();
+
+  // 已登录且访问根路径，兜底跳转到首页
+  if (currentUser && rootPaths.includes(location.pathname)) {
+    history.replace(homePath);
+  }
+
   return {
     fetchUserInfo,
+    currentUser,
     settings: defaultSettings as Partial<LayoutSettings>,
     settingDrawerOpen: false,
   };
@@ -178,11 +193,20 @@ export const layout: RunTimeLayoutConfig = ({
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
+
+      // 第一步：未登录则跳转到登录页
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.replace(
-          `${loginPath}?redirect=${encodeURIComponent(location.pathname + location.search + location.hash)}`,
+          `${loginPath}?redirect=${encodeURIComponent(
+            location.pathname + location.search + location.hash,
+          )}`,
         );
+        return;
+      }
+
+      // 第二步：已登录且访问根路径，跳转到首页
+      if (initialState?.currentUser && rootPaths.includes(location.pathname)) {
+        history.replace(homePath);
       }
     },
     bgLayoutImgList: [
