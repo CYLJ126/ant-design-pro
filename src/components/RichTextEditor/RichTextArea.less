@@ -1,0 +1,139 @@
+.richTextArea {
+  border-radius: 5px;
+  border-width: var(--ant-line-width);
+  border-style: var(--ant-line-type);
+  border-color: var(--ant-color-border);
+  position: relative;
+  width: 100%;
+
+  :global {
+    .tiptap-editor-content {
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .tiptap {
+      height: 100% !important;
+      width: 100% !important;
+      overflow-y: auto !important;
+      padding: 8px;
+      outline: none;
+      box-sizing: border-box;
+
+      :first-child {
+        margin-top: 0;
+      }
+
+      // 代码块样式通过 @import 引入
+      @import './extensions/CodeBlock/CodeBlock.less';
+
+      // 表格样式
+      @import './extensions/MyHtmlTable/MyHtmlTable.less';
+
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      // 图片调整大小的拖拽手柄样式
+      [data-resize-handle] {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+        z-index: 10;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.8);
+        }
+
+        &[data-resize-handle='top-left'],
+        &[data-resize-handle='top-right'],
+        &[data-resize-handle='bottom-left'],
+        &[data-resize-handle='bottom-right'] {
+          width: 8px;
+          height: 8px;
+        }
+
+        &[data-resize-handle='top-left'] {
+          top: -4px;
+          left: -4px;
+          cursor: nwse-resize;
+        }
+
+        &[data-resize-handle='top-right'] {
+          top: -4px;
+          right: -4px;
+          cursor: nesw-resize;
+        }
+
+        &[data-resize-handle='bottom-left'] {
+          bottom: -4px;
+          left: -4px;
+          cursor: nesw-resize;
+        }
+
+        &[data-resize-handle='bottom-right'] {
+          bottom: -4px;
+          right: -4px;
+          cursor: nwse-resize;
+        }
+
+        &[data-resize-handle='top'],
+        &[data-resize-handle='bottom'] {
+          height: 6px;
+          left: 8px;
+          right: 8px;
+        }
+
+        &[data-resize-handle='top'] {
+          top: -3px;
+          cursor: ns-resize;
+        }
+
+        &[data-resize-handle='bottom'] {
+          bottom: -3px;
+          cursor: ns-resize;
+        }
+
+        &[data-resize-handle='left'],
+        &[data-resize-handle='right'] {
+          width: 6px;
+          top: 8px;
+          bottom: 8px;
+        }
+
+        &[data-resize-handle='left'] {
+          left: -3px;
+          cursor: ew-resize;
+        }
+
+        &[data-resize-handle='right'] {
+          right: -3px;
+          cursor: ew-resize;
+        }
+      }
+
+      // 调整大小时的外框样式
+      [data-resize-state='true'] [data-resize-wrapper] {
+        outline: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 0.125rem;
+      }
+    }
+
+    .ProseMirror {
+      outline: none;
+      min-height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.richTextArea:focus,
+.richTextArea:focus-within {
+  border-color: var(--primary-color);
+}
