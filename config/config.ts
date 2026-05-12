@@ -1,11 +1,7 @@
-// https://umijs.org/config/
-
 import { join } from 'node:path';
 import { defineConfig } from '@umijs/max';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-
-import routes from './routes';
 
 const { UMI_ENV = 'dev' } = process.env;
 
@@ -36,6 +32,13 @@ const PUBLIC_PATH: string = '/';
 export default defineConfig({
   alias: {
     '@root': join(__dirname, '..'),
+    /**
+     * @name 兼容性 alias
+     * @description 将 child_process 指向空模块，防止浏览器端构建时因
+     *              Node.js 内置模块缺失（requestRecordMock.ts 引用）而报错
+     *              @utoo/pack-shared 不支持 false 值，需使用字符串路径
+     */
+    child_process: join(__dirname, 'emptyModule.js'),
   },
   /**
    * @name 开启 hash 模式
@@ -60,7 +63,8 @@ export default defineConfig({
    * @doc https://umijs.org/docs/guides/routes
    */
   // umi routes: https://umijs.org/docs/routing
-  routes,
+  // 注释，从后端获取菜单和路由
+  // routes,
   /**
    * @name 主题的配置
    * @description 虽然叫主题，但是其实只是 less 的变量设置
@@ -191,7 +195,13 @@ export default defineConfig({
   ],
 
   //================ pro 插件配置 =================
-  plugins: ['@umijs/max-plugin-openapi', '@umijs/request-record'],
+  /**
+   * @name 插件配置
+   * @description 移除 @umijs/request-record，避免生成包含 child_process 的临时文件
+   * @reason mock: false 时，request-record 插件仍会生成 requestRecordMock.ts，
+   *         该文件引用了 Node.js 专属的 child_process 模块，导致浏览器端构建失败
+   */
+  plugins: ['@umijs/max-plugin-openapi'],
 
   /**
    * @name openAPI 插件的配置
@@ -207,23 +217,50 @@ export default defineConfig({
       mock: false,
     },
   ],
-  // 新增：自定义 webpack 规则，处理 swagger-ui-dist 的 CSS
+  /**
+   * 新增：自定义 webpack 规则，处理 swagger-ui-dist 的 CSS
+   * @name 自定义 webpack 配置
+   * @description
+   *   1. 处理 swagger-ui-dist 的 CSS 文件
+   *   2. 处理 @ant-design/x-markdown 的 CSS 文件
+   *      该包 CSS 含有现代语法（CSS 嵌套/@layer），@utoo/pack Turbopack 无法解析
+   *      通过 style-loader + css-loader 接管处理，跳过 Turbopack 的 CSS 管道
+   */
   chainWebpack(memo) {
+    // ✅ 处理 swagger-ui-dist 的 CSS
     memo.module
       .rule('swagger-css')
-      .test(/swagger-ui-dist\/.*\.css$/) // 只匹配 swagger-ui-dist 下的 .css 文件
+      .test(/swagger-ui-dist[\\/].*\.css$/) // 只匹配 swagger-ui-dist 下的 .css 文件
       .use('style-loader') // 需要安装 style-loader 和 css-loader
       .loader(require.resolve('style-loader'))
       .end()
       .use('css-loader')
       .loader(require.resolve('css-loader'))
+      .options({ modules: false })
       .end();
+
+    // ✅ 处理 @ant-design/x-markdown 的 CSS
+    memo.module
+      .rule('x-markdown-css')
+      .test(/x-markdown[\\/].*\.css$/)
+      .use('style-loader')
+      .loader(require.resolve('style-loader'))
+      .end()
+      .use('css-loader')
+      .loader(require.resolve('css-loader'))
+      .options({ modules: false })
+      .end();
+
     return memo;
   },
-  mock: {
-    include: ['src/pages/**/_mock.ts'],
-    exclude: ['mock/requestRecord.mock.js'],
-  },
+  mock: false,
+  /**
+   * @name utoopack 配置
+   * @description
+   *   自定义 Turbopack 构建规则
+   *   新增：将 @ant-design/x-markdown 的 CSS 文件作为空 JS 模块处理，
+   *   避免 Turbopack CSS 管道因不支持现代 CSS 语法（嵌套/@layer）而崩溃
+   */
   utoopack: {
     module: {
       rules: {
@@ -231,10 +268,20 @@ export default defineConfig({
           loaders: [{ loader: join(__dirname, 'md-raw-loader.cjs') }],
           as: '*.js',
         },
+        // ✅ 将 x-markdown 的 CSS 文件当作空 JS 处理，彻底跳过 Turbopack CSS 管道
+        './node_modules/@ant-design/x-markdown/**/*.css': {
+          loaders: [{ loader: join(__dirname, 'empty-loader.cjs') }],
+          as: '*.js',
+        },
       },
     },
   },
-  requestRecord: {},
+  /**
+   * @name requestRecord 插件配置
+   * @description 已禁用：该插件会生成依赖 child_process 的临时文件，与 mock: false 冲突
+   *              如需重新启用，请同时在 plugins 数组中恢复 '@umijs/request-record'
+   */
+  // requestRecord: {},
   exportStatic: {},
   define: {
     'process.env.CI': process.env.CI,
@@ -243,4 +290,4 @@ export default defineConfig({
     __UMI_VERSION__: require('@umijs/max/package.json').version,
     __UTOO_VERSION__: require('@utoo/pack/package.json').version,
   },
-});
+} as any);

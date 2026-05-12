@@ -43,6 +43,7 @@ const loginRoute = {
 /**
  * 菜单转换
  * 由于 ant design pro 项目中，图标不支持从后端获取配置后直接转换，所以需要前端加一个映射
+ * 配置可参见官网：https://umijs.org/docs/max/layout-menu
  * @param rawMenu 后端的菜单配置信息
  * @param userMenuCodes 前端支持的菜单集合
  */
@@ -126,16 +127,35 @@ export const layout: RunTimeLayoutConfig = ({
   setInitialState,
 }) => {
   return {
-    // TODO 菜单、RightContent
-    menuItemRender: (item, dom) => {
-      if (item.path) {
-        return (
-          <Link to={item.path} prefetch>
-            {dom}
-          </Link>
-        );
-      }
-      return dom;
+    // TODO RightContent
+    menu: {
+      params: {
+        // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request https://beta-pro.ant.design/docs/advanced-menu-cn
+        userId: initialState?.currentUser?.userid,
+      },
+      request: async () => {
+        if (!initialState?.currentUser?.userid) {
+          // 没登录返回登录 route，不显示菜单
+          return [loginRoute];
+        }
+        let rawMenus: Array<any>;
+        try {
+          rawMenus = await listRecursiveMenus({ status: 1 });
+        } catch (e) {
+          console.log('从后端获取菜单异常', e);
+          rawMenus = [];
+        }
+        const userMenuCodes: string[] = initialState?.currentUser?.menus || [];
+        return rawMenus
+          .filter((one: any) => userMenuCodes.includes(one.menuCode))
+          .map((rawMenu: any) => transfer(rawMenu, userMenuCodes));
+      },
+    },
+    onCollapse: (collapsed) => {
+      setInitialState({
+        ...initialState,
+        settings: { ...initialState.settings, collapsed },
+      });
     },
     actionsRender: () => [
       <DocLink key="doc" />,
