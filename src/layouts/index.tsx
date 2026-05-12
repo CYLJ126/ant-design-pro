@@ -1,6 +1,5 @@
-// src/layouts/index.tsx
-import { AliveScope } from 'react-activation';
 import { Outlet } from '@umijs/max';
+import { AliveScope } from 'react-activation';
 
 export default function Layout() {
   return (

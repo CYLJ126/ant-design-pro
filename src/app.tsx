@@ -30,7 +30,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /** 首页路径 */
-const homePath = '/Homepage';
+const homePath = '/HomePage';
 
 /** 根路径集合 */
 const rootPaths = ['/', ''];

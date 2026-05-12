@@ -1,7 +1,6 @@
-// src/components/PageWrapper/index.tsx
+import { useLocation } from '@umijs/max';
 import React from 'react';
 import KeepAlive from 'react-activation';
-import { useLocation } from '@umijs/max';
 
 interface PageWrapperProps {
   children: React.ReactNode;
@@ -19,9 +18,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
 
   return (
     <KeepAlive cacheKey={cacheKey} name={cacheKey} when>
-      <div style={{ height: '100%' }}>
-        {children}
-      </div>
+      <div style={{ height: '100%' }}>{children}</div>
     </KeepAlive>
   );
 };
