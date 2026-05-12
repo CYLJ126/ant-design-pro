@@ -5,6 +5,7 @@ import {
   AlertOutlined,
   AppstoreOutlined,
   CrownOutlined,
+  HomeOutlined,
   LoadingOutlined,
   ReadOutlined,
   SettingOutlined,
@@ -25,6 +26,7 @@ const IconMap = {
   administration: <SettingOutlined />,
   alert: <AlertOutlined />,
   appstore: <AppstoreOutlined />,
+  homePage: <HomeOutlined />,
 };
 
 export default IconMap;

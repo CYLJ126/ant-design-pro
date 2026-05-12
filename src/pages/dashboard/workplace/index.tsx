@@ -119,7 +119,7 @@ const Workplace: FC = () => {
           title={
             <span>
               <a className={styles.username} href="#">
-                {item.user.name}
+                {item.user.userName}
               </a>
               &nbsp;
               <span className={styles.event}>{events}</span>
