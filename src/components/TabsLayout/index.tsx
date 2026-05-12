@@ -5,31 +5,150 @@ import { createStyles } from 'antd-style';
 import React, { useEffect, useState } from 'react';
 import { useAliveController } from 'react-activation';
 
-const useStyles = createStyles(({ token }) => ({
-  tabsContainer: {
-    backgroundColor: token.colorBgContainer,
-    borderBottom: `1px solid ${token.colorBorder}`,
-    padding: '0 16px',
-    position: 'sticky',
-    top: 0,
-    zIndex: 999,
-  },
-  customTab: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  tabContent: {
-    flex: 1,
-  },
-  closeButton: {
-    fontSize: '12px',
-    color: token.colorTextTertiary,
-    '&:hover': {
-      color: token.colorTextSecondary,
-      backgroundColor: token.colorFillTertiary,
-    },
-  },
+const useStyles = createStyles(({ token, css }) => ({
+  tabsContainer: css`
+    background-color: ${token.colorBgContainer};
+    border-bottom: 1px solid ${token.colorBorderSecondary};
+    padding: 0 12px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+    /* 覆盖 antd Tabs 默认样式，减小整体高度 */
+    .ant-tabs-nav {
+      margin-bottom: 0 !important;
+
+      &::before {
+        border-bottom: none !important;
+      }
+    }
+
+    /* 标签项整体高度压缩 */
+    .ant-tabs-tab {
+      padding: 4px 8px !important;
+      margin: 0 2px 0 0 !important;
+      border-radius: 4px 4px 0 0 !important;
+      font-size: 13px !important;
+      line-height: 1.4 !important;
+      border: 1px solid ${token.colorBorderSecondary} !important;
+      background-color: ${token.colorFillAlter} !important;
+      transition: all 0.15s ease !important;
+      user-select: none;
+
+      &:hover:not(.ant-tabs-tab-active) {
+        background-color: ${token.colorFillSecondary} !important;
+        border-color: ${token.colorBorder} !important;
+        color: ${token.colorText} !important;
+      }
+    }
+
+    /* 激活标签样式 */
+    .ant-tabs-tab-active {
+      background-color: ${token.colorBgContainer} !important;
+      border-bottom-color: ${token.colorBgContainer} !important;
+      border-color: ${token.colorBorderSecondary} !important;
+
+      .ant-tabs-tab-btn {
+        color: ${token.colorPrimary} !important;
+        font-weight: 500 !important;
+        text-shadow: none !important;
+      }
+    }
+
+    /* 标签文字区域 */
+    .ant-tabs-tab-btn {
+      font-size: 13px !important;
+      line-height: 20px !important;
+    }
+
+    /* 去掉 editable-card 新增按钮区域的多余空间 */
+    .ant-tabs-nav-add {
+      display: none !important;
+    }
+
+    /* 墨水条 */
+    .ant-tabs-ink-bar {
+      display: none !important;
+    }
+
+    /* tab 列表区域上边距对齐 */
+    .ant-tabs-nav-wrap {
+      padding-top: 4px;
+    }
+
+    /* 右侧额外内容区域垂直居中 */
+    .ant-tabs-extra-content {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+    }
+  `,
+
+  /* 单个标签内容布局 */
+  customTab: css`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 160px;
+  `,
+
+  tabLabel: css`
+    font-size: 13px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+  `,
+
+  /* 关闭按钮 */
+  closeBtn: css`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    padding: 0 !important;
+    border-radius: 3px !important;
+    color: ${token.colorTextQuaternary} !important;
+    flex-shrink: 0;
+    transition: all 0.15s ease !important;
+
+    .anticon {
+      font-size: 10px !important;
+    }
+
+    &:hover {
+      color: ${token.colorTextSecondary} !important;
+      background-color: ${token.colorFill} !important;
+    }
+  `,
+
+  /* 右侧操作按钮组 */
+  extraBtnGroup: css`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  `,
+
+  extraBtn: css`
+    height: 24px !important;
+    padding: 0 8px !important;
+    font-size: 12px !important;
+    border-radius: 4px !important;
+    color: ${token.colorTextSecondary} !important;
+    border-color: ${token.colorBorderSecondary} !important;
+    line-height: 22px !important;
+    transition: all 0.15s ease !important;
+
+    &:hover {
+      color: ${token.colorPrimary} !important;
+      border-color: ${token.colorPrimary} !important;
+      background-color: ${token.colorPrimaryBg} !important;
+    }
+  `,
 }));
 
 export interface TabItem {
@@ -57,7 +176,7 @@ function getMenuIntlInfo(path: string) {
 const TabsLayout: React.FC = () => {
   const { styles } = useStyles();
   const location = useLocation();
-  const { drop, refresh, getCachingNodes } = useAliveController();
+  const { drop, getCachingNodes } = useAliveController();
   const [activeKey, setActiveKey] = useState<string>('');
   const [tabs, setTabs] = useState<TabItem[]>([]);
   const intl = useIntl();
@@ -93,19 +212,14 @@ const TabsLayout: React.FC = () => {
       nodes.map((n) => n.name),
     );
     console.log('缓存节点数量:', nodes.length);
-    nodes.forEach((node) => {
-      console.log('缓存节点详情:', node.name, node);
-    });
-    // 忽略登录页等不需要标签的页面
+
     if (pathname.startsWith('/user/') || pathname === '/') {
       return;
     }
     const tabInfo = generateTabInfo(pathname, search);
     setTabs((prevTabs) => {
       const existingTab = prevTabs.find((tab) => tab.key === tabInfo.key);
-      if (existingTab) {
-        return prevTabs;
-      }
+      if (existingTab) return prevTabs;
       return [...prevTabs, tabInfo];
     });
     setActiveKey(tabInfo.key);
@@ -116,10 +230,7 @@ const TabsLayout: React.FC = () => {
     const tab = tabs.find((t) => t.key === key);
     if (tab) {
       setActiveKey(key);
-      history.push({
-        pathname: tab.pathname,
-        search: tab.search,
-      });
+      history.push({ pathname: tab.pathname, search: tab.search });
     }
   };
 
@@ -137,10 +248,7 @@ const TabsLayout: React.FC = () => {
       const nextTab = newTabs[newTabs.length - 1] || newTabs[0];
       if (nextTab) {
         setActiveKey(nextTab.key);
-        history.push({
-          pathname: nextTab.pathname,
-          search: nextTab.search,
-        });
+        history.push({ pathname: nextTab.pathname, search: nextTab.search });
       } else {
         // 如果没有其他标签页，跳转到首页
         history.push('/HomePage');
@@ -153,11 +261,8 @@ const TabsLayout: React.FC = () => {
     const currentTab = tabs.find((t) => t.key === currentKey);
     if (!currentTab) return;
     const newTabs = tabs.filter((t) => t.key === currentKey || !t.closable);
-    // 删除其他标签页的缓存
     tabs.forEach((tab) => {
-      if (tab.key !== currentKey && tab.closable) {
-        drop(tab.key).then();
-      }
+      if (tab.key !== currentKey && tab.closable) drop(tab.key).then();
     });
     setTabs(newTabs);
     setActiveKey(currentKey);
@@ -168,33 +273,30 @@ const TabsLayout: React.FC = () => {
     const newTabs = tabs.filter((t) => !t.closable);
     // 删除所有可关闭标签页的缓存
     tabs.forEach((tab) => {
-      if (tab.closable) {
-        drop(tab.key).then();
-      }
+      if (tab.closable) drop(tab.key).then();
     });
     setTabs(newTabs);
     // 跳转到首页或第一个不可关闭的标签页
     const firstTab = newTabs[0];
     if (firstTab) {
       setActiveKey(firstTab.key);
-      history.push({
-        pathname: firstTab.pathname,
-        search: firstTab.search,
-      });
+      history.push({ pathname: firstTab.pathname, search: firstTab.search });
     } else {
       history.push('/HomePage');
     }
   };
 
+  /** 渲染单个标签 */
   const renderTabLabel = (tab: TabItem) => (
     <div className={styles.customTab}>
-      <span className={styles.tabContent}>{tab.label}</span>
+      <span className={styles.tabLabel} title={tab.label}>
+        {tab.label}
+      </span>
       {tab.closable && (
         <Button
           type="text"
-          size="small"
+          className={styles.closeBtn}
           icon={<CloseOutlined />}
-          className={styles.closeButton}
           onClick={(e) => handleTabClose(tab.key, e)}
         />
       )}
@@ -222,11 +324,14 @@ const TabsLayout: React.FC = () => {
         onChange={handleTabChange}
         tabBarExtraContent={{
           right: (
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Button size="small" onClick={() => handleCloseOthers(activeKey)}>
+            <div className={styles.extraBtnGroup}>
+              <Button
+                className={styles.extraBtn}
+                onClick={() => handleCloseOthers(activeKey)}
+              >
                 关闭其他
               </Button>
-              <Button size="small" onClick={handleCloseAll}>
+              <Button className={styles.extraBtn} onClick={handleCloseAll}>
                 关闭所有
               </Button>
             </div>
