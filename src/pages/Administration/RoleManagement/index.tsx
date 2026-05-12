@@ -282,7 +282,7 @@ export default function UserPage() {
 
   return (
     <PageWrapper>
-      <div style={{ padding: 24 }}>
+      <div style={{ padding: 5 }}>
         <SearchForm
           gutter={[8, 8]}
           fields={searchFields}
