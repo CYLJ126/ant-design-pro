@@ -1,12 +1,36 @@
 .container {
-  :global(.ant-tabs-tabpane) {
-    > div {
-      padding: 1px !important;
-    }
+  :global(.ant-pro-page-container-children-container) {
+    padding: 0;
+  }
+
+  :global(.ant-pro-page-container-warp-page-header) {
+    padding: 5px;
+  }
+
+  :global(.ant-page-header-footer) {
+    margin: 0 !important;
+  }
+
+  :global(.ant-tabs) {
+    height: 28px;
   }
 
   :global(.ant-tabs-tab) {
-    margin-left: 0 !important;
+    padding: 4px 8px !important;
+    margin: 0 2px 0 0 !important;
+    border-radius: 4px 4px 0 0 !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    border: 1px solid var(--ant-color-border) !important;
+    background-color: #ffffff !important;
+    transition: all 0.15s ease !important;
+    user-select: none;
+
+    &:hover:not(.ant-tabs-tab-active) {
+      background-color: #ffffff !important;
+      border-color: var(--ant-color-primary) !important;
+      color: var(--ant-color-primary) !important;
+    }
   }
 
   :global(.ant-tabs-tab-btn) {

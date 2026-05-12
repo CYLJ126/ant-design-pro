@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
+import React, { useState } from 'react';
 import ComponentLearn from './ComponentLearn';
-import SimpleTableLearn from './SimpleTableLearn';
-import styles from './index.less';
-import DailyPage from './TimeHeaderTest';
 import GmCryptoDemo from './GmCryptoDemo';
+import styles from './index.less';
 import MyEditorLearn from './MyEditorLearn';
+import SimpleTableLearn from './SimpleTableLearn';
+import DailyPage from './TimeHeaderTest';
 
 const tabList = [
   {
@@ -44,6 +44,7 @@ export default function Learn() {
 
   return (
     <PageContainer
+      className={styles.container}
       tabList={tabList}
       tabActiveKey={activeKey}
       onTabChange={(key) => setActiveKey(key)}
