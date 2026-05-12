@@ -23,7 +23,7 @@ const commitHash =
   })();
 
 /**
- * @name 使用公共路径
+ * 使用公共路径
  * @description 部署时的路径，如果部署在非根目录下，需要配置这个变量
  * @doc https://umijs.org/docs/api/config#publicpath
  */
@@ -33,7 +33,7 @@ export default defineConfig({
   alias: {
     '@root': join(__dirname, '..'),
     /**
-     * @name 兼容性 alias
+     * 兼容性 alias
      * @description 将 child_process 指向空模块，防止浏览器端构建时因
      *              Node.js 内置模块缺失（requestRecordMock.ts 引用）而报错
      *              @utoo/pack-shared 不支持 false 值，需使用字符串路径
@@ -41,7 +41,7 @@ export default defineConfig({
     child_process: join(__dirname, 'emptyModule.js'),
   },
   /**
-   * @name 开启 hash 模式
+   * 开启 hash 模式
    * @description 让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存。
    * @doc https://umijs.org/docs/api/config#hash
    */
@@ -50,7 +50,7 @@ export default defineConfig({
   publicPath: PUBLIC_PATH,
 
   /**
-   * @name 兼容性设置
+   * 兼容性设置
    * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖
    * @doc https://umijs.org/docs/api/config#targets
    */
@@ -58,7 +58,7 @@ export default defineConfig({
   //   ie: 11,
   // },
   /**
-   * @name 路由的配置，不在路由中引入的文件不会编译
+   * 路由的配置，不在路由中引入的文件不会编译
    * @description 只支持 path，component，routes，redirect，wrappers，title 的配置
    * @doc https://umijs.org/docs/guides/routes
    */
@@ -66,20 +66,20 @@ export default defineConfig({
   // 注释，从后端获取菜单和路由
   // routes,
   /**
-   * @name 主题的配置
+   * 主题的配置
    * @description 虽然叫主题，但是其实只是 less 的变量设置
    * @doc antd的主题设置 https://ant.design/docs/react/customize-theme-cn
    * @doc umi 的 theme 配置 https://umijs.org/docs/api/config#theme
    */
   // theme: { '@primary-color': '#1DA57A' }
   /**
-   * @name moment 的国际化配置
+   * moment 的国际化配置
    * @description 如果对国际化没有要求，打开之后能减少js的包大小
    * @doc https://umijs.org/docs/api/config#ignoremomentlocale
    */
   ignoreMomentLocale: true,
   /**
-   * @name 代理配置
+   * 代理配置
    * @description 可以让你的本地服务器代理到你的服务器上，这样你就可以访问服务器的数据了
    * @see 要注意以下 代理只能在本地开发时使用，build 之后就无法使用了。
    * @doc 代理介绍 https://umijs.org/docs/guides/proxy
@@ -87,24 +87,24 @@ export default defineConfig({
    */
   proxy: proxy[UMI_ENV as keyof typeof proxy],
   /**
-   * @name 快速热更新配置
+   * 快速热更新配置
    * @description 一个不错的热更新组件，更新时可以保留 state
    */
   fastRefresh: true,
   /**
-   * @name 路由预加载
+   * 路由预加载
    * @description 预加载路由资源，提升页面切换速度
    * @doc https://umijs.org/docs/api/config#routePrefetch
    */
   routePrefetch: {},
   /**
-   * @name manifest 配置
+   * manifest 配置
    * @description 生成资源清单，配合 routePrefetch 使用
    */
   manifest: {},
   //============== 以下都是max的插件配置 ===============
   /**
-   * @name 数据流插件
+   * 数据流插件
    * @@doc https://umijs.org/docs/max/data-flow
    */
   model: {},
@@ -115,16 +115,16 @@ export default defineConfig({
    */
   initialState: {},
   /**
-   * @name layout 插件
+   * layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: 'Ant Design Pro',
+  title: 'Nobody Is Perfect',
   layout: {
     locale: true,
     ...defaultSettings,
   },
   /**
-   * @name moment2dayjs 插件
+   * moment2dayjs 插件
    * @description 将项目中的 moment 替换为 dayjs
    * @doc https://umijs.org/docs/max/moment2dayjs
    */
@@ -133,7 +133,7 @@ export default defineConfig({
     plugins: ['duration', 'relativeTime'],
   },
   /**
-   * @name 国际化插件
+   * 国际化插件
    * @doc https://umijs.org/docs/max/i18n
    */
   locale: {
@@ -144,7 +144,7 @@ export default defineConfig({
     baseNavigator: true,
   },
   /**
-   * @name antd 插件
+   * antd 插件
    * @description 内置了 babel import 插件
    * @doc https://umijs.org/docs/max/antd#antd
    */
@@ -160,25 +160,25 @@ export default defineConfig({
     },
   },
   /**
-   * @name 网络请求配置
+   * 网络请求配置
    * @description 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
    * @doc https://umijs.org/docs/max/request
    */
   request: {},
   /**
-   * @name React Query 插件
+   * React Query 插件
    * @description 使用 react-query 管理服务端状态
    * @doc https://umijs.org/docs/max/react-query
    */
   reactQuery: {},
   /**
-   * @name 权限插件
+   * 权限插件
    * @description 基于 initialState 的权限插件，必须先打开 initialState
    * @doc https://umijs.org/docs/max/access
    */
   access: {},
   /**
-   * @name Google Analytics
+   * Google Analytics
    * @description 使用 GA4 (gtag.js) 进行站点分析
    * @doc https://umijs.org/docs/max/analytics
    */
@@ -186,7 +186,7 @@ export default defineConfig({
     ga_v2: 'G-59NF1VHHPF',
   },
   /**
-   * @name <head> 中额外的 script
+   * <head> 中额外的 script
    * @description 配置 <head> 中额外的 script
    */
   headScripts: [
@@ -196,7 +196,7 @@ export default defineConfig({
 
   //================ pro 插件配置 =================
   /**
-   * @name 插件配置
+   * 插件配置
    * @description 移除 @umijs/request-record，避免生成包含 child_process 的临时文件
    * @reason mock: false 时，request-record 插件仍会生成 requestRecordMock.ts，
    *         该文件引用了 Node.js 专属的 child_process 模块，导致浏览器端构建失败
@@ -204,7 +204,7 @@ export default defineConfig({
   plugins: ['@umijs/max-plugin-openapi'],
 
   /**
-   * @name openAPI 插件的配置
+   * openAPI 插件的配置
    * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
@@ -219,14 +219,14 @@ export default defineConfig({
   ],
   /**
    * 新增：自定义 webpack 规则，处理 swagger-ui-dist 的 CSS
-   * @name 自定义 webpack 配置
+   * 自定义 webpack 配置
    * @description
    *   1. 处理 swagger-ui-dist 的 CSS 文件
    *   2. 处理 @ant-design/x-markdown 的 CSS 文件
    *      该包 CSS 含有现代语法（CSS 嵌套/@layer），@utoo/pack Turbopack 无法解析
    *      通过 style-loader + css-loader 接管处理，跳过 Turbopack 的 CSS 管道
    */
-  chainWebpack(memo) {
+  chainWebpack(memo: any) {
     // ✅ 处理 swagger-ui-dist 的 CSS
     memo.module
       .rule('swagger-css')
@@ -255,7 +255,7 @@ export default defineConfig({
   },
   mock: false,
   /**
-   * @name utoopack 配置
+   * utoopack 配置
    * @description
    *   自定义 Turbopack 构建规则
    *   新增：将 @ant-design/x-markdown 的 CSS 文件作为空 JS 模块处理，
@@ -277,7 +277,7 @@ export default defineConfig({
     },
   },
   /**
-   * @name requestRecord 插件配置
+   * requestRecord 插件配置
    * @description 已禁用：该插件会生成依赖 child_process 的临时文件，与 mock: false 冲突
    *              如需重新启用，请同时在 plugins 数组中恢复 '@umijs/request-record'
    */
