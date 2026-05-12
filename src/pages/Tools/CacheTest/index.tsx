@@ -264,7 +264,7 @@ const CacheTestContent: React.FC = () => {
   );
 };
 
-const CacheTest: React.FC = () => {
+const Index: React.FC = () => {
   return (
     <PageWrapper>
       <CacheTestContent />
@@ -272,4 +272,4 @@ const CacheTest: React.FC = () => {
   );
 };
 
-export default CacheTest;
+export default Index;

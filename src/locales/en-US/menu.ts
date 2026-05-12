@@ -54,6 +54,7 @@ export default {
   'menu.cache-test': 'Cache Test',
   'menu.Tools': 'Tool',
   'menu.Tools.TextFormatter': 'Text Formatter',
+  'menu.Tools.CacheTest': 'Cache Test',
   'menu.Tools.StandardField': 'Standard Field',
   'menu.Personal': 'Personal',
   'menu.Personal.TimeTrace': 'TimeTrace',

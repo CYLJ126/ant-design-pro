@@ -54,6 +54,7 @@ export default {
   'menu.cache-test': '緩存測試',
   'menu.Tools': '工具',
   'menu.Tools.TextFormatter': '文本格式化',
+  'menu.Tools.CacheTest': '頁面緩存測試',
   'menu.Tools.StandardField': '標準字段‌',
   'menu.Personal': '個人管理',
   'menu.Personal.TimeTrace': '時刻留痕',
