@@ -273,6 +273,11 @@ export default defineConfig({
           loaders: [{ loader: join(__dirname, 'empty-loader.cjs') }],
           as: '*.js',
         },
+        // ✅ 新增：将 swagger-ui-dist 的 CSS 文件当作空 JS 处理
+        './node_modules/swagger-ui-dist/**/*.css': {
+          loaders: [{ loader: join(__dirname, 'empty-loader.cjs') }],
+          as: '*.js',
+        },
       },
     },
   },
