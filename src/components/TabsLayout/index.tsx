@@ -159,6 +159,8 @@ export interface TabItem {
   closable?: boolean;
 }
 
+const HOME_PATH = '/HomePage';
+
 /**
  * 国际化翻译，组国际化的键，然后下一步去拿到国际化信息
  *
@@ -199,8 +201,29 @@ const TabsLayout: React.FC = () => {
       label,
       pathname,
       search,
-      closable: pathname !== '/HomePage', // 首页不可关闭
+      closable: pathname !== HOME_PATH, // 首页不可关闭
     };
+  };
+
+  /**
+   * 将新标签插入列表，确保 HomePage 始终在 index 0
+   * 规则：
+   *  1. 若新标签是 HomePage → 插入到最前面（index 0）
+   *  2. 若新标签不是 HomePage → 追加到末尾
+   *  3. 若已存在相同 key → 不重复插入，直接返回原数组
+   */
+  const insertTab = (prevTabs: TabItem[], newTab: TabItem): TabItem[] => {
+    // 已存在，直接返回
+    const exists = prevTabs.some((t) => t.key === newTab.key);
+    if (exists) return prevTabs;
+
+    if (newTab.pathname === HOME_PATH) {
+      // HomePage 插入到最前面
+      return [newTab, ...prevTabs];
+    }
+
+    // 其他页面追加到末尾
+    return [...prevTabs, newTab];
   };
 
   // 监听路由变化，添加或激活标签页
@@ -212,16 +235,13 @@ const TabsLayout: React.FC = () => {
       nodes.map((n) => n.name),
     );
     console.log('缓存节点数量:', nodes.length);
-
     if (pathname.startsWith('/user/') || pathname === '/') {
       return;
     }
+
     const tabInfo = generateTabInfo(pathname, search);
-    setTabs((prevTabs) => {
-      const existingTab = prevTabs.find((tab) => tab.key === tabInfo.key);
-      if (existingTab) return prevTabs;
-      return [...prevTabs, tabInfo];
-    });
+    // ✅ 使用 insertTab 确保 HomePage 始终在第一位
+    setTabs((prevTabs) => insertTab(prevTabs, tabInfo));
     setActiveKey(tabInfo.key);
   }, [location.pathname, location.search]);
 
@@ -239,37 +259,50 @@ const TabsLayout: React.FC = () => {
     event?.stopPropagation();
     const tab = tabs.find((t) => t.key === key);
     if (!tab || !tab.closable) return;
+
     const newTabs = tabs.filter((t) => t.key !== key);
     setTabs(newTabs);
     // 删除缓存
     drop(key).then();
     // 如果关闭的是当前激活的标签页，需要跳转到其他页面
     if (activeKey === key) {
-      const nextTab = newTabs[newTabs.length - 1] || newTabs[0];
-      if (nextTab) {
-        setActiveKey(nextTab.key);
-        history.push({ pathname: nextTab.pathname, search: nextTab.search });
+      // ✅ 关闭后优先跳转到 HomePage（始终在 index 0）
+      const homeTab = newTabs.find((t) => t.pathname === HOME_PATH);
+      const fallbackTab = homeTab ?? newTabs[newTabs.length - 1];
+      if (fallbackTab) {
+        setActiveKey(fallbackTab.key);
+        history.push({
+          pathname: fallbackTab.pathname,
+          search: fallbackTab.search,
+        });
       } else {
-        // 如果没有其他标签页，跳转到首页
-        history.push('/HomePage');
+        history.push(HOME_PATH);
       }
     }
   };
 
-  // 关闭其他标签页
+  // 关闭其他标签页（保留 HomePage + 当前页）
   const handleCloseOthers = (currentKey: string) => {
     const currentTab = tabs.find((t) => t.key === currentKey);
     if (!currentTab) return;
+
+    // ✅ 保留不可关闭的标签（HomePage）+ 当前标签，且保持 HomePage 在首位
     const newTabs = tabs.filter((t) => t.key === currentKey || !t.closable);
     tabs.forEach((tab) => {
       if (tab.key !== currentKey && tab.closable) drop(tab.key).then();
     });
+
     setTabs(newTabs);
     setActiveKey(currentKey);
+    history.push({
+      pathname: currentTab.pathname,
+      search: currentTab.search,
+    });
   };
 
   // 关闭所有可关闭的标签页
   const handleCloseAll = () => {
+    // ✅ 保留不可关闭的标签（HomePage 始终保留在首位）
     const newTabs = tabs.filter((t) => !t.closable);
     // 删除所有可关闭标签页的缓存
     tabs.forEach((tab) => {
@@ -277,12 +310,12 @@ const TabsLayout: React.FC = () => {
     });
     setTabs(newTabs);
     // 跳转到首页或第一个不可关闭的标签页
-    const firstTab = newTabs[0];
+    const firstTab = newTabs[0]; // index 0 就是 HomePage
     if (firstTab) {
       setActiveKey(firstTab.key);
       history.push({ pathname: firstTab.pathname, search: firstTab.search });
     } else {
-      history.push('/HomePage');
+      history.push(HOME_PATH);
     }
   };
 
